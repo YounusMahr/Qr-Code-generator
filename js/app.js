@@ -209,8 +209,13 @@ function initFormListeners() {
         switchTab('tab-details');
     });
 
-    // Checkbox and Input Listeners
-    document.getElementById('check-enable-badge')?.addEventListener('change', triggerCodeGeneration);
+    // Keep the optional QR link label visibly disabled until the user turns it on.
+    const badgeToggle = document.getElementById('check-enable-badge');
+    badgeToggle?.addEventListener('change', () => {
+        syncBadgeSettings();
+        triggerCodeGeneration();
+    });
+    syncBadgeSettings();
 
     // Download PNG
     document.getElementById('btn-download-png')?.addEventListener('click', () => {
@@ -257,6 +262,12 @@ function initFormListeners() {
     // Scanner Buttons
     document.getElementById('btn-start-scanner')?.addEventListener('click', startCameraScanner);
     document.getElementById('input-qr-file')?.addEventListener('change', scanQrFromFile);
+}
+
+function syncBadgeSettings() {
+    const toggle = document.getElementById('check-enable-badge');
+    const settings = document.getElementById('badge-settings');
+    if (settings && toggle) settings.hidden = !toggle.checked;
 }
 
 /**
