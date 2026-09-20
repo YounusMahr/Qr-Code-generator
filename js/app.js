@@ -77,12 +77,10 @@ function initPresetData() {
 function initUrlState() {
     const decodedRecord = decodeRecordFromUrl();
     if (decodedRecord) {
+        document.body.classList.add('shared-record-mode');
         loadRecordToForm(decodedRecord);
         renderRecordToView(decodedRecord);
-        showToast('Loaded shared registry record from link!');
-        if (window.location.hash === '#tab-details' || window.location.search.includes('rec=')) {
-            switchTab('tab-details');
-        }
+        switchTab('tab-details');
     }
 }
 
@@ -120,7 +118,9 @@ function triggerCodeGeneration() {
 
     if (activeGenType === 'qr') {
         const enableBadge = document.getElementById('check-enable-badge')?.checked !== false;
-        const badgeText = document.getElementById('input-badge-text')?.value || 'HATTAN REGISTRY';
+        const badgeText = getQrLinkLabel(content);
+        const badgeInput = document.getElementById('input-badge-text');
+        if (badgeInput) badgeInput.value = badgeText;
 
         renderCustomQRCode({
             content: content,
@@ -136,6 +136,16 @@ function triggerCodeGeneration() {
             content: record.recordId || 'FH3VnKa9',
             format: 'CODE128'
         });
+    }
+}
+
+function getQrLinkLabel(recordUrl) {
+    try {
+        const url = new URL(recordUrl);
+        if (url.protocol === 'file:') return 'LOCAL RECORD LINK';
+        return url.host.length > 24 ? `${url.host.slice(0, 21)}…` : url.host;
+    } catch (_) {
+        return 'RECORD LINK';
     }
 }
 
@@ -201,7 +211,6 @@ function initFormListeners() {
 
     // Checkbox and Input Listeners
     document.getElementById('check-enable-badge')?.addEventListener('change', triggerCodeGeneration);
-    document.getElementById('input-badge-text')?.addEventListener('input', triggerCodeGeneration);
 
     // Download PNG
     document.getElementById('btn-download-png')?.addEventListener('click', () => {

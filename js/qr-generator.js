@@ -16,7 +16,7 @@ function renderCustomQRCode(options = {}) {
     const lightColor = options.lightColor || '#ffffff';
     const enableFrame = options.enableFrame !== false;
     const enableBadge = options.enableBadge !== false;
-    const badgeText = options.badgeText || 'HATTAN REGISTRY';
+    const badgeText = options.badgeText || 'RECORD LINK';
     const badgeIcon = options.badgeIcon || 'fa-globe';
 
     // Clear previous elements
@@ -42,7 +42,7 @@ function renderCustomQRCode(options = {}) {
         height: 250,
         colorDark: darkColor,
         colorLight: lightColor,
-        correctLevel: QRCode.CorrectLevel.H // High error correction for center badge overlay
+        correctLevel: QRCode.CorrectLevel.Q // Handles the centred link pill while retaining clear modules
     });
 
     // Wait for canvas to draw then attach overlay badge pill if enabled
@@ -50,11 +50,11 @@ function renderCustomQRCode(options = {}) {
         // Look for generated canvas or img
         const canvas = qrDiv.querySelector('canvas');
         if (canvas) {
-            // Apply slight border radius to canvas
+            // The centred link pill identifies the destination URL.
             canvas.style.borderRadius = '12px';
 
             if (enableBadge) {
-                // Attach Pill Badge Overlay
+                // Attach link label
                 const badgeOverlay = document.createElement('div');
                 badgeOverlay.className = 'qr-badge-pill-overlay';
                 badgeOverlay.id = 'qr-center-badge';
@@ -98,6 +98,7 @@ function downloadQRPNG(filename = 'cognetify-qr-code.png') {
     // Create composite canvas to capture frame and badge overlay into clean image
     const tempCanvas = document.createElement('canvas');
     const ctx = tempCanvas.getContext('2d');
+    const badgeEl = document.getElementById('qr-center-badge');
     
     const isFramed = frameWrapper && frameWrapper.classList.contains('framed');
     const padding = isFramed ? 40 : 0;
@@ -116,8 +117,7 @@ function downloadQRPNG(filename = 'cognetify-qr-code.png') {
     // Draw main QR canvas
     ctx.drawImage(canvas, padding, padding);
 
-    // Draw central badge overlay onto composite canvas if present
-    const badgeEl = document.getElementById('qr-center-badge');
+    // Draw the centred link label if present
     if (badgeEl) {
         const badgeWidth = 190;
         const badgeHeight = 38;
@@ -125,7 +125,7 @@ function downloadQRPNG(filename = 'cognetify-qr-code.png') {
         const badgeY = (tempCanvas.height - badgeHeight) / 2;
 
         // Draw pill background
-        ctx.fillStyle = '#374151';
+        ctx.fillStyle = '#113e38';
         ctx.strokeStyle = '#ffffff';
         ctx.lineWidth = 3;
         roundRect(ctx, badgeX, badgeY, badgeWidth, badgeHeight, 19);
@@ -141,7 +141,7 @@ function downloadQRPNG(filename = 'cognetify-qr-code.png') {
         ctx.fill();
 
         // Draw text
-        const badgeText = document.getElementById('input-badge-text')?.value || 'HATTAN REGISTRY';
+        const badgeText = document.getElementById('input-badge-text')?.value || 'RECORD LINK';
         ctx.fillStyle = '#ffffff';
         ctx.font = 'bold 13px Inter, sans-serif';
         ctx.textAlign = 'left';

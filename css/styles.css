@@ -1165,9 +1165,8 @@ body {
 .segmented-btn.active { color: #08766c; box-shadow: 0 2px 7px rgba(20, 58, 51, .12); }
 
 .preview-stage { min-height: 360px; background: linear-gradient(135deg, #edf6f3, #f9fbfa); border: 1px solid #cce1da; border-radius: 18px; }
-.preview-stage::before { content: 'SCAN-READY'; position: absolute; top: 14px; left: 16px; color: #7ca79d; font-size: .62rem; font-weight: 800; letter-spacing: .15em; }
 .qr-canvas-frame-outer.framed { padding: 18px; border-color: #fff; border-radius: 27px; box-shadow: 0 18px 36px rgba(14, 62, 54, .17), inset 0 0 0 1px #d8e6e1; }
-.qr-badge-pill-overlay { background: #113e38; }
+.qr-badge-pill-overlay { top: 50%; bottom: auto; background: #113e38; }
 .export-toolbar { gap: .55rem; }
 .export-toolbar .btn { flex: 1 1 150px; }
 
@@ -1176,6 +1175,7 @@ body {
 .browser-bar { background: #1d2927; }
 .red-demo-banner { background: #123d38; font-size: .68rem; letter-spacing: .04em; }
 .dark-blue-header { background: linear-gradient(135deg, #123d38, #175f55); }
+.record-brandline { display: none; }
 .section-notice-bar { background: #f2f6f5; color: #54706a; border-color: #dce7e3; }
 .records-table { border-color: #d4e1dd; }
 .records-table td { border-color: #dbe6e2; }
@@ -1214,6 +1214,7 @@ body {
     .input-with-action .form-input { min-width: 0; }
     .preview-stage { min-height: 300px; padding: 1.3rem; }
     .qr-canvas-frame-outer.framed { padding: 13px; }
+    .qr-badge-pill-overlay { top: 50%; bottom: auto; }
     #qr-canvas-container canvas, #qr-canvas-container img { width: min(250px, 62vw) !important; }
     .qr-badge-pill-overlay { font-size: .7rem; padding: 7px 11px; }
     .export-toolbar { display: grid; grid-template-columns: 1fr; }
@@ -1240,4 +1241,64 @@ body {
     .tab-content { display: none !important; }
     #tab-details { display: block !important; }
     .phone-bezel { max-width: none; border: 0; box-shadow: none; }
+}
+
+/* Shared QR destination: a focused record page, not the generator workspace. */
+.shared-record-mode { background: #edf3f1; }
+.shared-record-mode .global-demo-banner,
+.shared-record-mode .app-navbar,
+.shared-record-mode .hero-bar,
+.shared-record-mode .viewer-toolbar,
+.shared-record-mode .toast { display: none !important; }
+.shared-record-mode .app-main { padding: 2.5rem 1rem; }
+.shared-record-mode .tab-content { display: none !important; }
+.shared-record-mode #tab-details { display: block !important; }
+.shared-record-mode .viewer-page-wrapper { max-width: 760px; }
+.shared-record-mode .phone-mockup-wrapper { padding: 0; }
+.shared-record-mode .phone-bezel { max-width: none; border: 0; border-radius: 18px; background: #fff; overflow: hidden; box-shadow: 0 22px 55px rgba(22, 58, 52, .16); }
+.shared-record-mode .phone-speaker,
+.shared-record-mode .browser-bar { display: none; }
+.shared-record-mode .phone-screen { min-height: 0; }
+.shared-record-mode .red-demo-banner { background: #163a36; padding: .65rem 1rem; font-size: .7rem; }
+.shared-record-mode .dark-blue-header { min-height: 150px; padding: 1.55rem 1.75rem; background: linear-gradient(122deg, #0f3732 0%, #12695e 100%); position: relative; overflow: hidden; }
+.shared-record-mode .dark-blue-header::after { content: ''; position: absolute; width: 190px; height: 190px; right: -60px; top: -100px; border: 1px solid rgba(206, 249, 237, .22); border-radius: 50%; box-shadow: 0 0 0 28px rgba(206, 249, 237, .06), 0 0 0 56px rgba(206, 249, 237, .04); }
+.shared-record-mode .header-left,
+.shared-record-mode .header-right { position: relative; z-index: 1; }
+.shared-record-mode .record-brandline { display: flex; align-items: center; gap: .45rem; margin-bottom: .85rem; font-family: var(--font-heading); color: #b9ede0; font-size: .62rem; font-weight: 800; letter-spacing: .13em; }
+.shared-record-mode .record-brand-seal { position: relative; display: inline-block; width: 16px; height: 16px; border: 2px solid #b9ede0; border-radius: 4px; }
+.shared-record-mode .record-brand-seal i { position: absolute; width: 4px; height: 4px; top: 2px; left: 2px; background: #b9ede0; }
+.shared-record-mode .record-brand-seal b { position: absolute; width: 4px; height: 4px; bottom: 2px; right: 2px; background: #f0a23a; }
+.shared-record-mode .header-left .sub-heading { color: #a6dcd0; }
+.shared-record-mode .header-left .main-heading { font-size: clamp(1.55rem, 4vw, 2.05rem); }
+.shared-record-mode .header-right .arabic-heading { font-size: 1.35rem; }
+.shared-record-mode .section-notice-bar { padding: .9rem 1.75rem; font-size: .85rem; }
+.shared-record-mode .records-table-container { padding: 1.5rem 1.75rem 1.65rem; }
+.shared-record-mode .records-table { font-size: .9rem; }
+.shared-record-mode .records-table td { padding: .72rem 1rem; }
+.shared-record-mode .records-table .field-label { width: 35%; }
+.shared-record-mode .record-footer { padding: 1.15rem 1.75rem; background: #f0f5f3; }
+
+@media (max-width: 600px) {
+    .shared-record-mode .app-main { padding: 0; }
+    .shared-record-mode .viewer-page-wrapper { max-width: none; }
+    .shared-record-mode .phone-bezel { border-radius: 0; box-shadow: none; }
+    .shared-record-mode .dark-blue-header { min-height: 142px; padding: 1.25rem; flex-direction: column; align-items: stretch; }
+    .shared-record-mode .header-right { align-self: flex-end; }
+    .shared-record-mode .header-right .arabic-heading { font-size: 1.05rem; }
+    .shared-record-mode .section-notice-bar { padding: .8rem 1.25rem; font-size: .78rem; }
+    .shared-record-mode .records-table-container { padding: 1rem; }
+    .shared-record-mode .records-table { min-width: 0; font-size: .78rem; }
+    .shared-record-mode .records-table td { padding: .67rem .65rem; }
+    .shared-record-mode .records-table .field-label { width: 42%; }
+    .shared-record-mode .record-footer { padding: 1rem 1.25rem 1.25rem; font-size: .68rem; }
+}
+
+@media (max-width: 380px) {
+    .shared-record-mode .dark-blue-header { padding: 1.05rem; }
+    .shared-record-mode .header-left .main-heading { font-size: 1.38rem; }
+    .shared-record-mode .header-right .arabic-heading { font-size: .96rem; }
+    .shared-record-mode .records-table-container { padding: .7rem; }
+    .shared-record-mode .records-table { font-size: .72rem; }
+    .shared-record-mode .records-table td { padding: .58rem .45rem; }
+    .shared-record-mode .record-footer { padding-inline: .9rem; }
 }

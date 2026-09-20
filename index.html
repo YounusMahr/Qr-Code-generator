@@ -17,7 +17,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <!-- CSS Styles with Cache-Busting -->
-    <link rel="stylesheet" href="css/styles.css?v=4.0">
+    <link rel="stylesheet" href="css/styles.css?v=4.2">
     
     <!-- QRCode, JsBarcode, and html5-qrcode scripts -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
@@ -214,7 +214,7 @@
                     <!-- QR Customization Toggle Card -->
                     <div class="card-option">
                         <div class="option-header">
-                            <span class="option-title"><i class="fa-solid fa-circle-dot"></i> Branded centre label</span>
+                            <span class="option-title"><i class="fa-solid fa-link"></i> Record link label</span>
                             <label class="switch">
                                 <input type="checkbox" id="check-enable-badge" checked>
                                 <span class="slider round"></span>
@@ -222,8 +222,8 @@
                         </div>
                         <div class="option-body" id="badge-settings">
                             <div class="form-group" style="margin-bottom:0.5rem;">
-                                <label for="input-badge-text" class="form-label">Badge Link Text</label>
-                                <input type="text" id="input-badge-text" class="form-input" value="HATTAN REGISTRY">
+                                <label for="input-badge-text" class="form-label">Generated automatically from the record link</label>
+                                <input type="text" id="input-badge-text" class="form-input" value="RECORD LINK" readonly>
                             </div>
                         </div>
                     </div>
@@ -401,6 +401,7 @@
                                 <!-- Dark Blue Header Box -->
                                 <div class="dark-blue-header">
                                     <div class="header-left">
+                                        <div class="record-brandline"><span class="record-brand-seal"><i></i><b></b></span> HATTAN REGISTRY</div>
                                         <div class="sub-heading">FLEET RECORD</div>
                                         <div class="main-heading">Hattan Fleet Registry</div>
                                     </div>
@@ -494,9 +495,9 @@
     <div id="toast" class="toast"></div>
 
     <!-- Application JS with Cache-Busting -->
-    <script src="js/record-viewer.js?v=4.0"></script>
-    <script src="js/qr-generator.js?v=4.0"></script>
-    <script src="js/barcode.js?v=4.0"></script>
-    <script src="js/app.js?v=4.0"></script>
+    <script src="js/record-viewer.js?v=4.2"></script>
+    <script src="js/qr-generator.js?v=4.2"></script>
+    <script src="js/barcode.js?v=4.2"></script>
+    <script src="js/app.js?v=4.2"></script>
 </body>
 </html>
