@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hattan Registry | QR & Barcode Workspace</title>
+    
+    <!-- Meta SEO -->
+    <meta name="description" content="Hattan Registry — create, store and scan shareable fleet records with QR and barcode identifiers.">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@700&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&family=Tajawal:wght@500;700;800&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- CSS Styles with Cache-Busting -->
+    <link rel="stylesheet" href="css/styles.css?v=4.0">
+    
+    <!-- QRCode, JsBarcode, and html5-qrcode scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
+    <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+</head>
+<body>
+
+    <!-- Top Demo Build Banner -->
+    <div class="global-demo-banner">
+        <i class="fa-solid fa-triangle-exclamation"></i>
+        <span>DEMO WORKSPACE — NOT CONNECTED TO ANY GOVERNMENT DATABASE</span>
+    </div>
+
+    <!-- Main Navigation Bar -->
+    <nav class="app-navbar" id="app-navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <div class="brand-logo" aria-label="Hattan Registry logo">
+                    <span class="brand-mark mark-a"></span><span class="brand-mark mark-b"></span><span class="brand-mark mark-c"></span><span class="brand-mark mark-d"></span>
+                </div>
+                <div class="brand-text">
+                    <span class="brand-title">Hattan<span>Registry</span></span>
+                    <span class="brand-subtitle">Fleet identification workspace</span>
+                </div>
+            </div>
+
+            <div class="nav-tabs">
+                <button class="nav-tab active" data-tab="tab-create" id="tab-btn-create">
+                    <i class="fa-solid fa-pen-to-square"></i>
+                    <span>Create Record</span>
+                </button>
+                <button class="nav-tab" data-tab="tab-scan" id="tab-btn-scan">
+                    <i class="fa-solid fa-camera-retro"></i>
+                    <span>Scan / Lookup</span>
+                </button>
+                <button class="nav-tab" data-tab="tab-saved" id="tab-btn-saved">
+                    <i class="fa-solid fa-database"></i>
+                    <span>Saved Records</span>
+                    <span class="nav-badge" id="saved-count-badge">0</span>
+                </button>
+                <button class="nav-tab" data-tab="tab-details" id="tab-btn-details">
+                    <i class="fa-solid fa-id-card"></i>
+                    <span>Record Details</span>
+                </button>
+            </div>
+
+            <div class="nav-actions">
+                <button class="btn btn-outline btn-sm" id="btn-load-preset">
+                    <i class="fa-solid fa-bolt"></i> Load Sample Data
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Header Hero Description Bar -->
+    <header class="hero-bar">
+        <div class="container hero-content">
+            <div class="hero-left">
+                <span class="badge badge-accent"><i class="fa-solid fa-shield-halved"></i> Secure record workspace</span>
+                <h1>Make every fleet record <em>scan-ready.</em></h1>
+                <p class="hero-desc">Create a clear vehicle record, generate its QR and barcode, then share or look it up from any device. Everything is stored locally in this browser.</p>
+            </div>
+            <div class="hero-right">
+                        <div class="arabic-hero-title">سجل هتان للأسطول</div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Workspace -->
+    <main class="app-main">
+
+        <!-- TAB 1: CREATE RECORD & GENERATE QR -->
+        <section class="tab-content active" id="tab-create">
+            <div class="container grid-layout">
+                
+                <!-- Form Column -->
+                <div class="panel config-panel">
+                    <div class="panel-header">
+                        <h2><i class="fa-solid fa-file-signature"></i> Create Record</h2>
+                        <p class="panel-subtitle">Enter the same information that should appear after the QR code is scanned.</p>
+                    </div>
+
+                    <form id="form-create-record" onsubmit="event.preventDefault();">
+                        <!-- Workshop / Maker -->
+                        <div class="form-group">
+                            <label for="rec-workshop" class="form-label">Workshop / Maker</label>
+                            <input type="text" id="rec-workshop" class="form-input" placeholder="e.g. مصنع مقطورات السحب" value="مصنع مقطورات السحب">
+                        </div>
+
+                        <!-- Maker Code & Unique Barrier No -->
+                        <div class="grid-2col">
+                            <div class="form-group">
+                                <label for="rec-maker-code" class="form-label">Maker Code</label>
+                                <input type="text" id="rec-maker-code" class="form-input" placeholder="e.g. E12" value="E12">
+                            </div>
+                            <div class="form-group">
+                                <label for="rec-barrier-no" class="form-label">Unique Barrier No.</label>
+                                <input type="text" id="rec-barrier-no" class="form-input font-mono" placeholder="e.g. KSA E12 S/R/F RRR 297615" value="KSA E12 S/R/F RRR 297615">
+                            </div>
+                        </div>
+
+                        <!-- Vehicle Type & VIN -->
+                        <div class="grid-2col">
+                            <div class="form-group">
+                                <label for="rec-vehicle-type" class="form-label">Vehicle Type</label>
+                                <input type="text" id="rec-vehicle-type" class="form-input" placeholder="e.g. شاحنة" value="شاحنة">
+                            </div>
+                            <div class="form-group">
+                                <label for="rec-vin" class="form-label">Chassis (VIN)</label>
+                                <input type="text" id="rec-vin" class="form-input font-mono" placeholder="e.g. RS3NHMAJ6P0735625" value="RS3NHMAJ6P0735625">
+                            </div>
+                        </div>
+
+                        <!-- Brand & Model -->
+                        <div class="grid-2col">
+                            <div class="form-group">
+                                <label for="rec-brand" class="form-label">Brand</label>
+                                <input type="text" id="rec-brand" class="form-input" placeholder="e.g. MERCEDES" value="MERCEDES">
+                            </div>
+                            <div class="form-group">
+                                <label for="rec-model" class="form-label">Model</label>
+                                <input type="text" id="rec-model" class="form-input" placeholder="e.g. خلاطه / RRR" value="خلاطه / RRR">
+                            </div>
+                        </div>
+
+                        <!-- Model Year, Made On, Card Issued -->
+                        <div class="grid-3col">
+                            <div class="form-group">
+                                <label for="rec-model-year" class="form-label">Model Year</label>
+                                <input type="text" id="rec-model-year" class="form-input" placeholder="e.g. 2023" value="2023">
+                            </div>
+                            <div class="form-group">
+                                <label for="rec-made-on" class="form-label">Made On</label>
+                                <input type="date" id="rec-made-on" class="form-input" value="2026-09-14">
+                            </div>
+                            <div class="form-group">
+                                <label for="rec-card-issued" class="form-label">Card Issued</label>
+                                <input type="date" id="rec-card-issued" class="form-input" value="2026-09-14">
+                            </div>
+                        </div>
+
+                        <!-- Record ID (Readonly or auto-generated) -->
+                        <div class="form-group">
+                            <label for="rec-id" class="form-label">Record ID</label>
+                            <div class="input-with-action">
+                                <input type="text" id="rec-id" class="form-input font-mono" value="FH3VnKa9">
+                                <button type="button" class="btn btn-secondary btn-icon" id="btn-gen-id" title="Generate New ID">
+                                    <i class="fa-solid fa-arrows-rotate"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Three Main Action Buttons -->
+                        <div class="form-actions-grid">
+                            <button type="button" class="btn btn-primary" id="btn-generate-both">
+                                <i class="fa-solid fa-qrcode"></i> Generate QR & Barcode
+                            </button>
+                            <button type="button" class="btn btn-success" id="btn-save-record">
+                                <i class="fa-solid fa-floppy-disk"></i> Save Record & Generate
+                            </button>
+                            <button type="button" class="btn btn-danger-outline" id="btn-clear-form">
+                                <i class="fa-solid fa-eraser"></i> Clear Form
+                            </button>
+                        </div>
+
+                        <!-- Important Disclaimer Notice -->
+                        <div class="disclaimer-box">
+                            <i class="fa-solid fa-shield-halved disclaimer-icon"></i>
+                            <div class="disclaimer-text">
+                                <strong>Important:</strong> The QR code stores the record URL. The record values are therefore visible to anyone who scans the QR code. This demo does not use a government database or server-side authentication.
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Preview Column: QR Code (Image 2 style) & Quick Record View -->
+                <div class="panel preview-panel">
+                    <div class="panel-header">
+                        <h2><i class="fa-solid fa-wand-magic-sparkles"></i> Generated Code Preview</h2>
+                        <span class="badge badge-accent">Live preview</span>
+                    </div>
+
+                    <!-- Code Type Switcher -->
+                    <div class="segmented-control mb-4">
+                        <button class="segmented-btn active" id="btn-type-qr" onclick="setGenType('qr')">
+                            <i class="fa-solid fa-qrcode"></i> QR code
+                        </button>
+                        <button class="segmented-btn" id="btn-type-barcode" onclick="setGenType('barcode')">
+                            <i class="fa-solid fa-barcode"></i> Barcode
+                        </button>
+                    </div>
+
+                    <!-- QR Customization Toggle Card -->
+                    <div class="card-option">
+                        <div class="option-header">
+                            <span class="option-title"><i class="fa-solid fa-circle-dot"></i> Branded centre label</span>
+                            <label class="switch">
+                                <input type="checkbox" id="check-enable-badge" checked>
+                                <span class="slider round"></span>
+                            </label>
+                        </div>
+                        <div class="option-body" id="badge-settings">
+                            <div class="form-group" style="margin-bottom:0.5rem;">
+                                <label for="input-badge-text" class="form-label">Badge Link Text</label>
+                                <input type="text" id="input-badge-text" class="form-input" value="HATTAN REGISTRY">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Render Stage -->
+                    <div class="preview-stage">
+                        <div class="qr-canvas-frame-outer framed" id="qr-frame-wrapper">
+                            <div id="qr-canvas-container"></div>
+                            <svg id="barcode-svg-container" style="display:none;"></svg>
+                        </div>
+                    </div>
+
+                    <!-- Export Toolbar -->
+                    <div class="export-toolbar">
+                        <button class="btn btn-secondary" id="btn-download-png">
+                            <i class="fa-solid fa-download"></i> Download PNG
+                        </button>
+                        <button class="btn btn-secondary" id="btn-copy-link">
+                            <i class="fa-solid fa-share-nodes"></i> Copy Record Link
+                        </button>
+                        <button class="btn btn-primary" id="btn-view-details">
+                            <i class="fa-solid fa-eye"></i> View Record Details
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- TAB 2: SCAN / LOOKUP -->
+        <section class="tab-content" id="tab-scan">
+            <div class="container container-sm">
+                <div class="panel">
+                    <div class="panel-header">
+                        <h2><i class="fa-solid fa-camera"></i> Scan / Lookup Record</h2>
+                        <p class="panel-subtitle">Scan a QR code via camera/image, or enter a Record ID to view details.</p>
+                    </div>
+
+                    <!-- ID Lookup Bar -->
+                    <div class="form-group">
+                        <label for="input-lookup-id" class="form-label">Enter Record ID or Barrier No.</label>
+                        <div class="input-with-action">
+                            <input type="text" id="input-lookup-id" class="form-input font-mono" placeholder="e.g. FH3VnKa9 or KSA E12...">
+                            <button class="btn btn-primary" id="btn-do-lookup">
+                                <i class="fa-solid fa-magnifying-glass"></i> Lookup
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="divider"><span>OR CAMERA SCAN</span></div>
+
+                    <div class="scanner-wrapper">
+                        <div id="reader"></div>
+                        <div class="scanner-placeholder" id="scanner-placeholder">
+                            <i class="fa-solid fa-qrcode scan-icon"></i>
+                            <p>Click start to open camera QR scanner</p>
+                            <button class="btn btn-primary" id="btn-start-scanner">
+                                <i class="fa-solid fa-video"></i> Start Camera Scanner
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="divider"><span>OR UPLOAD IMAGE</span></div>
+
+                    <div class="form-group">
+                        <label for="input-qr-file" class="file-drop-zone">
+                            <i class="fa-solid fa-cloud-arrow-up"></i>
+                            <span>Upload QR Code Image File</span>
+                            <input type="file" id="input-qr-file" accept="image/*" class="file-input">
+                        </label>
+                    </div>
+
+                    <div id="scan-result-card" class="scan-result-box" style="display: none;">
+                        <h3><i class="fa-solid fa-circle-check"></i> Scanned Record Found!</h3>
+                        <p id="scan-result-text" class="scan-url font-mono"></p>
+                        <button class="btn btn-success" id="btn-open-scanned">
+                            <i class="fa-solid fa-arrow-right-to-bracket"></i> Open Formatted Record
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 3: SAVED RECORDS -->
+        <section class="tab-content" id="tab-saved">
+            <div class="container">
+                <div class="panel">
+                    <div class="panel-header flex-between">
+                        <div>
+                            <h2><i class="fa-solid fa-database"></i> Saved Fleet Records</h2>
+                            <p class="panel-subtitle">Manage locally stored registry records and generate QR codes with 1 click.</p>
+                        </div>
+                        <button class="btn btn-danger-outline btn-sm" id="btn-clear-saved">
+                            <i class="fa-solid fa-trash-can"></i> Clear All Saved
+                        </button>
+                    </div>
+
+                    <!-- Search Filter -->
+                    <div class="form-group">
+                        <input type="text" id="input-search-saved" class="form-input" placeholder="🔍 Search saved records by VIN, Record ID, or Brand...">
+                    </div>
+
+                    <!-- Saved Records Table Container -->
+                    <div class="saved-table-wrapper">
+                        <table class="saved-records-table">
+                            <thead>
+                                <tr>
+                                    <th>Record ID</th>
+                                    <th>Workshop / Maker</th>
+                                    <th>Vehicle Type</th>
+                                    <th>Chassis (VIN)</th>
+                                    <th>Brand / Model</th>
+                                    <th>Date Issued</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="saved-records-tbody">
+                                <!-- Populated dynamically by JS -->
+                            </tbody>
+                        </table>
+                        <div id="saved-empty-state" class="empty-state">
+                            <i class="fa-solid fa-folder-open"></i>
+                            <p>No saved records found. Click "Save Record & Generate" in Create Record tab to add records.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 4: RECORD DETAILS (EXACT IMAGE 1 REPLICA) -->
+        <section class="tab-content" id="tab-details">
+            <div class="container viewer-page-wrapper">
+                
+                <div class="viewer-toolbar">
+                    <div class="toolbar-left">
+                        <span class="toolbar-title"><i class="fa-solid fa-mobile-screen-button"></i> Record card preview</span>
+                        <span class="badge badge-success">Ready to share</span>
+                    </div>
+                    <div class="toolbar-right">
+                        <button class="btn btn-secondary btn-sm" onclick="window.print()">
+                            <i class="fa-solid fa-print"></i> Print Card
+                        </button>
+                        <button class="btn btn-primary btn-sm" id="btn-share-details">
+                            <i class="fa-solid fa-share-nodes"></i> Share URL
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Smartphone Bezel Mockup Container -->
+                <div class="phone-mockup-wrapper">
+                    <div class="phone-bezel">
+                        <div class="phone-speaker"></div>
+                        <div class="phone-screen">
+
+                            <!-- Top Browser Bar Mockup -->
+                            <div class="browser-bar">
+                                <button class="browser-icon"><i class="fa-solid fa-xmark"></i></button>
+                                <button class="browser-icon"><i class="fa-solid fa-chevron-down"></i></button>
+                                <div class="browser-url-pill">
+                                    <span id="display-browser-url">hattan-registry.local</span>
+                                </div>
+                                <button class="browser-icon"><i class="fa-solid fa-share-nodes"></i></button>
+                                <button class="browser-icon"><i class="fa-solid fa-language"></i></button>
+                                <button class="browser-icon"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+                            </div>
+
+                            <!-- IMAGE 1 EXACT RECORD CARD HTML -->
+                            <div class="image1-record-card" id="image1-record-view">
+                                
+                                <!-- Top Red Demo Banner -->
+                                <div class="red-demo-banner">
+                                    Demo workspace · not a government service
+                                </div>
+
+                                <!-- Dark Blue Header Box -->
+                                <div class="dark-blue-header">
+                                    <div class="header-left">
+                                        <div class="sub-heading">FLEET RECORD</div>
+                                        <div class="main-heading">Hattan Fleet Registry</div>
+                                    </div>
+                                    <div class="header-right">
+                                        <div class="arabic-heading">مكتب هتان لسجلات الأسطول</div>
+                                    </div>
+                                </div>
+
+                                <!-- Section Header Notice -->
+                                <div class="section-notice-bar">
+                                    Scan-ready vehicle identification record.
+                                </div>
+
+                                <!-- Field Data Table -->
+                                <div class="records-table-container">
+                                    <table class="records-table">
+                                        <tbody>
+                                            <tr>
+                                                <td class="field-label">Workshop / maker</td>
+                                                <td class="field-val val-arabic" id="view-workshop">مصنع مقطورات السحب</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="field-label">Maker code</td>
+                                                <td class="field-val" id="view-maker-code">E12</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="field-label">Unique barrier no.</td>
+                                                <td class="field-val font-mono" id="view-barrier-no">KSA  E12  S/R/F  RRR  297615</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="field-label">Vehicle type</td>
+                                                <td class="field-val val-arabic" id="view-vehicle-type">شاحنة</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="field-label">Chassis (VIN)</td>
+                                                <td class="field-val font-mono" id="view-vin">RS3NHMAJ6P0735625</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="field-label">Brand</td>
+                                                <td class="field-val" id="view-brand">MERCEDES</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="field-label">Model</td>
+                                                <td class="field-val val-arabic" id="view-model">خلاطه  /  RRR</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="field-label">Model year</td>
+                                                <td class="field-val" id="view-model-year">2023</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="field-label">Made on</td>
+                                                <td class="field-val" id="view-made-on">14/09/2026</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="field-label">Card issued</td>
+                                                <td class="field-val" id="view-card-issued">14/09/2026</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="field-label">Record id</td>
+                                                <td class="field-val font-mono" id="view-record-id">FH3VnKa9</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <!-- Footer Notice Section -->
+                                <div class="record-footer">
+                                    <div class="footer-line">
+                                        Hattan Registry · fleet identification workspace
+                                    </div>
+                                    <div class="footer-line">
+                                        Private local record · verify details before use
+                                    </div>
+                                    <div class="footer-line muted">
+                                        This demo does not verify or issue official vehicle documents.
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast"></div>
+
+    <!-- Application JS with Cache-Busting -->
+    <script src="js/record-viewer.js?v=4.0"></script>
+    <script src="js/qr-generator.js?v=4.0"></script>
+    <script src="js/barcode.js?v=4.0"></script>
+    <script src="js/app.js?v=4.0"></script>
+</body>
+</html>
