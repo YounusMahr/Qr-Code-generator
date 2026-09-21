@@ -7,7 +7,7 @@ function renderCustomBarcode(options = {}) {
     const svgContainer = document.getElementById('barcode-svg-container');
     if (!svgContainer) return;
 
-    const content = options.content || 'FH3VnKa9';
+    const content = options.content || 'HHH260466';
     const format = options.format || 'CODE128';
     const lineColor = options.lineColor || '#111827';
     const background = options.background || '#ffffff';

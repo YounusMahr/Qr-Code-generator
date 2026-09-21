@@ -19,7 +19,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <!-- CSS Styles with Cache-Busting -->
-    <link rel="stylesheet" href="css/styles.css?v=4.3">
+    <link rel="stylesheet" href="css/styles.css?v=4.5">
     
     <!-- QRCode, JsBarcode, and html5-qrcode scripts -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
@@ -79,9 +79,9 @@
     <header class="hero-bar">
         <div class="container hero-content">
             <div class="hero-left">
-                <span class="badge badge-accent"><i class="fa-solid fa-shield-halved"></i> Secure record workspace</span>
-                <h1>Make every fleet record <em>scan-ready.</em></h1>
-                <p class="hero-desc">Create a clear vehicle record, generate its QR and barcode, then share or look it up from any device. Everything is stored locally in this browser.</p>
+                <span class="badge badge-accent"><i class="fa-solid fa-shield-halved"></i> مساحة عمل تجريبية</span>
+                <h1 dir="rtl">سجل المركبات <em>القابل للمسح.</em></h1>
+                <p class="hero-desc" dir="rtl">أنشئ سجلًا واضحًا للمركبة، ثم ولّد رمز QR والباركود لمشاركته أو البحث عنه. تُحفظ البيانات محليًا في هذا المتصفح.</p>
             </div>
             <div class="hero-right">
                         <div class="arabic-hero-title">سجل هتان للأسطول</div>
@@ -99,74 +99,74 @@
                 <!-- Form Column -->
                 <div class="panel config-panel">
                     <div class="panel-header">
-                        <h2><i class="fa-solid fa-file-signature"></i> Create Record</h2>
-                        <p class="panel-subtitle">Enter the same information that should appear after the QR code is scanned.</p>
+                        <h2><i class="fa-solid fa-file-signature"></i> إنشاء سجل</h2>
+                        <p class="panel-subtitle" dir="rtl">أدخل البيانات التي يجب أن تظهر بعد مسح رمز QR.</p>
                     </div>
 
                     <form id="form-create-record" onsubmit="event.preventDefault();">
                         <!-- Workshop / Maker -->
                         <div class="form-group">
-                            <label for="rec-workshop" class="form-label">Workshop / Maker</label>
-                            <input type="text" id="rec-workshop" class="form-input" placeholder="e.g. مصنع مقطورات السحب" value="مصنع مقطورات السحب">
+                            <label for="rec-workshop" class="form-label" dir="rtl">الشركة / الجهة المصنعة</label>
+                            <input type="text" id="rec-workshop" class="form-input" placeholder="e.g. شركة وهج الإبداع المميزة" value="شركة وهج الإبداع المميزة">
                         </div>
 
                         <!-- Maker Code & Unique Barrier No -->
                         <div class="grid-2col">
                             <div class="form-group">
-                                <label for="rec-maker-code" class="form-label">Maker Code</label>
-                                <input type="text" id="rec-maker-code" class="form-input" placeholder="e.g. E12" value="E12">
+                                <label for="rec-maker-code" class="form-label" dir="rtl">رمز الصانع</label>
+                                <input type="text" id="rec-maker-code" class="form-input" placeholder="e.g. E13" value="E13">
                             </div>
                             <div class="form-group">
-                                <label for="rec-barrier-no" class="form-label">Unique Barrier No.</label>
-                                <input type="text" id="rec-barrier-no" class="form-input font-mono" placeholder="e.g. KSA E12 S/R/F RRR 297615" value="KSA E12 S/R/F RRR 297615">
+                                <label for="rec-barrier-no" class="form-label" dir="rtl">الرقم المميز للحاجز</label>
+                                <input type="text" id="rec-barrier-no" class="form-input font-mono" placeholder="e.g. KSA E13 S/R/F HHH 260466" value="KSA E13 S/R/F HHH 260466">
                             </div>
                         </div>
 
                         <!-- Vehicle Type & VIN -->
                         <div class="grid-2col">
                             <div class="form-group">
-                                <label for="rec-vehicle-type" class="form-label">Vehicle Type</label>
+                                <label for="rec-vehicle-type" class="form-label" dir="rtl">نوع المركبة</label>
                                 <input type="text" id="rec-vehicle-type" class="form-input" placeholder="e.g. شاحنة" value="شاحنة">
                             </div>
                             <div class="form-group">
-                                <label for="rec-vin" class="form-label">Chassis (VIN)</label>
-                                <input type="text" id="rec-vin" class="form-input font-mono" placeholder="e.g. RS3NHMAJ6P0735625" value="RS3NHMAJ6P0735625">
+                                <label for="rec-vin" class="form-label" dir="rtl">رقم الهيكل للمركبة</label>
+                                <input type="text" id="rec-vin" class="form-input font-mono" placeholder="e.g. WDB9340321L164157" value="WDB9340321L164157">
                             </div>
                         </div>
 
                         <!-- Brand & Model -->
                         <div class="grid-2col">
                             <div class="form-group">
-                                <label for="rec-brand" class="form-label">Brand</label>
+                                <label for="rec-brand" class="form-label" dir="rtl">ماركة المركبة</label>
                                 <input type="text" id="rec-brand" class="form-input" placeholder="e.g. MERCEDES" value="MERCEDES">
                             </div>
                             <div class="form-group">
-                                <label for="rec-model" class="form-label">Model</label>
-                                <input type="text" id="rec-model" class="form-input" placeholder="e.g. خلاطه / RRR" value="خلاطه / RRR">
+                                <label for="rec-model" class="form-label" dir="rtl">اسم طراز المركبة</label>
+                                <input type="text" id="rec-model" class="form-input" placeholder="e.g. رأس" value="رأس">
                             </div>
                         </div>
 
                         <!-- Model Year, Made On, Card Issued -->
                         <div class="grid-3col">
                             <div class="form-group">
-                                <label for="rec-model-year" class="form-label">Model Year</label>
-                                <input type="text" id="rec-model-year" class="form-input" placeholder="e.g. 2023" value="2023">
+                                <label for="rec-model-year" class="form-label" dir="rtl">سنة موديل المركبة</label>
+                                <input type="text" id="rec-model-year" class="form-input" placeholder="e.g. 2007" value="2007">
                             </div>
                             <div class="form-group">
-                                <label for="rec-made-on" class="form-label">Made On</label>
-                                <input type="date" id="rec-made-on" class="form-input" value="2026-09-14">
+                                <label for="rec-made-on" class="form-label" dir="rtl">تاريخ صنع الحاجز</label>
+                                <input type="date" id="rec-made-on" class="form-input" value="2026-09-19">
                             </div>
                             <div class="form-group">
-                                <label for="rec-card-issued" class="form-label">Card Issued</label>
-                                <input type="date" id="rec-card-issued" class="form-input" value="2026-09-14">
+                                <label for="rec-card-issued" class="form-label" dir="rtl">تاريخ إصدار البطاقة</label>
+                                <input type="date" id="rec-card-issued" class="form-input" value="2026-09-19">
                             </div>
                         </div>
 
                         <!-- Record ID (Readonly or auto-generated) -->
                         <div class="form-group">
-                            <label for="rec-id" class="form-label">Record ID</label>
+                            <label for="rec-id" class="form-label" dir="rtl">معرّف السجل</label>
                             <div class="input-with-action">
-                                <input type="text" id="rec-id" class="form-input font-mono" value="FH3VnKa9">
+                                <input type="text" id="rec-id" class="form-input font-mono" value="HHH260466">
                                 <button type="button" class="btn btn-secondary btn-icon" id="btn-gen-id" title="Generate New ID">
                                     <i class="fa-solid fa-arrows-rotate"></i>
                                 </button>
@@ -176,13 +176,13 @@
                         <!-- Three Main Action Buttons -->
                         <div class="form-actions-grid">
                             <button type="button" class="btn btn-primary" id="btn-generate-both">
-                                <i class="fa-solid fa-qrcode"></i> Generate QR & Barcode
+                                <i class="fa-solid fa-qrcode"></i> توليد QR والباركود
                             </button>
                             <button type="button" class="btn btn-success" id="btn-save-record">
-                                <i class="fa-solid fa-floppy-disk"></i> Save Record & Generate
+                                <i class="fa-solid fa-floppy-disk"></i> حفظ السجل وتوليد الرمز
                             </button>
                             <button type="button" class="btn btn-danger-outline" id="btn-clear-form">
-                                <i class="fa-solid fa-eraser"></i> Clear Form
+                                <i class="fa-solid fa-eraser"></i> مسح النموذج
                             </button>
                         </div>
 
@@ -190,7 +190,7 @@
                         <div class="disclaimer-box">
                             <i class="fa-solid fa-shield-halved disclaimer-icon"></i>
                             <div class="disclaimer-text">
-                                <strong>Important:</strong> The QR code stores the record URL. The record values are therefore visible to anyone who scans the QR code. This demo does not use a government database or server-side authentication.
+                                <strong>تنبيه:</strong> يحتوي رمز QR على رابط السجل، لذا يمكن لمن يمسحه رؤية البيانات. هذا نموذج تجريبي ولا يتصل بقاعدة بيانات حكومية أو بخدمة تحقق رسمية.
                             </div>
                         </div>
                     </form>
@@ -268,7 +268,7 @@
                     <div class="form-group">
                         <label for="input-lookup-id" class="form-label">Enter Record ID or Barrier No.</label>
                         <div class="input-with-action">
-                            <input type="text" id="input-lookup-id" class="form-input font-mono" placeholder="e.g. FH3VnKa9 or KSA E12...">
+                            <input type="text" id="input-lookup-id" class="form-input font-mono" placeholder="e.g. HHH260466 or KSA E13...">
                             <button class="btn btn-primary" id="btn-do-lookup">
                                 <i class="fa-solid fa-magnifying-glass"></i> Lookup
                             </button>
@@ -404,17 +404,17 @@
                                 <div class="dark-blue-header">
                                     <div class="header-left">
                                         <div class="record-brandline"><span class="record-brand-seal"><i></i><b></b></span> HATTAN REGISTRY</div>
-                                        <div class="sub-heading">INTERNAL RECORDS VIEWER</div>
-                                        <div class="main-heading">Hattan Fleet Registry</div>
+                                        <div class="sub-heading" dir="rtl">سجل داخلي تجريبي</div>
+                                        <div class="main-heading" dir="rtl">سجل هتان للأسطول</div>
                                     </div>
                                     <div class="header-right">
-                                        <div class="arabic-heading">مكتب هتان لسجلات الاسطول</div>
+                                        <div class="arabic-heading">بيانات المركبة</div>
                                     </div>
                                 </div>
 
                                 <!-- Section Header Notice -->
                                 <div class="section-notice-bar">
-                                    Barrier card lookup. Values copied from the stored file.
+                                    <span dir="rtl">بيانات حاجز المركبة المحفوظة محليًا.</span>
                                 </div>
 
                                 <!-- Field Data Table -->
@@ -422,48 +422,48 @@
                                     <table class="records-table">
                                         <tbody>
                                             <tr>
-                                                <td class="field-label">Workshop / maker</td>
-                                                <td class="field-val val-arabic" id="view-workshop">مصنع مقطورات السحب</td>
+                                                <td class="field-label" dir="rtl">الشركة / الجهة المصنعة</td>
+                                                <td class="field-val val-arabic" id="view-workshop">شركة وهج الإبداع المميزة</td>
                                             </tr>
                                             <tr>
-                                                <td class="field-label">Maker code</td>
-                                                <td class="field-val" id="view-maker-code">E12</td>
+                                                <td class="field-label" dir="rtl">رمز الصانع</td>
+                                                <td class="field-val" id="view-maker-code">E13</td>
                                             </tr>
                                             <tr>
-                                                <td class="field-label">Unique barrier no.</td>
-                                                <td class="field-val font-mono" id="view-barrier-no">KSA  E12  S/R/F  RRR  297615</td>
+                                                <td class="field-label" dir="rtl">الرقم المميز للحاجز</td>
+                                                <td class="field-val font-mono" id="view-barrier-no">KSA E13 S/R/F HHH 260466</td>
                                             </tr>
                                             <tr>
-                                                <td class="field-label">Vehicle type</td>
+                                                <td class="field-label" dir="rtl">نوع المركبة</td>
                                                 <td class="field-val val-arabic" id="view-vehicle-type">شاحنة</td>
                                             </tr>
                                             <tr>
-                                                <td class="field-label">Chassis (VIN)</td>
-                                                <td class="field-val font-mono" id="view-vin">RS3NHMAJ6P0735625</td>
+                                                <td class="field-label" dir="rtl">رقم الهيكل للمركبة</td>
+                                                <td class="field-val font-mono" id="view-vin">WDB9340321L164157</td>
                                             </tr>
                                             <tr>
-                                                <td class="field-label">Brand</td>
+                                                <td class="field-label" dir="rtl">ماركة المركبة</td>
                                                 <td class="field-val" id="view-brand">MERCEDES</td>
                                             </tr>
                                             <tr>
-                                                <td class="field-label">Model</td>
-                                                <td class="field-val val-arabic" id="view-model">خلاطه  /  RRR</td>
+                                                <td class="field-label" dir="rtl">اسم طراز المركبة</td>
+                                                <td class="field-val val-arabic" id="view-model">رأس</td>
                                             </tr>
                                             <tr>
-                                                <td class="field-label">Model year</td>
-                                                <td class="field-val" id="view-model-year">2023</td>
+                                                <td class="field-label" dir="rtl">سنة موديل المركبة</td>
+                                                <td class="field-val" id="view-model-year">2007</td>
                                             </tr>
                                             <tr>
-                                                <td class="field-label">Made on</td>
-                                                <td class="field-val" id="view-made-on">14/09/2026</td>
+                                                <td class="field-label" dir="rtl">تاريخ صنع الحاجز</td>
+                                                <td class="field-val" id="view-made-on">19/09/2026</td>
                                             </tr>
                                             <tr>
-                                                <td class="field-label">Card issued</td>
-                                                <td class="field-val" id="view-card-issued">14/09/2026</td>
+                                                <td class="field-label" dir="rtl">تاريخ إصدار البطاقة</td>
+                                                <td class="field-val" id="view-card-issued">19/09/2026</td>
                                             </tr>
                                             <tr>
-                                                <td class="field-label">Record id</td>
-                                                <td class="field-val font-mono" id="view-record-id">FH3VnKa9</td>
+                                                <td class="field-label" dir="rtl">معرّف السجل</td>
+                                                <td class="field-val font-mono" id="view-record-id">HHH260466</td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -472,13 +472,13 @@
                                 <!-- Footer Notice Section -->
                                 <div class="record-footer">
                                     <div class="footer-line">
-                                        Operator: Desk clerk · Hattan Technical Desk
+                                        مشغل السجل: مكتب هتان الفني
                                     </div>
                                     <div class="footer-line">
-                                        Mail: <a href="mailto:desk@hattan-records.example">desk@hattan-records.example</a> · Fax: +966 13 000 000
+                                        بيانات تجريبية محلية · ليست خدمة حكومية
                                     </div>
                                     <div class="footer-line muted">
-                                        DeskSoft Records v2.14 · fictional registry for cargo-barrier cards.
+                                        تحقق من البيانات قبل الاستخدام.
                                     </div>
                                 </div>
 
@@ -497,9 +497,9 @@
     <div id="toast" class="toast"></div>
 
     <!-- Application JS with Cache-Busting -->
-    <script src="js/record-viewer.js?v=4.3"></script>
-    <script src="js/qr-generator.js?v=4.3"></script>
-    <script src="js/barcode.js?v=4.3"></script>
-    <script src="js/app.js?v=4.3"></script>
+    <script src="js/record-viewer.js?v=4.5"></script>
+    <script src="js/qr-generator.js?v=4.5"></script>
+    <script src="js/barcode.js?v=4.5"></script>
+    <script src="js/app.js?v=4.5"></script>
 </body>
 </html>

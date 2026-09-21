@@ -4,17 +4,17 @@
  */
 
 const DEFAULT_RECORD = {
-    workshop: "مصنع مقطورات السحب",
-    makerCode: "E12",
-    barrierNo: "KSA  E12  S/R/F  RRR  297615",
+    workshop: "شركة وهج الإبداع المميزة",
+    makerCode: "E13",
+    barrierNo: "KSA E13 S/R/F HHH 260466",
     vehicleType: "شاحنة",
-    vin: "RS3NHMAJ6P0735625",
+    vin: "WDB9340321L164157",
     brand: "MERCEDES",
-    model: "خلاطه  /  RRR",
-    modelYear: "2023",
-    madeOn: "14/09/2026",
-    cardIssued: "14/09/2026",
-    recordId: "FH3VnKa9"
+    model: "رأس",
+    modelYear: "2007",
+    madeOn: "19/09/2026",
+    cardIssued: "19/09/2026",
+    recordId: "HHH260466"
 };
 
 let currentRecordState = { ...DEFAULT_RECORD };
@@ -23,7 +23,7 @@ let currentRecordState = { ...DEFAULT_RECORD };
  * Format YYYY-MM-DD date string to DD/MM/YYYY
  */
 function formatDateForDisplay(dateStr) {
-    if (!dateStr) return '14/09/2026';
+    if (!dateStr) return '19/09/2026';
     if (dateStr.includes('/')) return dateStr;
     const parts = dateStr.split('-');
     if (parts.length === 3) {
@@ -48,8 +48,8 @@ function generateRandomRecordId() {
  * Get record data from the builder form inputs
  */
 function getRecordFromForm() {
-    const madeOnRaw = document.getElementById('rec-made-on')?.value || '2026-09-14';
-    const cardIssuedRaw = document.getElementById('rec-card-issued')?.value || '2026-09-14';
+    const madeOnRaw = document.getElementById('rec-made-on')?.value || '2026-09-19';
+    const cardIssuedRaw = document.getElementById('rec-card-issued')?.value || '2026-09-19';
 
     return {
         workshop: document.getElementById('rec-workshop')?.value.trim() || DEFAULT_RECORD.workshop,
@@ -82,7 +82,7 @@ function loadRecordToForm(data) {
     
     // Convert DD/MM/YYYY to YYYY-MM-DD for date inputs if needed
     const convertToIso = (dStr) => {
-        if (!dStr) return '2026-09-14';
+        if (!dStr) return '2026-09-19';
         if (dStr.includes('/')) {
             const p = dStr.split('/');
             if (p.length === 3) return `${p[2]}-${p[1]}-${p[0]}`;

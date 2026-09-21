@@ -316,6 +316,7 @@ body {
     color: #1e293b;
     margin-bottom: 0.45rem;
 }
+.form-label[dir="rtl"] { text-align: right; font-family: var(--font-arabic); }
 
 .form-input, .form-select {
     width: 100%;
@@ -913,6 +914,7 @@ input:checked + .slider:before {
     width: 38%;
     font-size: 0.8125rem;
 }
+.records-table .field-label[dir="rtl"] { text-align: right; font-family: var(--font-arabic); }
 
 .records-table .field-val {
     background: #ffffff;

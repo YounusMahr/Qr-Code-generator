@@ -133,7 +133,7 @@ function triggerCodeGeneration() {
         });
     } else {
         renderCustomBarcode({
-            content: record.recordId || 'FH3VnKa9',
+            content: record.recordId || 'HHH260466',
             format: 'CODE128'
         });
     }
