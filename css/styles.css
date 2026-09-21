@@ -1281,6 +1281,36 @@ body {
 .shared-record-mode .record-footer { padding: 1.15rem 1.75rem; background: #dedcd7; border-color: #c4c2bc; color: #555450; }
 .shared-record-mode .record-footer a { color: #2b569a; }
 
+/* Arabic vehicle certificate layout — used by preview and the QR destination. */
+.certificate-header { background: #fff; color: #192323; padding: 1.3rem 1.45rem .95rem; text-align: right; border-top: 5px solid #097b91; }
+.certificate-brand { display: flex; align-items: center; justify-content: flex-end; gap: .5rem; color: #175b63; font-family: var(--font-arabic); font-weight: 800; font-size: .78rem; }
+.certificate-mark { position: relative; width: 31px; height: 31px; background: #f3f8f7; border: 1px solid #d1e0de; border-radius: 4px; overflow: hidden; }
+.certificate-mark i { position: absolute; width: 19px; height: 19px; right: 4px; bottom: 3px; border: 6px solid #087d4a; border-top-color: transparent; border-right-color: transparent; }
+.certificate-mark b { position: absolute; width: 12px; height: 7px; right: 5px; top: 4px; background: #138ca2; }
+.certificate-header h2 { margin: .65rem 0 .25rem; font-family: var(--font-arabic); font-size: 1.52rem; line-height: 1.2; }
+.certificate-header p { margin: 0; font-family: var(--font-arabic); font-weight: 700; font-size: .98rem; line-height: 1.45; }
+.company-band { margin: .85rem 1.1rem 1.2rem; padding: 1rem 1.15rem; border-radius: 10px; color: #fff; background: linear-gradient(135deg, #00833e, #00a33d); text-align: right; box-shadow: 0 5px 14px rgba(0, 115, 50, .18); }
+.company-band strong { display: block; font-family: var(--font-arabic); font-size: 1.25rem; }
+.company-band span { display: inline-block; margin-top: .65rem; padding: .35rem .7rem; border-radius: 7px; background: rgba(255, 255, 255, .92); color: #222; font-family: var(--font-arabic); font-size: .8rem; }
+.company-band b { margin-right: .3rem; direction: ltr; unicode-bidi: embed; }
+.records-table-container { padding: 0 1.1rem 1.25rem; }
+.vehicle-records { display: grid; gap: .88rem; }
+.vehicle-field { text-align: right; }
+.vehicle-field label { display: block; margin: 0 0 .3rem; color: #4e8884; font-family: var(--font-arabic); font-size: 1rem; font-weight: 700; }
+.vehicle-field output { display: block; width: 100%; min-height: 55px; padding: .95rem 1rem; border: 1px solid #e1e1e1; border-radius: 9px; background: #f7f7f7; color: #222; font-size: 1rem; text-align: right; }
+.vehicle-field output.font-mono { direction: ltr; unicode-bidi: embed; text-align: right; font-size: .88rem; letter-spacing: .02em; }
+.vehicle-field--meta { display: none; }
+.certificate-footer { padding: 1.3rem 1.2rem 1.1rem; background: linear-gradient(125deg, #006eae, #008bd0); color: #fff; }
+.footer-contacts { display: grid; gap: .55rem; font-family: var(--font-arabic); font-size: .85rem; }
+.footer-contacts span { display: flex; align-items: center; justify-content: flex-start; gap: .55rem; direction: rtl; }
+.footer-contacts i { display: grid; place-items: center; width: 23px; height: 23px; border-radius: 50%; background: #073560; font-size: .65rem; }
+.certificate-action { width: 100%; margin-top: 1.15rem; border: 0; border-radius: 5px; padding: .72rem; background: linear-gradient(180deg, #173c60, #09233f); color: #fff; font-family: var(--font-arabic); font-size: 1rem; font-weight: 800; }
+.footer-legal { margin-top: 1rem; padding-top: .75rem; border-top: 1px solid rgba(255,255,255,.4); text-align: center; font-family: var(--font-arabic); font-size: .72rem; }
+.shared-record-mode .certificate-header { padding: 1.4rem 1.8rem 1rem; }
+.shared-record-mode .company-band { margin: 1rem 1.8rem 1.35rem; }
+.shared-record-mode .records-table-container { padding: 0 1.8rem 1.5rem; }
+.shared-record-mode .certificate-footer { padding: 1.4rem 1.8rem 1.2rem; }
+
 @media (max-width: 600px) {
     .shared-record-mode .app-main { padding: 0; }
     .shared-record-mode .viewer-page-wrapper { max-width: none; }
@@ -1294,6 +1324,16 @@ body {
     .shared-record-mode .records-table td { padding: .67rem .65rem; }
     .shared-record-mode .records-table .field-label { width: 42%; }
     .shared-record-mode .record-footer { padding: 1rem 1.25rem 1.25rem; font-size: .68rem; }
+    .certificate-header, .shared-record-mode .certificate-header { padding: 1.1rem 1.15rem .85rem; }
+    .certificate-header h2 { font-size: 1.3rem; }
+    .certificate-header p { font-size: .88rem; }
+    .company-band, .shared-record-mode .company-band { margin: .75rem 1rem 1rem; padding: .85rem .9rem; }
+    .company-band strong { font-size: 1.08rem; }
+    .records-table-container, .shared-record-mode .records-table-container { padding: 0 1rem 1.1rem; overflow: visible; }
+    .vehicle-records { gap: .78rem; }
+    .vehicle-field label { font-size: .9rem; }
+    .vehicle-field output { min-height: 49px; padding: .78rem .85rem; font-size: .92rem; }
+    .certificate-footer, .shared-record-mode .certificate-footer { padding: 1.05rem 1rem; }
 }
 
 @media (max-width: 380px) {

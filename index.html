@@ -19,7 +19,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <!-- CSS Styles with Cache-Busting -->
-    <link rel="stylesheet" href="css/styles.css?v=4.5">
+    <link rel="stylesheet" href="css/styles.css?v=4.6">
     
     <!-- QRCode, JsBarcode, and html5-qrcode scripts -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
@@ -392,7 +392,7 @@
                                 <button class="browser-icon"><i class="fa-solid fa-ellipsis-vertical"></i></button>
                             </div>
 
-                            <!-- IMAGE 1 EXACT RECORD CARD HTML -->
+                            <!-- Dynamic QR destination and record preview -->
                             <div class="image1-record-card" id="image1-record-view">
                                 
                                 <!-- Top Red Demo Banner -->
@@ -401,85 +401,41 @@
                                 </div>
 
                                 <!-- Dark Blue Header Box -->
-                                <div class="dark-blue-header">
-                                    <div class="header-left">
-                                        <div class="record-brandline"><span class="record-brand-seal"><i></i><b></b></span> HATTAN REGISTRY</div>
-                                        <div class="sub-heading" dir="rtl">سجل داخلي تجريبي</div>
-                                        <div class="main-heading" dir="rtl">سجل هتان للأسطول</div>
-                                    </div>
-                                    <div class="header-right">
-                                        <div class="arabic-heading">بيانات المركبة</div>
-                                    </div>
+                                <div class="certificate-header" dir="rtl">
+                                    <div class="certificate-brand"><span class="certificate-mark"><i></i><b></b></span> سجل هتان</div>
+                                    <h2>نظام سجلات المركبات</h2>
+                                    <p>بطاقة الرقم المميز لحواجز الشاحنات والمقطورات</p>
                                 </div>
 
                                 <!-- Section Header Notice -->
-                                <div class="section-notice-bar">
-                                    <span dir="rtl">بيانات حاجز المركبة المحفوظة محليًا.</span>
+                                <div class="company-band" dir="rtl">
+                                    <strong id="view-workshop">شركة وهج الإبداع المميزة</strong>
+                                    <span>تاريخ صنع الحاجز <b id="view-made-on">19/09/2026</b></span>
                                 </div>
 
                                 <!-- Field Data Table -->
                                 <div class="records-table-container">
-                                    <table class="records-table">
-                                        <tbody>
-                                            <tr>
-                                                <td class="field-label" dir="rtl">الشركة / الجهة المصنعة</td>
-                                                <td class="field-val val-arabic" id="view-workshop">شركة وهج الإبداع المميزة</td>
-                                            </tr>
-                                            <tr>
-                                                <td class="field-label" dir="rtl">رمز الصانع</td>
-                                                <td class="field-val" id="view-maker-code">E13</td>
-                                            </tr>
-                                            <tr>
-                                                <td class="field-label" dir="rtl">الرقم المميز للحاجز</td>
-                                                <td class="field-val font-mono" id="view-barrier-no">KSA E13 S/R/F HHH 260466</td>
-                                            </tr>
-                                            <tr>
-                                                <td class="field-label" dir="rtl">نوع المركبة</td>
-                                                <td class="field-val val-arabic" id="view-vehicle-type">شاحنة</td>
-                                            </tr>
-                                            <tr>
-                                                <td class="field-label" dir="rtl">رقم الهيكل للمركبة</td>
-                                                <td class="field-val font-mono" id="view-vin">WDB9340321L164157</td>
-                                            </tr>
-                                            <tr>
-                                                <td class="field-label" dir="rtl">ماركة المركبة</td>
-                                                <td class="field-val" id="view-brand">MERCEDES</td>
-                                            </tr>
-                                            <tr>
-                                                <td class="field-label" dir="rtl">اسم طراز المركبة</td>
-                                                <td class="field-val val-arabic" id="view-model">رأس</td>
-                                            </tr>
-                                            <tr>
-                                                <td class="field-label" dir="rtl">سنة موديل المركبة</td>
-                                                <td class="field-val" id="view-model-year">2007</td>
-                                            </tr>
-                                            <tr>
-                                                <td class="field-label" dir="rtl">تاريخ صنع الحاجز</td>
-                                                <td class="field-val" id="view-made-on">19/09/2026</td>
-                                            </tr>
-                                            <tr>
-                                                <td class="field-label" dir="rtl">تاريخ إصدار البطاقة</td>
-                                                <td class="field-val" id="view-card-issued">19/09/2026</td>
-                                            </tr>
-                                            <tr>
-                                                <td class="field-label" dir="rtl">معرّف السجل</td>
-                                                <td class="field-val font-mono" id="view-record-id">HHH260466</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
+                                    <div class="vehicle-records" dir="rtl">
+                                        <div class="vehicle-field"><label>الرقم المميز للحاجز</label><output class="font-mono" id="view-barrier-no">KSA E13 S/R/F HHH 260466</output></div>
+                                        <div class="vehicle-field"><label>نوع المركبة</label><output id="view-vehicle-type">شاحنة</output></div>
+                                        <div class="vehicle-field"><label>رقم الهيكل للمركبة</label><output class="font-mono" id="view-vin">WDB9340321L164157</output></div>
+                                        <div class="vehicle-field"><label>ماركة المركبة</label><output id="view-brand">MERCEDES</output></div>
+                                        <div class="vehicle-field"><label>اسم طراز المركبة</label><output id="view-model">رأس</output></div>
+                                        <div class="vehicle-field"><label>سنة موديل المركبة</label><output id="view-model-year">2007</output></div>
+                                        <div class="vehicle-field vehicle-field--meta"><label>رمز الصانع</label><output id="view-maker-code">E13</output></div>
+                                        <div class="vehicle-field vehicle-field--meta"><label>تاريخ إصدار البطاقة</label><output id="view-card-issued">19/09/2026</output></div>
+                                        <div class="vehicle-field vehicle-field--meta"><label>معرّف السجل</label><output class="font-mono" id="view-record-id">HHH260466</output></div>
+                                    </div>
                                 </div>
 
                                 <!-- Footer Notice Section -->
-                                <div class="record-footer">
-                                    <div class="footer-line">
-                                        مشغل السجل: مكتب هتان الفني
+                                <div class="record-footer certificate-footer" dir="rtl">
+                                    <div class="footer-contacts">
+                                        <span><i class="fa-solid fa-phone"></i> سجل تجريبي محلي</span>
+                                        <span><i class="fa-solid fa-envelope"></i> لا توجد جهة رسمية مرتبطة</span>
                                     </div>
-                                    <div class="footer-line">
-                                        بيانات تجريبية محلية · ليست خدمة حكومية
-                                    </div>
-                                    <div class="footer-line muted">
-                                        تحقق من البيانات قبل الاستخدام.
-                                    </div>
+                                    <button type="button" class="certificate-action">مراجعة بيانات السجل <i class="fa-solid fa-clipboard-check"></i></button>
+                                    <div class="footer-legal">هذه واجهة عرض تجريبية فقط · تحقق من البيانات قبل الاستخدام</div>
                                 </div>
 
                             </div>
@@ -497,9 +453,9 @@
     <div id="toast" class="toast"></div>
 
     <!-- Application JS with Cache-Busting -->
-    <script src="js/record-viewer.js?v=4.5"></script>
-    <script src="js/qr-generator.js?v=4.5"></script>
-    <script src="js/barcode.js?v=4.5"></script>
-    <script src="js/app.js?v=4.5"></script>
+    <script src="js/record-viewer.js?v=4.6"></script>
+    <script src="js/qr-generator.js?v=4.6"></script>
+    <script src="js/barcode.js?v=4.6"></script>
+    <script src="js/app.js?v=4.6"></script>
 </body>
 </html>
