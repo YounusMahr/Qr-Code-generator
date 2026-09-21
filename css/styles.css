@@ -1300,12 +1300,15 @@ body {
 .vehicle-field output { display: block; width: 100%; min-height: 55px; padding: .95rem 1rem; border: 1px solid #e1e1e1; border-radius: 9px; background: #f7f7f7; color: #222; font-size: 1rem; text-align: right; }
 .vehicle-field output.font-mono { direction: ltr; unicode-bidi: embed; text-align: right; font-size: .88rem; letter-spacing: .02em; }
 .vehicle-field--meta { display: none; }
-.certificate-footer { padding: 1.3rem 1.2rem 1.1rem; background: linear-gradient(125deg, #006eae, #008bd0); color: #fff; }
-.footer-contacts { display: grid; gap: .55rem; font-family: var(--font-arabic); font-size: .85rem; }
-.footer-contacts span { display: flex; align-items: center; justify-content: flex-start; gap: .55rem; direction: rtl; }
-.footer-contacts i { display: grid; place-items: center; width: 23px; height: 23px; border-radius: 50%; background: #073560; font-size: .65rem; }
-.certificate-action { width: 100%; margin-top: 1.15rem; border: 0; border-radius: 5px; padding: .72rem; background: linear-gradient(180deg, #173c60, #09233f); color: #fff; font-family: var(--font-arabic); font-size: 1rem; font-weight: 800; }
-.footer-legal { margin-top: 1rem; padding-top: .75rem; border-top: 1px solid rgba(255,255,255,.4); text-align: center; font-family: var(--font-arabic); font-size: .72rem; }
+.certificate-footer { padding: 1.45rem 1.2rem 0; background: linear-gradient(115deg, #006aa8 0%, #0088c4 58%, #0077b5 100%); color: #fff; border-top: 2px solid #06416a; }
+.footer-contacts { display: grid; gap: .65rem; max-width: 310px; margin-inline: auto; font-family: var(--font-arabic); font-size: 1rem; }
+.footer-contacts span { display: flex; align-items: center; justify-content: flex-start; gap: .7rem; direction: rtl; letter-spacing: .045em; }
+.footer-contacts bdi { direction: ltr; unicode-bidi: embed; }
+.footer-contacts i { display: grid; place-items: center; width: 29px; height: 29px; border-radius: 50%; background: #06375e; box-shadow: inset 0 0 0 2px rgba(119, 206, 248, .18); font-size: .78rem; }
+.certificate-action { width: 100%; margin-top: 1.25rem; border: 1px solid #275578; border-radius: 5px; padding: .78rem; background: linear-gradient(180deg, #173e64, #061d37); box-shadow: inset 0 1px rgba(255,255,255,.2); color: #fff; font-family: var(--font-arabic); font-size: 1.05rem; font-weight: 800; }
+.footer-legal { margin: 1.1rem -1.2rem 0; padding: .85rem 1rem; background: #06223e; border-top: 1px solid rgba(116,208,255,.4); text-align: center; font-family: var(--font-arabic); font-size: .73rem; font-weight: 700; }
+.footer-bottom { display: flex; justify-content: center; align-items: center; gap: .65rem; padding: .7rem 0 .8rem; background: #06223e; color: #d7edf9; font-family: var(--font-arabic); font-size: .75rem; }
+.footer-divider { color: #57c8ef; }
 .shared-record-mode .certificate-header { padding: 1.4rem 1.8rem 1rem; }
 .shared-record-mode .company-band { margin: 1rem 1.8rem 1.35rem; }
 .shared-record-mode .records-table-container { padding: 0 1.8rem 1.5rem; }
@@ -1333,7 +1336,9 @@ body {
     .vehicle-records { gap: .78rem; }
     .vehicle-field label { font-size: .9rem; }
     .vehicle-field output { min-height: 49px; padding: .78rem .85rem; font-size: .92rem; }
-    .certificate-footer, .shared-record-mode .certificate-footer { padding: 1.05rem 1rem; }
+    .certificate-footer, .shared-record-mode .certificate-footer { padding: 1.1rem 1rem 0; }
+    .footer-contacts { font-size: .88rem; }
+    .footer-legal { margin-inline: -1rem; }
 }
 
 @media (max-width: 380px) {
