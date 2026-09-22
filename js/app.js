@@ -372,18 +372,25 @@ function renderMobileBarrierCard() {
     if (!documentEl) return;
     const value = (id, fallback = '—') => document.getElementById(id)?.value.trim() || fallback;
     const fields = [
-        ['Manufacturer Name', value('card-maker')], ['Manufacturer Code', value('card-maker-code')],
-        ['Country of Origin', value('card-country')], ['Date of Manufacture', value('card-manufacture-date')],
-        ['Technical References', value('card-technical')], ['Vehicle Model', value('card-model')],
-        ['Vehicle Brand', value('card-brand')], ['Vehicle Model Year', value('card-year')],
-        ['UPD Type', value('card-upd-type')], ['Vehicle Chassis Number (VIN)', value('card-vin')],
-        ['Distinguished Under-Run Number', value('card-barrier')], ['Card Issue Date', value('card-issue-date')]
+        ['Manufacturer’s Name', 'اسم المصنع/الورشة', value('card-maker')],
+        ['Manufacturer Assigned Code', 'رمز المنشأة', value('card-maker-code')],
+        ['Country of Origin', 'بلد المنشأ', value('card-country')],
+        ['Date of Manufacture', 'تاريخ الصنع', value('card-manufacture-date')],
+        ['Technical References', 'المتطلبات الفنية', value('card-technical')],
+        ['Vehicle Model Name', 'اسم طراز المركبة', value('card-model')],
+        ['Vehicle Brand', 'ماركة المركبة', value('card-brand')],
+        ['Vehicle Model Year', 'سنة موديل المركبة', value('card-year')],
+        ['UPD Type (Front, Side, Rear)', 'نوع الحاجز', value('card-upd-type')],
+        ['Vehicle Chassis Number (VIN)', 'رقم هيكل المركبة (VIN)', value('card-vin')],
+        ['Distinguished Under-Run Number', 'الرقم المميز للحاجز', value('card-barrier')],
+        ['Card’s issue date', 'تاريخ إصدار البطاقة', value('card-issue-date')]
     ];
     documentEl.innerHTML = `
-        <header><span>HATTAN REGISTRY</span><h1>Barrier Card</h1><p>Unique Under-run Protection Device Record</p></header>
-        <div class="mobile-card-qr" id="mobile-card-qr"></div>
-        <section>${fields.map(([label, content]) => `<div><b>${escapeHtml(label)}</b><span>${escapeHtml(content)}</span></div>`).join('')}</section>
-        <footer>This is an electronic demo card. Scan the QR code to verify the associated record.</footer>`;
+        <header><div class="mobile-card-qr" id="mobile-card-qr"></div><div><span>بطاقة الرقم المميز للحاجز</span><h1>Unique Under-run Protection Device UPD Card</h1><p>UPD Manufacturer’s Information / معلومات مصنع الحاجز</p></div></header>
+        <section class="mobile-card-maker">${fields.slice(0, 5).map(([english, arabic, content]) => `<div><b>${escapeHtml(english)}</b><span>${escapeHtml(content)}</span><em dir="rtl">${escapeHtml(arabic)}</em></div>`).join('')}</section>
+        <h2>Vehicle (Truck/trailer) Information - بيانات المركبة</h2>
+        <section>${fields.slice(5).map(([english, arabic, content]) => `<div><b>${escapeHtml(english)}</b><span>${escapeHtml(content)}</span><em dir="rtl">${escapeHtml(arabic)}</em></div>`).join('')}</section>
+        <footer>This is an electronic demo card and does not require a stamp or signature.<br><span dir="rtl">هذه بطاقة تجريبية إلكترونية. تحقق من البيانات قبل الاستخدام.</span></footer>`;
     const target = document.getElementById('mobile-card-qr');
     const mainQrCanvas = document.querySelector('#qr-canvas-container canvas');
     if (target && mainQrCanvas) {

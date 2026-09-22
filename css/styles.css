@@ -1353,18 +1353,20 @@ body {
 .barrier-number-grid strong { display: grid; place-items: center; overflow: hidden; background: #f2f2f2; color: #101010; font-family: var(--font-mono); font-size: .72rem; }
 .barrier-card-note { padding: .75rem .35rem 0; font-size: .67rem; line-height: 1.55; }
 .barrier-card-note span { display: block; text-align: right; }
-.barrier-card-mobile-document { position: fixed; left: -10000px; top: 0; width: 740px; padding: 36px; background: #fff; color: #14201e; font-family: var(--font-main); }
-.barrier-card-mobile-document header { padding: 28px; text-align: center; color: #fff; background: linear-gradient(135deg, #075f56, #0b917b); }
-.barrier-card-mobile-document header span { font-size: 14px; font-weight: 800; letter-spacing: .14em; }
-.barrier-card-mobile-document h1 { margin: 10px 0 6px; font-family: var(--font-heading); font-size: 36px; }
-.barrier-card-mobile-document p { margin: 0; font-size: 16px; }
-.mobile-card-qr { display: flex; justify-content: center; padding: 28px 0 18px; }
+.barrier-card-mobile-document { position: fixed; left: -10000px; top: 0; width: 760px; padding: 26px; background: #fff; color: #121212; font-family: var(--font-main); }
+.barrier-card-mobile-document header { display: grid; grid-template-columns: 126px 1fr; align-items: center; gap: 20px; padding: 8px 0 22px; text-align: center; }
+.barrier-card-mobile-document header span { display: block; color: #7b4803; font-family: var(--font-arabic); font-size: 22px; font-weight: 800; }
+.barrier-card-mobile-document h1 { margin: 7px 0 5px; font-family: var(--font-heading); font-size: 20px; }
+.barrier-card-mobile-document header p { margin: 0; font-size: 17px; font-weight: 800; }
+.mobile-card-qr { display: flex; justify-content: center; align-items: center; width: 116px; height: 116px; padding: 6px; border: 1px solid #ddd; }
 .mobile-card-qr img { image-rendering: pixelated; }
-.barrier-card-mobile-document section { display: grid; gap: 10px; }
-.barrier-card-mobile-document section div { display: grid; grid-template-columns: 43% 1fr; border: 1px solid #d5e2de; }
-.barrier-card-mobile-document section b { padding: 14px 16px; background: #edf4f2; color: #31564f; font-size: 15px; }
-.barrier-card-mobile-document section span { padding: 14px 16px; font-size: 16px; overflow-wrap: anywhere; }
-.barrier-card-mobile-document footer { margin-top: 22px; padding: 18px; color: #fff; background: #123d38; text-align: center; font-size: 13px; line-height: 1.5; }
+.barrier-card-mobile-document section { display: grid; gap: 5px; }
+.barrier-card-mobile-document section div { display: grid; grid-template-columns: 29% 1fr 29%; min-height: 58px; }
+.barrier-card-mobile-document section b, .barrier-card-mobile-document section em { display: flex; align-items: center; padding: 10px 11px; background: #a4a4a4; color: #fff; font-size: 13px; font-style: normal; font-weight: 800; line-height: 1.25; }
+.barrier-card-mobile-document section em { justify-content: flex-end; text-align: right; font-family: var(--font-arabic); font-size: 16px; }
+.barrier-card-mobile-document section span { display: flex; align-items: center; justify-content: center; padding: 10px 14px; border: 1px solid #d4d4d4; background: #f1f1f1; text-align: center; font-size: 15px; overflow-wrap: anywhere; }
+.barrier-card-mobile-document h2 { margin: 13px 0 6px; text-align: center; font-size: 16px; }
+.barrier-card-mobile-document footer { margin-top: 14px; padding: 13px; border-top: 1px solid #999; text-align: center; font-size: 12px; line-height: 1.55; }
 .shared-record-mode .certificate-header { padding: 1.4rem 1.8rem 1rem; }
 .shared-record-mode .company-band { margin: 1rem 1.8rem 1.35rem; }
 .shared-record-mode .records-table-container { padding: 0 1.8rem 1.5rem; }
