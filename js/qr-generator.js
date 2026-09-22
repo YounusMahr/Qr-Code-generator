@@ -44,7 +44,7 @@ function renderCustomQRCode(options = {}) {
         height: 250,
         colorDark: darkColor,
         colorLight: lightColor,
-        correctLevel: QRCode.CorrectLevel.Q // Handles the centred link pill while retaining clear modules
+        correctLevel: QRCode.CorrectLevel.Q // Canonical QR used in both generator and PDF card
     });
 
     // Wait for canvas to draw then attach overlay badge pill if enabled

@@ -119,8 +119,9 @@ function triggerCodeGeneration() {
     const content = encodeRecordToUrl(record);
 
     if (activeGenType === 'qr') {
-        const enableBadge = document.getElementById('check-enable-badge')?.checked !== false;
-        const badgeText = getQrLinkLabel(content);
+        // Canonical QR style: plain black/white modules with no label or decoration.
+        const enableBadge = false;
+        const badgeText = '';
         const badgeInput = document.getElementById('input-badge-text');
         if (badgeInput) badgeInput.value = badgeText;
 
@@ -270,6 +271,7 @@ function initFormListeners() {
         document.getElementById(id)?.addEventListener('change', renderBarrierCard);
     });
     document.getElementById('btn-download-card-pdf')?.addEventListener('click', downloadBarrierCardPdf);
+    document.getElementById('btn-download-mobile-pdf')?.addEventListener('click', downloadMobileBarrierCardPdf);
 }
 
 function syncBadgeSettings() {
@@ -309,7 +311,7 @@ function renderBarrierCard() {
         ['Vehicle Model Year', 'سنة موديل المركبة', year],
         ['UPD Type (Front, Side, Rear)', 'نوع الحاجز (أمامي، جانبي، خلفي)', updType],
         ['Vehicle Chassis Number (VIN)', 'رقم هيكل المركبة (VIN)', vin],
-        ['Distinguished Under-Run Number', 'الرقم المميز للحاجز', barrier],
+        ['barrier-grid', 'الرقم المميز للحاجز', barrier],
         ['Card’s issue date', 'تاريخ إصدار البطاقة', issueDate]
     ];
     table.innerHTML = '';
@@ -319,6 +321,26 @@ function renderBarrierCard() {
             section.className = 'card-table-section';
             section.textContent = row[1];
             table.appendChild(section);
+            return;
+        }
+        if (row[0] === 'barrier-grid') {
+            const item = document.createElement('div');
+            item.className = 'card-barrier-grid-row';
+            const left = document.createElement('b');
+            left.textContent = 'Distinguished Under-Run Number:';
+            const grid = document.createElement('div');
+            grid.className = 'barrier-number-grid';
+            const segments = getBarrierSegments(row[2]);
+            segments.forEach((segment, index) => {
+                const cell = document.createElement('span');
+                cell.innerHTML = `<i>${index + 1}</i><strong>${escapeHtml(segment)}</strong>`;
+                grid.appendChild(cell);
+            });
+            const right = document.createElement('b');
+            right.dir = 'rtl';
+            right.textContent = row[1];
+            item.append(left, grid, right);
+            table.appendChild(item);
             return;
         }
         const item = document.createElement('div');
@@ -340,8 +362,39 @@ function renderBarrierCard() {
         qrTarget.appendChild(image);
     } else {
         // Fallback matches the main generator's record URL if the preview has not rendered yet.
-        new QRCode(qrTarget, { text: encodeRecordToUrl(getRecordFromForm()), width: 86, height: 86, colorDark: '#000000', colorLight: '#ffffff', correctLevel: QRCode.CorrectLevel.M });
+        new QRCode(qrTarget, { text: encodeRecordToUrl(getRecordFromForm()), width: 86, height: 86, colorDark: '#000000', colorLight: '#ffffff', correctLevel: QRCode.CorrectLevel.Q });
     }
+    renderMobileBarrierCard();
+}
+
+function renderMobileBarrierCard() {
+    const documentEl = document.getElementById('barrier-card-mobile-document');
+    if (!documentEl) return;
+    const value = (id, fallback = '—') => document.getElementById(id)?.value.trim() || fallback;
+    const fields = [
+        ['Manufacturer Name', value('card-maker')], ['Manufacturer Code', value('card-maker-code')],
+        ['Country of Origin', value('card-country')], ['Date of Manufacture', value('card-manufacture-date')],
+        ['Technical References', value('card-technical')], ['Vehicle Model', value('card-model')],
+        ['Vehicle Brand', value('card-brand')], ['Vehicle Model Year', value('card-year')],
+        ['UPD Type', value('card-upd-type')], ['Vehicle Chassis Number (VIN)', value('card-vin')],
+        ['Distinguished Under-Run Number', value('card-barrier')], ['Card Issue Date', value('card-issue-date')]
+    ];
+    documentEl.innerHTML = `
+        <header><span>HATTAN REGISTRY</span><h1>Barrier Card</h1><p>Unique Under-run Protection Device Record</p></header>
+        <div class="mobile-card-qr" id="mobile-card-qr"></div>
+        <section>${fields.map(([label, content]) => `<div><b>${escapeHtml(label)}</b><span>${escapeHtml(content)}</span></div>`).join('')}</section>
+        <footer>This is an electronic demo card. Scan the QR code to verify the associated record.</footer>`;
+    const target = document.getElementById('mobile-card-qr');
+    const mainQrCanvas = document.querySelector('#qr-canvas-container canvas');
+    if (target && mainQrCanvas) {
+        const image = new Image(); image.src = mainQrCanvas.toDataURL('image/png'); image.width = 116; image.height = 116; target.appendChild(image);
+    }
+}
+
+function getBarrierSegments(barrier) {
+    const words = String(barrier || '').trim().split(/\s+/).filter(Boolean);
+    const chars = words.flatMap(word => word === 'S/R/F' ? [word] : [...word]);
+    return [...chars.slice(0, 16), ...Array(Math.max(0, 16 - chars.length)).fill('—')];
 }
 
 async function downloadBarrierCardPdf() {
@@ -367,6 +420,31 @@ async function downloadBarrierCardPdf() {
     } catch (error) {
         console.error('PDF export failed:', error);
         showToast('Could not create PDF. Please try again.');
+    }
+}
+
+async function downloadMobileBarrierCardPdf() {
+    const card = document.getElementById('barrier-card-mobile-document');
+    if (!card || !window.html2canvas || !window.jspdf) {
+        showToast('PDF export library is not available. Please check your connection.');
+        return;
+    }
+    renderBarrierCard();
+    try {
+        const canvas = await html2canvas(card, { backgroundColor: '#ffffff', scale: 2, useCORS: true });
+        const { jsPDF } = window.jspdf;
+        const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+        const maxWidth = 190;
+        const maxHeight = 277;
+        const scale = Math.min(maxWidth / canvas.width, maxHeight / canvas.height);
+        const width = canvas.width * scale;
+        const height = canvas.height * scale;
+        pdf.addImage(canvas.toDataURL('image/png'), 'PNG', (210 - width) / 2, (297 - height) / 2, width, height);
+        pdf.save('barrier-card-mobile.pdf');
+        showToast('Mobile PDF downloaded.');
+    } catch (error) {
+        console.error('Mobile PDF export failed:', error);
+        showToast('Could not create Mobile PDF. Please try again.');
     }
 }
 

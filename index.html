@@ -19,7 +19,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <!-- CSS Styles with Cache-Busting -->
-    <link rel="stylesheet" href="css/styles.css?v=5.2">
+    <link rel="stylesheet" href="css/styles.css?v=5.5">
     
     <!-- QRCode, JsBarcode, and html5-qrcode scripts -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
@@ -475,15 +475,19 @@
                         <div class="form-group"><label class="form-label" for="card-issue-date">Card issue date</label><input class="form-input" id="card-issue-date" value="21.09.2026"></div>
                     </div>
                     <div class="card-source-note"><i class="fa-solid fa-pen-to-square"></i> Edit any value here. These fields stay in this card only; its QR uses the main QR Generator record.</div>
-                    <button type="button" class="btn btn-primary card-download" id="btn-download-card-pdf"><i class="fa-solid fa-file-arrow-down"></i> Download PDF</button>
+                    <div class="card-export-actions">
+                        <button type="button" class="btn btn-primary card-download" id="btn-download-card-pdf"><i class="fa-solid fa-print"></i> Print PDF (Landscape)</button>
+                        <button type="button" class="btn btn-secondary card-download" id="btn-download-mobile-pdf"><i class="fa-solid fa-mobile-screen-button"></i> Mobile PDF (Portrait)</button>
+                    </div>
                 </aside>
                 <div class="card-preview-wrap">
                     <div class="card-preview-bar"><span>LIVE DOCUMENT PREVIEW</span><span>A4 landscape</span></div>
                     <article id="barrier-card-document" class="barrier-card-document">
-                        <header class="barrier-card-header"><div class="barrier-card-qr" id="card-qr"></div><div class="barrier-card-title"><span>بطاقة الرقم المميز للحاجز</span><strong>Unique Under-run Protection Device UPD Card</strong><b>UPD Manufacturer’s Information / معلومات مصنع الحاجز</b></div><div class="barrier-card-demo">DEMO<br>RECORD</div></header>
+                        <header class="barrier-card-header"><div class="barrier-card-qr" id="card-qr"></div><div class="barrier-card-title"><span>بطاقة الرقم المميز للحاجز</span><strong>Unique Under-run Protection Device UPD Card</strong><b>UPD Manufacturer’s Information / معلومات مصنع الحاجز</b></div></header>
                         <section class="card-table" id="card-table"></section>
                         <footer class="barrier-card-note">This is an electronic demo card. Scan the QR code to view its record. Any changes or modification affect its validity.<br><span dir="rtl">هذه بطاقة تجريبية إلكترونية. امسح رمز QR لعرض السجل وتحقق من البيانات قبل الاستخدام.</span></footer>
                     </article>
+                    <article id="barrier-card-mobile-document" class="barrier-card-mobile-document" aria-hidden="true"></article>
                 </div>
             </div>
         </section>
@@ -494,9 +498,9 @@
     <div id="toast" class="toast"></div>
 
     <!-- Application JS with Cache-Busting -->
-    <script src="js/record-viewer.js?v=5.2"></script>
-    <script src="js/qr-generator.js?v=5.2"></script>
-    <script src="js/barcode.js?v=5.2"></script>
-    <script src="js/app.js?v=5.2"></script>
+    <script src="js/record-viewer.js?v=5.5"></script>
+    <script src="js/qr-generator.js?v=5.5"></script>
+    <script src="js/barcode.js?v=5.5"></script>
+    <script src="js/app.js?v=5.5"></script>
 </body>
 </html>
