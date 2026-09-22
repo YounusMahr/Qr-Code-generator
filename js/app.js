@@ -265,7 +265,7 @@ function initFormListeners() {
     document.getElementById('btn-start-scanner')?.addEventListener('click', startCameraScanner);
     document.getElementById('input-qr-file')?.addEventListener('change', scanQrFromFile);
 
-    ['card-maker', 'card-maker-code', 'card-country', 'card-manufacture-date', 'card-technical', 'card-model', 'card-brand', 'card-year', 'card-upd-type', 'card-vin', 'card-barrier', 'card-issue-date', 'card-qr-content'].forEach(id => {
+    ['card-maker', 'card-maker-code', 'card-country', 'card-manufacture-date', 'card-technical', 'card-model', 'card-brand', 'card-year', 'card-upd-type', 'card-vin', 'card-barrier', 'card-issue-date'].forEach(id => {
         document.getElementById(id)?.addEventListener('input', renderBarrierCard);
         document.getElementById(id)?.addEventListener('change', renderBarrierCard);
     });
@@ -297,7 +297,6 @@ function renderBarrierCard() {
     const vin = value('card-vin');
     const barrier = value('card-barrier');
     const issueDate = value('card-issue-date');
-    const qrContent = value('card-qr-content', 'BARRIER-CARD');
     const rows = [
         ['Manufacturer’s Name', 'اسم المصنع/الورشة', maker],
         ['Manufacturer Assigned Code', 'رمز المنشأة', makerCode],
@@ -331,7 +330,18 @@ function renderBarrierCard() {
         table.appendChild(item);
     });
     qrTarget.innerHTML = '';
-    new QRCode(qrTarget, { text: qrContent, width: 86, height: 86, colorDark: '#000000', colorLight: '#ffffff', correctLevel: QRCode.CorrectLevel.M });
+    const mainQrCanvas = document.querySelector('#qr-canvas-container canvas');
+    if (mainQrCanvas) {
+        const image = new Image();
+        image.src = mainQrCanvas.toDataURL('image/png');
+        image.width = 86;
+        image.height = 86;
+        image.alt = 'Generated record QR code';
+        qrTarget.appendChild(image);
+    } else {
+        // Fallback matches the main generator's record URL if the preview has not rendered yet.
+        new QRCode(qrTarget, { text: encodeRecordToUrl(getRecordFromForm()), width: 86, height: 86, colorDark: '#000000', colorLight: '#ffffff', correctLevel: QRCode.CorrectLevel.M });
+    }
 }
 
 async function downloadBarrierCardPdf() {
@@ -345,8 +355,12 @@ async function downloadBarrierCardPdf() {
         const canvas = await html2canvas(card, { backgroundColor: '#ffffff', scale: 2, useCORS: true });
         const { jsPDF } = window.jspdf;
         const pdf = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' });
-        const pdfHeight = canvas.height / canvas.width * 283;
-        pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 7, 7, 283, pdfHeight);
+        const maxWidth = 283;
+        const maxHeight = 196;
+        const scale = Math.min(maxWidth / canvas.width, maxHeight / canvas.height);
+        const pdfWidth = canvas.width * scale;
+        const pdfHeight = canvas.height * scale;
+        pdf.addImage(canvas.toDataURL('image/png'), 'PNG', (297 - pdfWidth) / 2, (210 - pdfHeight) / 2, pdfWidth, pdfHeight);
         const filename = (document.getElementById('card-barrier')?.value || 'record').replace(/[^a-z0-9]+/gi, '-').replace(/^-|-$/g, '');
         pdf.save(`barrier-card-${filename || 'record'}.pdf`);
         showToast('Barrier card PDF downloaded.');
