@@ -1325,7 +1325,7 @@ body {
 .card-export-actions { display: grid; gap: .6rem; }
 .card-preview-wrap { display: flex; flex-direction: column; align-items: center; overflow: auto; width: 100%; padding-bottom: .6rem; }
 .card-preview-bar { display: flex; justify-content: space-between; padding: .45rem .65rem; color: #66807a; font-size: .63rem; font-weight: 800; letter-spacing: .1em; }
-.barrier-card-document { display: flex; flex-direction: column; width: min(100%, 1056px); min-width: 740px; aspect-ratio: 792 / 612; box-sizing: border-box; overflow: hidden; background: #fff; padding: 1.8% 2.5% 2%; color: #141414; box-shadow: 0 16px 36px rgba(18, 50, 45, .14); }
+.barrier-card-document { display: flex; flex-direction: column; width: min(100%, 1056px); min-width: 740px; aspect-ratio: 792 / 612; box-sizing: border-box; overflow: hidden; background: #fff; padding: 1% 2% 2%; color: #141414; box-shadow: 0 16px 36px rgba(18, 50, 45, .14); }
 .barrier-card-header { flex: 0 0 12%; display: grid; grid-template-columns: 10.5% 1fr; align-items: start; gap: 1.5%; min-height: 0; }
 .barrier-card-qr { width: 100%; aspect-ratio: 1; padding: 3px; border: 1px solid #ddd; background: #fff; }
 .barrier-card-qr canvas, .barrier-card-qr img { display: block; width: 100% !important; height: 100% !important; }
