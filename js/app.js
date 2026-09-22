@@ -412,7 +412,7 @@ async function downloadBarrierCardPdf() {
     }
     renderBarrierCard();
     try {
-        const canvas = await html2canvas(card, { backgroundColor: '#ffffff', scale: 2, useCORS: true });
+        const canvas = await html2canvas(card, { backgroundColor: '#ffffff', scale: 4, useCORS: true });
         const { jsPDF } = window.jspdf;
         // Original supplied design is US Letter landscape (792 × 612 pt).
         const pdf = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'letter' });
@@ -442,7 +442,7 @@ async function downloadMobileBarrierCardPdf() {
     }
     renderBarrierCard();
     try {
-        const canvas = await html2canvas(card, { backgroundColor: '#ffffff', scale: 2, useCORS: true });
+        const canvas = await html2canvas(card, { backgroundColor: '#ffffff', scale: 4, useCORS: true });
         const { jsPDF } = window.jspdf;
         const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
         const maxWidth = 190;

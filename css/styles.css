@@ -1331,16 +1331,16 @@ body {
 .barrier-card-qr canvas, .barrier-card-qr img { display: block; width: 100% !important; height: 100% !important; }
 .barrier-card-qr img { image-rendering: pixelated; border-radius: 0; }
 .barrier-card-title { text-align: center; padding-top: .1%; }
-.barrier-card-title span { display: block; color: #7b4803; font-family: var(--font-arabic); font-size: clamp(.95rem, 1.65vw, 1.45rem); font-weight: 800; }
-.barrier-card-title strong, .barrier-card-title b { display: block; margin-top: .12%; font-size: clamp(.62rem, 1.05vw, .94rem); }
-.barrier-card-title b { font-size: clamp(.6rem, .96vw, .85rem); }
+.barrier-card-title span { display: block; color: #7b4803; font-family: var(--font-arabic); font-size: clamp(1.12rem, 1.9vw, 1.62rem); font-weight: 800; }
+.barrier-card-title strong, .barrier-card-title b { display: block; margin-top: .12%; font-size: clamp(.79rem, 1.22vw, 1.11rem); }
+.barrier-card-title b { font-size: clamp(.77rem, 1.13vw, 1.02rem); }
 .barrier-card-demo { justify-self: end; border: 2px solid #555; padding: .3rem .42rem; color: #b21e1e; font-size: .55rem; font-weight: 800; text-align: center; }
 .card-table { flex: 1 1 auto; min-height: 0; display: grid; grid-template-rows: repeat(5, minmax(0, 1fr)) auto repeat(7, minmax(0, 1fr)); gap: 4px; }
 .card-table-row { display: grid; grid-template-columns: 16% 1fr 16%; min-height: 0; }
-.card-table-row > b { display: flex; align-items: center; padding: .25rem .32rem; background: #a7a7a7; color: #fff; font-size: clamp(.47rem, .72vw, .66rem); line-height: 1.25; }
-.card-table-row > b:last-child { justify-content: flex-end; text-align: right; font-family: var(--font-arabic); font-size: clamp(.6rem, .9vw, .82rem); }
-.card-table-value { display: flex; align-items: center; justify-content: center; padding: .25rem; background: #f1f1f1; border: 1px solid #d8d8d8; text-align: center; font-size: clamp(.55rem, .83vw, .75rem); overflow-wrap: anywhere; }
-.card-table-section { display: flex; align-items: center; justify-content: center; padding: .2% .35%; text-align: center; font-weight: 800; font-size: clamp(.55rem, .88vw, .8rem); }
+.card-table-row > b { display: flex; align-items: center; padding: .25rem .32rem; background: #a7a7a7; color: #fff; font-size: clamp(.64rem, .89vw, .83rem); line-height: 1.25; }
+.card-table-row > b:last-child { justify-content: flex-end; text-align: right; font-family: var(--font-arabic); font-size: clamp(.77rem, 1.07vw, .99rem); }
+.card-table-value { display: flex; align-items: center; justify-content: center; padding: .25rem; background: #f1f1f1; border: 1px solid #d8d8d8; text-align: center; font-size: clamp(.72rem, 1vw, .92rem); overflow-wrap: anywhere; }
+.card-table-section { display: flex; align-items: center; justify-content: center; padding: .2% .35%; text-align: center; font-weight: 800; font-size: clamp(.72rem, 1.05vw, .97rem); }
 .card-barrier-row { min-height: 0; }
 .card-barrier-row .card-table-value { font-family: var(--font-mono); font-weight: 700; letter-spacing: .08em; }
 .card-barrier-grid-row { display: grid; grid-template-columns: 16% 1fr 16%; min-height: 0; }
@@ -1349,9 +1349,9 @@ body {
 .barrier-number-grid { display: grid; grid-template-columns: repeat(16, minmax(0, 1fr)); background: #eee; border: 1px solid #d4d4d4; }
 .barrier-number-grid span { display: grid; grid-template-rows: 45% 55%; min-width: 0; border-right: 2px solid #fff; text-align: center; }
 .barrier-number-grid span:last-child { border-right: 0; }
-.barrier-number-grid i { display: grid; place-items: center; background: #888; color: #fff; font-style: normal; font-size: clamp(.45rem, .72vw, .66rem); }
-.barrier-number-grid strong { display: grid; place-items: center; overflow: hidden; background: #f2f2f2; color: #101010; font-family: var(--font-mono); font-size: clamp(.46rem, .72vw, .66rem); }
-.barrier-card-note { flex: 0 0 6%; padding: .45% .35rem 0; font-size: clamp(.43rem, .62vw, .58rem); line-height: 1.4; }
+.barrier-number-grid i { display: grid; place-items: center; background: #888; color: #fff; font-style: normal; font-size: clamp(.62rem, .89vw, .83rem); }
+.barrier-number-grid strong { display: grid; place-items: center; overflow: hidden; background: #f2f2f2; color: #101010; font-family: var(--font-mono); font-size: clamp(.63rem, .89vw, .83rem); }
+.barrier-card-note { flex: 0 0 6%; padding: .45% .35rem 0; font-size: clamp(.6rem, .79vw, .75rem); line-height: 1.4; }
 .barrier-card-note span { display: block; text-align: right; }
 .barrier-card-mobile-document { position: fixed; left: -10000px; top: 0; width: 760px; padding: 26px; background: #fff; color: #121212; font-family: var(--font-main); }
 .barrier-card-mobile-document header { display: grid; grid-template-columns: 126px 1fr; align-items: center; gap: 20px; padding: 8px 0 22px; text-align: center; }
