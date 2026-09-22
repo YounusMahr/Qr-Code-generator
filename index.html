@@ -19,7 +19,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <!-- CSS Styles with Cache-Busting -->
-    <link rel="stylesheet" href="css/styles.css?v=5.0">
+    <link rel="stylesheet" href="css/styles.css?v=5.1">
     
     <!-- QRCode, JsBarcode, and html5-qrcode scripts -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
@@ -459,11 +459,23 @@
         <section class="tab-content" id="tab-card">
             <div class="container card-builder-layout">
                 <aside class="panel card-controls">
-                    <div class="panel-header"><h2><i class="fa-solid fa-file-lines"></i> Barrier Card</h2><p class="panel-subtitle">A print-ready landscape card based on the active record.</p></div>
-                    <div class="form-group"><label class="form-label" for="card-country">Country of origin</label><input class="form-input" id="card-country" value="Saudi Arabia"></div>
-                    <div class="form-group"><label class="form-label" for="card-technical">Technical reference</label><input class="form-input" id="card-technical" value="Front, side and rear protection device for trucks and trailers"></div>
-                    <div class="form-group"><label class="form-label" for="card-upd-type">UPD type</label><select class="form-input" id="card-upd-type"><option>S/R/F</option><option>Front</option><option>Side</option><option>Rear</option></select></div>
-                    <div class="card-source-note"><i class="fa-solid fa-circle-info"></i> Vehicle fields stay synced with Create Record.</div>
+                    <div class="panel-header"><h2><i class="fa-solid fa-file-lines"></i> Barrier Card</h2><p class="panel-subtitle">A fully separate, editable document. It does not change the QR Generator record.</p></div>
+                    <div class="card-form-grid">
+                        <div class="form-group"><label class="form-label" for="card-maker">Manufacturer name</label><input class="form-input" id="card-maker" value="شركة وهج الإبداع المميزة"></div>
+                        <div class="form-group"><label class="form-label" for="card-maker-code">Manufacturer code</label><input class="form-input" id="card-maker-code" value="E13"></div>
+                        <div class="form-group"><label class="form-label" for="card-country">Country of origin</label><input class="form-input" id="card-country" value="Saudi Arabia"></div>
+                        <div class="form-group"><label class="form-label" for="card-manufacture-date">Date of manufacture</label><input class="form-input" id="card-manufacture-date" value="19/09/2026"></div>
+                        <div class="form-group"><label class="form-label" for="card-technical">Technical reference</label><input class="form-input" id="card-technical" value="Front, side and rear protection device for trucks and trailers"></div>
+                        <div class="form-group"><label class="form-label" for="card-model">Vehicle model</label><input class="form-input" id="card-model" value="رأس"></div>
+                        <div class="form-group"><label class="form-label" for="card-brand">Vehicle brand</label><input class="form-input" id="card-brand" value="MERCEDES"></div>
+                        <div class="form-group"><label class="form-label" for="card-year">Vehicle model year</label><input class="form-input" id="card-year" value="2007"></div>
+                        <div class="form-group"><label class="form-label" for="card-upd-type">UPD type</label><select class="form-input" id="card-upd-type"><option>S/R/F</option><option>Front</option><option>Side</option><option>Rear</option></select></div>
+                        <div class="form-group"><label class="form-label" for="card-vin">Vehicle chassis number (VIN)</label><input class="form-input font-mono" id="card-vin" value="WDB9340321L164157"></div>
+                        <div class="form-group"><label class="form-label" for="card-barrier">Distinguished barrier number</label><input class="form-input font-mono" id="card-barrier" value="KSA E13 S/R/F HHH 260466"></div>
+                        <div class="form-group"><label class="form-label" for="card-issue-date">Card issue date</label><input class="form-input" id="card-issue-date" value="19/09/2026"></div>
+                        <div class="form-group card-qr-control"><label class="form-label" for="card-qr-content">Card QR content (separate)</label><input class="form-input font-mono" id="card-qr-content" value="BARRIER-CARD-E13-260466"></div>
+                    </div>
+                    <div class="card-source-note"><i class="fa-solid fa-pen-to-square"></i> Edit any value here. Changes stay in this card preview only.</div>
                     <button type="button" class="btn btn-primary card-download" id="btn-download-card-pdf"><i class="fa-solid fa-file-arrow-down"></i> Download PDF</button>
                 </aside>
                 <div class="card-preview-wrap">
@@ -483,9 +495,9 @@
     <div id="toast" class="toast"></div>
 
     <!-- Application JS with Cache-Busting -->
-    <script src="js/record-viewer.js?v=5.0"></script>
-    <script src="js/qr-generator.js?v=5.0"></script>
-    <script src="js/barcode.js?v=5.0"></script>
-    <script src="js/app.js?v=5.0"></script>
+    <script src="js/record-viewer.js?v=5.1"></script>
+    <script src="js/qr-generator.js?v=5.1"></script>
+    <script src="js/barcode.js?v=5.1"></script>
+    <script src="js/app.js?v=5.1"></script>
 </body>
 </html>

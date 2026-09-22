@@ -265,7 +265,7 @@ function initFormListeners() {
     document.getElementById('btn-start-scanner')?.addEventListener('click', startCameraScanner);
     document.getElementById('input-qr-file')?.addEventListener('change', scanQrFromFile);
 
-    ['card-country', 'card-technical', 'card-upd-type'].forEach(id => {
+    ['card-maker', 'card-maker-code', 'card-country', 'card-manufacture-date', 'card-technical', 'card-model', 'card-brand', 'card-year', 'card-upd-type', 'card-vin', 'card-barrier', 'card-issue-date', 'card-qr-content'].forEach(id => {
         document.getElementById(id)?.addEventListener('input', renderBarrierCard);
         document.getElementById(id)?.addEventListener('change', renderBarrierCard);
     });
@@ -282,24 +282,36 @@ function renderBarrierCard() {
     const table = document.getElementById('card-table');
     const qrTarget = document.getElementById('card-qr');
     if (!table || !qrTarget) return;
-    const record = getRecordFromForm();
+    const value = (id, fallback = '—') => document.getElementById(id)?.value.trim() || fallback;
+    // All values are intentionally sourced from the Barrier Card editor only.
+    // This template never changes the main QR generator or its record data.
+    const maker = value('card-maker');
+    const makerCode = value('card-maker-code');
     const country = document.getElementById('card-country')?.value.trim() || 'Saudi Arabia';
-    const technical = document.getElementById('card-technical')?.value.trim() || 'Front, side and rear protection device for trucks and trailers';
-    const updType = document.getElementById('card-upd-type')?.value || 'S/R/F';
+    const manufactureDate = value('card-manufacture-date');
+    const technical = value('card-technical');
+    const model = value('card-model');
+    const brand = value('card-brand');
+    const year = value('card-year');
+    const updType = value('card-upd-type');
+    const vin = value('card-vin');
+    const barrier = value('card-barrier');
+    const issueDate = value('card-issue-date');
+    const qrContent = value('card-qr-content', 'BARRIER-CARD');
     const rows = [
-        ['Manufacturer’s Name', 'اسم المصنع/الورشة', record.workshop],
-        ['Manufacturer Assigned Code', 'رمز المنشأة', record.makerCode],
+        ['Manufacturer’s Name', 'اسم المصنع/الورشة', maker],
+        ['Manufacturer Assigned Code', 'رمز المنشأة', makerCode],
         ['Country of Origin', 'بلد المنشأ', country],
-        ['Date of Manufacture', 'تاريخ الصنع', record.madeOn],
+        ['Date of Manufacture', 'تاريخ الصنع', manufactureDate],
         ['Technical References', 'المتطلبات الفنية', technical],
         ['section', 'Vehicle (Truck/trailer) Information - بيانات المركبة'],
-        ['Vehicle Model Name', 'اسم طراز المركبة', record.model],
-        ['Vehicle Brand', 'ماركة المركبة', record.brand],
-        ['Vehicle Model Year', 'سنة موديل المركبة', record.modelYear],
+        ['Vehicle Model Name', 'اسم طراز المركبة', model],
+        ['Vehicle Brand', 'ماركة المركبة', brand],
+        ['Vehicle Model Year', 'سنة موديل المركبة', year],
         ['UPD Type (Front, Side, Rear)', 'نوع الحاجز (أمامي، جانبي، خلفي)', updType],
-        ['Vehicle Chassis Number (VIN)', 'رقم هيكل المركبة (VIN)', record.vin],
-        ['Distinguished Under-Run Number', 'الرقم المميز للحاجز', record.barrierNo],
-        ['Card’s issue date', 'تاريخ إصدار البطاقة', record.cardIssued]
+        ['Vehicle Chassis Number (VIN)', 'رقم هيكل المركبة (VIN)', vin],
+        ['Distinguished Under-Run Number', 'الرقم المميز للحاجز', barrier],
+        ['Card’s issue date', 'تاريخ إصدار البطاقة', issueDate]
     ];
     table.innerHTML = '';
     rows.forEach(row => {
@@ -319,7 +331,7 @@ function renderBarrierCard() {
         table.appendChild(item);
     });
     qrTarget.innerHTML = '';
-    new QRCode(qrTarget, { text: encodeRecordToUrl(record), width: 86, height: 86, colorDark: '#000000', colorLight: '#ffffff', correctLevel: QRCode.CorrectLevel.M });
+    new QRCode(qrTarget, { text: qrContent, width: 86, height: 86, colorDark: '#000000', colorLight: '#ffffff', correctLevel: QRCode.CorrectLevel.M });
 }
 
 async function downloadBarrierCardPdf() {
@@ -335,7 +347,8 @@ async function downloadBarrierCardPdf() {
         const pdf = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' });
         const pdfHeight = canvas.height / canvas.width * 283;
         pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 7, 7, 283, pdfHeight);
-        pdf.save(`barrier-card-${getRecordFromForm().recordId || 'record'}.pdf`);
+        const filename = (document.getElementById('card-barrier')?.value || 'record').replace(/[^a-z0-9]+/gi, '-').replace(/^-|-$/g, '');
+        pdf.save(`barrier-card-${filename || 'record'}.pdf`);
         showToast('Barrier card PDF downloaded.');
     } catch (error) {
         console.error('PDF export failed:', error);

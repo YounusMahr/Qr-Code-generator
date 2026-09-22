@@ -1317,6 +1317,7 @@ body {
 /* Printable barrier-card workspace (original demo template). */
 .card-builder-layout { display: grid; grid-template-columns: 270px minmax(0, 1fr); gap: 1.25rem; align-items: start; }
 .card-controls { position: sticky; top: 92px; padding: 1.25rem; }
+.card-form-grid { max-height: 55vh; padding-right: .2rem; overflow-y: auto; }
 .card-source-note { display: flex; gap: .55rem; padding: .75rem; margin: 1rem 0; border-radius: 10px; background: #f1f7f5; color: #52706a; font-size: .75rem; line-height: 1.45; }
 .card-source-note i { color: #08766c; margin-top: .1rem; }
 .card-download { width: 100%; }
