@@ -12,9 +12,9 @@ function renderCustomQRCode(options = {}) {
 
     // Options extraction
     const content = options.content || window.location.href;
-    const darkColor = options.darkColor || '#111827';
+    const darkColor = options.darkColor || '#000000';
     const lightColor = options.lightColor || '#ffffff';
-    const enableFrame = options.enableFrame !== false;
+    const enableFrame = options.enableFrame === true;
     const enableBadge = options.enableBadge !== false;
     const badgeText = options.badgeText || 'RECORD LINK';
     const badgeIcon = options.badgeIcon || 'fa-globe';
@@ -26,8 +26,10 @@ function renderCustomQRCode(options = {}) {
     if (frameWrapper) {
         if (enableFrame) {
             frameWrapper.classList.add('framed');
+            frameWrapper.classList.remove('simple');
         } else {
             frameWrapper.classList.remove('framed');
+            frameWrapper.classList.add('simple');
         }
     }
 
@@ -50,8 +52,8 @@ function renderCustomQRCode(options = {}) {
         // Look for generated canvas or img
         const canvas = qrDiv.querySelector('canvas');
         if (canvas) {
-            // The centred link pill identifies the destination URL.
-            canvas.style.borderRadius = '12px';
+            // Preserve the classic sharp, black-and-white QR appearance.
+            canvas.style.borderRadius = '0';
 
             if (enableBadge) {
                 // Attach link label
@@ -101,16 +103,18 @@ function downloadQRPNG(filename = 'cognetify-qr-code.png') {
     const badgeEl = document.getElementById('qr-center-badge');
     
     const isFramed = frameWrapper && frameWrapper.classList.contains('framed');
-    const padding = isFramed ? 40 : 0;
+    const isSimple = frameWrapper && frameWrapper.classList.contains('simple');
+    const padding = isFramed ? 40 : (isSimple ? 16 : 0);
     
     tempCanvas.width = canvas.width + (padding * 2);
     tempCanvas.height = canvas.height + (padding * 2);
 
     // Background
-    if (isFramed) {
-        // Draw white rounded rect background
+    if (isFramed || isSimple) {
+        // Keep a clean white quiet zone around the downloadable QR.
         ctx.fillStyle = '#ffffff';
-        roundRect(ctx, 0, 0, tempCanvas.width, tempCanvas.height, 36);
+        if (isFramed) roundRect(ctx, 0, 0, tempCanvas.width, tempCanvas.height, 36);
+        else ctx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
         ctx.fill();
     }
 

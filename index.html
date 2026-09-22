@@ -19,12 +19,14 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <!-- CSS Styles with Cache-Busting -->
-    <link rel="stylesheet" href="css/styles.css?v=4.8">
+    <link rel="stylesheet" href="css/styles.css?v=5.0">
     
     <!-- QRCode, JsBarcode, and html5-qrcode scripts -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
     <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
 
@@ -64,6 +66,10 @@
                 <button class="nav-tab" data-tab="tab-details" id="tab-btn-details">
                     <i class="fa-solid fa-id-card"></i>
                     <span>Record Details</span>
+                </button>
+                <button class="nav-tab" data-tab="tab-card" id="tab-btn-card">
+                    <i class="fa-solid fa-file-pdf"></i>
+                    <span>Barrier Card</span>
                 </button>
             </div>
 
@@ -232,7 +238,7 @@
 
                     <!-- Render Stage -->
                     <div class="preview-stage">
-                        <div class="qr-canvas-frame-outer framed" id="qr-frame-wrapper">
+                        <div class="qr-canvas-frame-outer simple" id="qr-frame-wrapper">
                             <div id="qr-canvas-container"></div>
                             <svg id="barcode-svg-container" style="display:none;"></svg>
                         </div>
@@ -449,15 +455,37 @@
             </div>
         </section>
 
+        <!-- TAB 5: PRINTABLE BARRIER CARD -->
+        <section class="tab-content" id="tab-card">
+            <div class="container card-builder-layout">
+                <aside class="panel card-controls">
+                    <div class="panel-header"><h2><i class="fa-solid fa-file-lines"></i> Barrier Card</h2><p class="panel-subtitle">A print-ready landscape card based on the active record.</p></div>
+                    <div class="form-group"><label class="form-label" for="card-country">Country of origin</label><input class="form-input" id="card-country" value="Saudi Arabia"></div>
+                    <div class="form-group"><label class="form-label" for="card-technical">Technical reference</label><input class="form-input" id="card-technical" value="Front, side and rear protection device for trucks and trailers"></div>
+                    <div class="form-group"><label class="form-label" for="card-upd-type">UPD type</label><select class="form-input" id="card-upd-type"><option>S/R/F</option><option>Front</option><option>Side</option><option>Rear</option></select></div>
+                    <div class="card-source-note"><i class="fa-solid fa-circle-info"></i> Vehicle fields stay synced with Create Record.</div>
+                    <button type="button" class="btn btn-primary card-download" id="btn-download-card-pdf"><i class="fa-solid fa-file-arrow-down"></i> Download PDF</button>
+                </aside>
+                <div class="card-preview-wrap">
+                    <div class="card-preview-bar"><span>LIVE DOCUMENT PREVIEW</span><span>A4 landscape</span></div>
+                    <article id="barrier-card-document" class="barrier-card-document">
+                        <header class="barrier-card-header"><div class="barrier-card-qr" id="card-qr"></div><div class="barrier-card-title"><span>بطاقة الرقم المميز للحاجز</span><strong>Unique Under-run Protection Device UPD Card</strong><b>UPD Manufacturer’s Information / معلومات مصنع الحاجز</b></div><div class="barrier-card-demo">DEMO<br>RECORD</div></header>
+                        <section class="card-table" id="card-table"></section>
+                        <footer class="barrier-card-note">This is an electronic demo card. Scan the QR code to view its record. Any changes or modification affect its validity.<br><span dir="rtl">هذه بطاقة تجريبية إلكترونية. امسح رمز QR لعرض السجل وتحقق من البيانات قبل الاستخدام.</span></footer>
+                    </article>
+                </div>
+            </div>
+        </section>
+
     </main>
 
     <!-- Toast Notification -->
     <div id="toast" class="toast"></div>
 
     <!-- Application JS with Cache-Busting -->
-    <script src="js/record-viewer.js?v=4.8"></script>
-    <script src="js/qr-generator.js?v=4.8"></script>
-    <script src="js/barcode.js?v=4.8"></script>
-    <script src="js/app.js?v=4.8"></script>
+    <script src="js/record-viewer.js?v=5.0"></script>
+    <script src="js/qr-generator.js?v=5.0"></script>
+    <script src="js/barcode.js?v=5.0"></script>
+    <script src="js/app.js?v=5.0"></script>
 </body>
 </html>

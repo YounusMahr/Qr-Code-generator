@@ -60,6 +60,8 @@ function switchTab(tabId) {
     if (tabId === 'tab-saved') {
         renderSavedRecordsTable();
     }
+
+    if (tabId === 'tab-card') renderBarrierCard();
 }
 
 /**
@@ -124,9 +126,9 @@ function triggerCodeGeneration() {
 
         renderCustomQRCode({
             content: content,
-            darkColor: '#111827',
+            darkColor: '#000000',
             lightColor: '#ffffff',
-            enableFrame: true,
+            enableFrame: false,
             enableBadge: enableBadge,
             badgeText: badgeText,
             badgeIcon: 'fa-globe'
@@ -262,12 +264,83 @@ function initFormListeners() {
     // Scanner Buttons
     document.getElementById('btn-start-scanner')?.addEventListener('click', startCameraScanner);
     document.getElementById('input-qr-file')?.addEventListener('change', scanQrFromFile);
+
+    ['card-country', 'card-technical', 'card-upd-type'].forEach(id => {
+        document.getElementById(id)?.addEventListener('input', renderBarrierCard);
+        document.getElementById(id)?.addEventListener('change', renderBarrierCard);
+    });
+    document.getElementById('btn-download-card-pdf')?.addEventListener('click', downloadBarrierCardPdf);
 }
 
 function syncBadgeSettings() {
     const toggle = document.getElementById('check-enable-badge');
     const settings = document.getElementById('badge-settings');
     if (settings && toggle) settings.hidden = !toggle.checked;
+}
+
+function renderBarrierCard() {
+    const table = document.getElementById('card-table');
+    const qrTarget = document.getElementById('card-qr');
+    if (!table || !qrTarget) return;
+    const record = getRecordFromForm();
+    const country = document.getElementById('card-country')?.value.trim() || 'Saudi Arabia';
+    const technical = document.getElementById('card-technical')?.value.trim() || 'Front, side and rear protection device for trucks and trailers';
+    const updType = document.getElementById('card-upd-type')?.value || 'S/R/F';
+    const rows = [
+        ['Manufacturer’s Name', 'اسم المصنع/الورشة', record.workshop],
+        ['Manufacturer Assigned Code', 'رمز المنشأة', record.makerCode],
+        ['Country of Origin', 'بلد المنشأ', country],
+        ['Date of Manufacture', 'تاريخ الصنع', record.madeOn],
+        ['Technical References', 'المتطلبات الفنية', technical],
+        ['section', 'Vehicle (Truck/trailer) Information - بيانات المركبة'],
+        ['Vehicle Model Name', 'اسم طراز المركبة', record.model],
+        ['Vehicle Brand', 'ماركة المركبة', record.brand],
+        ['Vehicle Model Year', 'سنة موديل المركبة', record.modelYear],
+        ['UPD Type (Front, Side, Rear)', 'نوع الحاجز (أمامي، جانبي، خلفي)', updType],
+        ['Vehicle Chassis Number (VIN)', 'رقم هيكل المركبة (VIN)', record.vin],
+        ['Distinguished Under-Run Number', 'الرقم المميز للحاجز', record.barrierNo],
+        ['Card’s issue date', 'تاريخ إصدار البطاقة', record.cardIssued]
+    ];
+    table.innerHTML = '';
+    rows.forEach(row => {
+        if (row[0] === 'section') {
+            const section = document.createElement('div');
+            section.className = 'card-table-section';
+            section.textContent = row[1];
+            table.appendChild(section);
+            return;
+        }
+        const item = document.createElement('div');
+        item.className = row[0] === 'Distinguished Under-Run Number' ? 'card-table-row card-barrier-row' : 'card-table-row';
+        const left = document.createElement('b'); left.textContent = `${row[0]}:`;
+        const value = document.createElement('span'); value.className = 'card-table-value'; value.textContent = row[2] || '—';
+        const right = document.createElement('b'); right.dir = 'rtl'; right.textContent = row[1];
+        item.append(left, value, right);
+        table.appendChild(item);
+    });
+    qrTarget.innerHTML = '';
+    new QRCode(qrTarget, { text: encodeRecordToUrl(record), width: 86, height: 86, colorDark: '#000000', colorLight: '#ffffff', correctLevel: QRCode.CorrectLevel.M });
+}
+
+async function downloadBarrierCardPdf() {
+    const card = document.getElementById('barrier-card-document');
+    if (!card || !window.html2canvas || !window.jspdf) {
+        showToast('PDF export library is not available. Please check your connection.');
+        return;
+    }
+    renderBarrierCard();
+    try {
+        const canvas = await html2canvas(card, { backgroundColor: '#ffffff', scale: 2, useCORS: true });
+        const { jsPDF } = window.jspdf;
+        const pdf = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' });
+        const pdfHeight = canvas.height / canvas.width * 283;
+        pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 7, 7, 283, pdfHeight);
+        pdf.save(`barrier-card-${getRecordFromForm().recordId || 'record'}.pdf`);
+        showToast('Barrier card PDF downloaded.');
+    } catch (error) {
+        console.error('PDF export failed:', error);
+        showToast('Could not create PDF. Please try again.');
+    }
 }
 
 /**

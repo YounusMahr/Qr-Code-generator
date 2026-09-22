@@ -1168,6 +1168,8 @@ body {
 
 .preview-stage { min-height: 360px; background: linear-gradient(135deg, #edf6f3, #f9fbfa); border: 1px solid #cce1da; border-radius: 18px; }
 .qr-canvas-frame-outer.framed { padding: 18px; border-color: #fff; border-radius: 27px; box-shadow: 0 18px 36px rgba(14, 62, 54, .17), inset 0 0 0 1px #d8e6e1; }
+.qr-canvas-frame-outer.simple { padding: 16px; background: #fff; border-radius: 0; box-shadow: none; }
+.qr-canvas-frame-outer.simple #qr-canvas-container canvas { image-rendering: pixelated; }
 .qr-badge-pill-overlay { top: 50%; bottom: auto; background: #113e38; }
 .export-toolbar { gap: .55rem; }
 .export-toolbar .btn { flex: 1 1 150px; }
@@ -1216,6 +1218,7 @@ body {
     .input-with-action .form-input { min-width: 0; }
     .preview-stage { min-height: 300px; padding: 1.3rem; }
     .qr-canvas-frame-outer.framed { padding: 13px; }
+    .qr-canvas-frame-outer.simple { padding: 12px; }
     .qr-badge-pill-overlay { top: 50%; bottom: auto; }
     #qr-canvas-container canvas, #qr-canvas-container img { width: min(250px, 62vw) !important; }
     .qr-badge-pill-overlay { font-size: .7rem; padding: 7px 11px; }
@@ -1310,6 +1313,34 @@ body {
 .footer-legal { margin: .75rem -1.2rem 0; padding: .7rem 1rem .35rem; background: #06223e; border-top: 1px solid rgba(116,208,255,.4); text-align: center; font-family: var(--font-arabic); font-size: .73rem; font-weight: 700; }
 .footer-bottom { display: flex; justify-content: center; align-items: center; gap: .65rem; padding: .7rem 0 .8rem; background: #06223e; color: #d7edf9; font-family: var(--font-arabic); font-size: .75rem; }
 .footer-divider { color: #57c8ef; }
+
+/* Printable barrier-card workspace (original demo template). */
+.card-builder-layout { display: grid; grid-template-columns: 270px minmax(0, 1fr); gap: 1.25rem; align-items: start; }
+.card-controls { position: sticky; top: 92px; padding: 1.25rem; }
+.card-source-note { display: flex; gap: .55rem; padding: .75rem; margin: 1rem 0; border-radius: 10px; background: #f1f7f5; color: #52706a; font-size: .75rem; line-height: 1.45; }
+.card-source-note i { color: #08766c; margin-top: .1rem; }
+.card-download { width: 100%; }
+.card-preview-wrap { overflow: auto; padding-bottom: .6rem; }
+.card-preview-bar { display: flex; justify-content: space-between; padding: .45rem .65rem; color: #66807a; font-size: .63rem; font-weight: 800; letter-spacing: .1em; }
+.barrier-card-document { min-width: 740px; background: #fff; padding: 1.45rem 1.65rem 1.15rem; color: #141414; box-shadow: 0 16px 36px rgba(18, 50, 45, .14); }
+.barrier-card-header { display: grid; grid-template-columns: 100px 1fr 75px; align-items: start; gap: 1rem; min-height: 106px; }
+.barrier-card-qr { width: 94px; height: 94px; padding: 4px; border: 1px solid #ddd; background: #fff; }
+.barrier-card-qr canvas, .barrier-card-qr img { display: block; width: 86px !important; height: 86px !important; }
+.barrier-card-title { text-align: center; padding-top: .3rem; }
+.barrier-card-title span { display: block; color: #7b4803; font-family: var(--font-arabic); font-size: 1.52rem; font-weight: 800; }
+.barrier-card-title strong, .barrier-card-title b { display: block; margin-top: .16rem; font-size: 1rem; }
+.barrier-card-title b { font-size: .95rem; }
+.barrier-card-demo { justify-self: end; border: 2px solid #555; padding: .3rem .42rem; color: #b21e1e; font-size: .55rem; font-weight: 800; text-align: center; }
+.card-table { display: grid; gap: 4px; }
+.card-table-row { display: grid; grid-template-columns: 23% 1fr 23%; min-height: 47px; }
+.card-table-row > b { display: flex; align-items: center; padding: .55rem .5rem; background: #a7a7a7; color: #fff; font-size: .74rem; line-height: 1.25; }
+.card-table-row > b:last-child { justify-content: flex-end; text-align: right; font-family: var(--font-arabic); font-size: .9rem; }
+.card-table-value { display: flex; align-items: center; justify-content: center; padding: .55rem; background: #f1f1f1; border: 1px solid #d8d8d8; text-align: center; font-size: .82rem; overflow-wrap: anywhere; }
+.card-table-section { padding: .45rem; text-align: center; font-weight: 800; font-size: .93rem; }
+.card-barrier-row { min-height: 58px; }
+.card-barrier-row .card-table-value { font-family: var(--font-mono); font-weight: 700; letter-spacing: .08em; }
+.barrier-card-note { padding: .75rem .35rem 0; font-size: .67rem; line-height: 1.55; }
+.barrier-card-note span { display: block; text-align: right; }
 .shared-record-mode .certificate-header { padding: 1.4rem 1.8rem 1rem; }
 .shared-record-mode .company-band { margin: 1rem 1.8rem 1.35rem; }
 .shared-record-mode .records-table-container { padding: 0 1.8rem 1.5rem; }
@@ -1340,6 +1371,11 @@ body {
     .certificate-footer, .shared-record-mode .certificate-footer { padding: 1.1rem 1rem 0; }
     .footer-contacts { font-size: .88rem; }
     .footer-legal { margin-inline: -1rem; }
+}
+
+@media (max-width: 1024px) {
+    .card-builder-layout { grid-template-columns: 1fr; }
+    .card-controls { position: static; }
 }
 
 @media (max-width: 380px) {
