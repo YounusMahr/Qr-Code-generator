@@ -414,13 +414,17 @@ async function downloadBarrierCardPdf() {
     try {
         const canvas = await html2canvas(card, { backgroundColor: '#ffffff', scale: 2, useCORS: true });
         const { jsPDF } = window.jspdf;
-        const pdf = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' });
-        const maxWidth = 283;
-        const maxHeight = 196;
+        // Original supplied design is US Letter landscape (792 × 612 pt).
+        const pdf = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'letter' });
+        const pageWidth = pdf.internal.pageSize.getWidth();
+        const pageHeight = pdf.internal.pageSize.getHeight();
+        const margin = 6;
+        const maxWidth = pageWidth - (margin * 2);
+        const maxHeight = pageHeight - (margin * 2);
         const scale = Math.min(maxWidth / canvas.width, maxHeight / canvas.height);
         const pdfWidth = canvas.width * scale;
         const pdfHeight = canvas.height * scale;
-        pdf.addImage(canvas.toDataURL('image/png'), 'PNG', (297 - pdfWidth) / 2, (210 - pdfHeight) / 2, pdfWidth, pdfHeight);
+        pdf.addImage(canvas.toDataURL('image/png'), 'PNG', (pageWidth - pdfWidth) / 2, (pageHeight - pdfHeight) / 2, pdfWidth, pdfHeight);
         const filename = (document.getElementById('card-barrier')?.value || 'record').replace(/[^a-z0-9]+/gi, '-').replace(/^-|-$/g, '');
         pdf.save(`barrier-card-${filename || 'record'}.pdf`);
         showToast('Barrier card PDF downloaded.');
