@@ -362,7 +362,7 @@ function renderBarrierCard() {
         qrTarget.appendChild(image);
     } else {
         // Fallback matches the main generator's record URL if the preview has not rendered yet.
-        new QRCode(qrTarget, { text: encodeRecordToUrl(getRecordFromForm()), width: 86, height: 86, colorDark: '#000000', colorLight: '#ffffff', correctLevel: QRCode.CorrectLevel.Q });
+        new QRCode(qrTarget, { text: encodeRecordToUrl(getRecordFromForm()), width: 180, height: 180, colorDark: '#000000', colorLight: '#ffffff', correctLevel: QRCode.CorrectLevel.M });
     }
     renderMobileBarrierCard();
 }

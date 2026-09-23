@@ -44,7 +44,7 @@ function renderCustomQRCode(options = {}) {
         height: 250,
         colorDark: darkColor,
         colorLight: lightColor,
-        correctLevel: QRCode.CorrectLevel.Q // Canonical QR used in both generator and PDF card
+        correctLevel: QRCode.CorrectLevel.M // Lower density improves scan reliability for the embedded record URL
     });
 
     // Wait for canvas to draw then attach overlay badge pill if enabled
