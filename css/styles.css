@@ -1330,7 +1330,11 @@ body {
 .barrier-card-qr { box-sizing: border-box; width: 48%; aspect-ratio: 1; margin-left: 16%; padding: 0; border: 0; background: transparent; }
 .barrier-card-qr canvas, .barrier-card-qr img { display: block; width: 100% !important; height: 100% !important; }
 .barrier-card-qr img { image-rendering: pixelated; border-radius: 0; }
-.barrier-card-title { text-align: center; padding-top: .1%; }
+.barrier-card-title {
+    text-align: center;
+    padding-top: .1%;
+    margin-right: 150px;
+}
 .barrier-card-title span { display: block; color: #7b4803; font-family: var(--font-arabic); font-size: clamp(1rem, 1.7vw, 1.48rem); font-weight: 800; }
 .barrier-card-title strong, .barrier-card-title b { display: block; margin-top: .08%; font-size: clamp(.7rem, 1.08vw, .98rem); }
 .barrier-card-title b { font-size: clamp(.68rem, 1vw, .9rem); }
