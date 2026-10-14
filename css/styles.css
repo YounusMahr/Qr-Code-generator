@@ -2432,16 +2432,33 @@ body {
 
 .card-header-arabic {
     text-align: right;
+    direction: rtl;
     font-family: "Cairo", Arial, sans-serif;
 }
 
 .card-header-arabic>strong {
+    display: block;
     font-size: clamp(.65rem, 1vw, .88rem);
     font-weight: 800;
+    text-align: right;
+    width: 100%;
 }
 
 .card-header-arabic>span {
-    flex-direction: row-reverse;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: baseline;
+    gap: .3rem;
+    text-align: right;
+    width: 100%;
+    direction: rtl;
+}
+
+.card-header-arabic>span b {
+    display: inline-block;
+    direction: ltr;
+    unicode-bidi: isolate;
 }
 
 .card-intro {
