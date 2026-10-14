@@ -290,7 +290,7 @@ function initFormListeners() {
     document.getElementById('btn-start-scanner')?.addEventListener('click', startCameraScanner);
     document.getElementById('input-qr-file')?.addEventListener('change', scanQrFromFile);
 
-    ['card-vin', 'card-maker', 'card-maker-code', 'card-country', 'card-manufacture-date', 'card-model', 'card-brand', 'card-year', 'card-upd-type', 'card-barrier', 'card-technical'].forEach(id => {
+    ['card-vin', 'card-maker', 'card-maker-code', 'card-country', 'card-manufacture-date', 'card-issue-date', 'card-model', 'card-brand', 'card-year', 'card-upd-type', 'card-barrier', 'card-technical'].forEach(id => {
         document.getElementById(id)?.addEventListener('input', renderBarrierCard);
         document.getElementById(id)?.addEventListener('change', renderBarrierCard);
     });
@@ -391,6 +391,9 @@ function renderBarrierCard() {
     const qrTarget = document.getElementById('card-qr');
     if (!table || !qrTarget) return;
     const value = (id, fallback = '—') => document.getElementById(id)?.value.trim() || fallback;
+    const cardIssueDate = value('card-issue-date', '13/10/2026');
+    document.getElementById('hdr-card-date-en').textContent = cardIssueDate;
+    document.getElementById('hdr-card-date-ar').textContent = cardIssueDate;
     // All values are intentionally sourced from the Barrier Card editor only.
     // This template never changes the main QR generator or its record data.
     const maker = value('card-maker');
@@ -463,6 +466,7 @@ function renderMobileBarrierCard() {
     const documentEl = document.getElementById('barrier-card-mobile-document');
     if (!documentEl) return;
     const value = (id, fallback = '—') => document.getElementById(id)?.value.trim() || fallback;
+    const cardIssueDate = value('card-issue-date', '13/10/2026');
     const fields = [
         ['Manufacturer’s Name', 'اسم المصنع/الورشة', value('card-maker')],
         ['Manufacturer Assigned Code', 'رمز المنشأة', value('card-maker-code')],
@@ -477,7 +481,7 @@ function renderMobileBarrierCard() {
         ['Technical References', 'المتطلبات الفنية', value('card-technical')]
     ];
     documentEl.innerHTML = `
-        <header><div class="card-header-saso-img" style="width:100%;overflow:hidden;max-height:90px;"><img src="assets/saso-header.png" alt="Saudi Standards - SASO" style="display:block;width:100%;height:90px;object-fit:cover;object-position:center;"></div><div class="mobile-card-meta" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:8px 14px;background:#eaf5f6;border-top:1px solid #d3e8e9;"><div><span>Card Number</span><b>8801004743</b><span>Card Issue Date</span><b>13/10/2026</b></div><div dir="rtl"><span>رقم البطاقة</span><b>8801004743</b><span>تاريخ إصدار البطاقة</span><b>13/10/2026</b></div></div></header>
+        <header><div class="card-header-saso-img" style="width:100%;overflow:hidden;max-height:90px;"><img src="assets/saso-header.png" alt="Saudi Standards - SASO" style="display:block;width:100%;height:90px;object-fit:cover;object-position:center;"></div><div class="mobile-card-meta" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:8px 14px;background:#eaf5f6;border-top:1px solid #d3e8e9;"><div><span>Card Number</span><b>8801004743</b><span>Card Issue Date</span><b>${escapeHtml(cardIssueDate)}</b></div><div dir="rtl"><span>رقم البطاقة</span><b>8801004743</b><span>تاريخ إصدار البطاقة</span><b>${escapeHtml(cardIssueDate)}</b></div></div></header>
         <section class="card-intro"><div class="card-intro-copy"><p>Hattan Registry organizes sample fleet information in a clear, easy-to-review workspace.</p><p dir="rtl">ينظم Hattan Registry معلومات الأسطول التجريبية في مساحة واضحة وسهلة المراجعة.</p></div><div class="card-intro-brand"><img class="card-intro-logo" src="assets/uploaded-registry-symbol.jfif?v=1" alt="Hattan Registry sample mark"></div></section>
         <section class="mobile-card-maker">${fields.slice(0, 5).map(([english, arabic, content]) => `<div><b>${escapeHtml(english)}</b><span>${escapeHtml(content)}</span><em dir="rtl">${escapeHtml(arabic)}</em></div>`).join('')}</section>
         <h2>Vehicle Details · بيانات المركبة (نموذج تجريبي)</h2>
