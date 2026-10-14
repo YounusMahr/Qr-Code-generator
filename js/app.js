@@ -338,8 +338,22 @@ async function handleRecordPictureUpload(event) {
             headers: { 'Content-Type': 'image/jpeg' },
             body: imageBlob
         });
-        const result = await response.json().catch(() => ({}));
-        if (!response.ok) throw new Error(result.error || 'Picture upload failed. Check that the Vercel Blob store is connected.');
+        const responseBody = await response.text();
+        let result = {};
+        try {
+            result = responseBody ? JSON.parse(responseBody) : {};
+        } catch (_) {
+            // Vercel's default 404/500 pages are HTML, so preserve the HTTP status for diagnosis.
+        }
+        if (!response.ok) {
+            const errorMessage = result.error
+                || (response.status === 404
+                    ? 'Vercel did not find /api/record-picture. Deploy the latest project files and confirm the project root includes the api folder.'
+                    : response.status >= 500
+                        ? `Vercel upload function failed (HTTP ${response.status}). Check the deployment function logs and Blob store connection.`
+                        : `Picture upload failed (HTTP ${response.status}).`);
+            throw new Error(errorMessage);
+        }
         if (!isVercelBlobPictureUrl(result.url)) throw new Error('Upload returned an invalid picture link.');
 
         document.getElementById('rec-picture-url').value = result.url;
