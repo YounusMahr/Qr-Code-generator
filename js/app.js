@@ -5,6 +5,7 @@
 let activeGenType = 'qr';
 let html5QrCodeScanner = null;
 let savedRecordsList = [];
+let uploadedRecordPicture = null;
 
 document.addEventListener('DOMContentLoaded', () => {
     initTabNavigation();
@@ -116,6 +117,7 @@ function setGenType(type) {
  */
 function triggerCodeGeneration() {
     const record = getRecordFromForm();
+    persistRecordPicture(record.recordId);
     const content = encodeRecordToUrl(record);
 
     if (activeGenType === 'qr') {
@@ -156,11 +158,23 @@ function getQrLinkLabel(recordUrl) {
  * Form Event Listeners & Action Buttons
  */
 function initFormListeners() {
+    document.getElementById('rec-picture')?.addEventListener('change', handleRecordPictureUpload);
+    document.getElementById('btn-view-record-picture')?.addEventListener('click', () => {
+        const panel = document.getElementById('record-picture-panel');
+        if (!panel) return;
+        panel.hidden = false;
+        document.getElementById('record-picture-image')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    });
+    document.getElementById('btn-hide-record-picture')?.addEventListener('click', () => {
+        const panel = document.getElementById('record-picture-panel');
+        if (panel) panel.hidden = true;
+    });
+
     // 1. Generate QR & Barcode Button
     document.getElementById('btn-generate-both')?.addEventListener('click', () => {
         const record = getRecordFromForm();
-        renderRecordToView(record);
         triggerCodeGeneration();
+        renderRecordToView(record);
         showToast('Generated QR Code & Barcode updated!');
     });
 
@@ -168,8 +182,8 @@ function initFormListeners() {
     document.getElementById('btn-save-record')?.addEventListener('click', () => {
         const record = getRecordFromForm();
         saveRecordToLocalStorage(record);
-        renderRecordToView(record);
         triggerCodeGeneration();
+        renderRecordToView(record);
         showToast(`Record ${record.recordId} saved & QR generated!`);
         switchTab('tab-details');
     });
@@ -187,6 +201,11 @@ function initFormListeners() {
         document.getElementById('rec-made-on').value = '';
         document.getElementById('rec-card-issued').value = '';
         document.getElementById('rec-id').value = generateRandomRecordId();
+        const pictureInput = document.getElementById('rec-picture');
+        if (pictureInput) pictureInput.value = '';
+        uploadedRecordPicture = null;
+        const pictureStatus = document.getElementById('rec-picture-status');
+        if (pictureStatus) pictureStatus.textContent = 'Upload a picture to attach it to this record. It will be available after scanning on this same browser/device.';
         showToast('Form cleared! Enter new record details.');
     });
 
@@ -208,6 +227,7 @@ function initFormListeners() {
     // View Details Button in Preview Column
     document.getElementById('btn-view-details')?.addEventListener('click', () => {
         const rec = getRecordFromForm();
+        persistRecordPicture(rec.recordId);
         renderRecordToView(rec);
         switchTab('tab-details');
     });
@@ -227,14 +247,18 @@ function initFormListeners() {
 
     // Copy Link
     document.getElementById('btn-copy-link')?.addEventListener('click', () => {
-        const recUrl = encodeRecordToUrl(getRecordFromForm());
+        const record = getRecordFromForm();
+        persistRecordPicture(record.recordId);
+        const recUrl = encodeRecordToUrl(record);
         navigator.clipboard.writeText(recUrl).then(() => {
             showToast('Shareable Record URL copied to clipboard!');
         });
     });
 
     document.getElementById('btn-share-details')?.addEventListener('click', () => {
-        const recUrl = encodeRecordToUrl(getRecordFromForm());
+        const record = getRecordFromForm();
+        persistRecordPicture(record.recordId);
+        const recUrl = encodeRecordToUrl(record);
         navigator.clipboard.writeText(recUrl).then(() => {
             showToast('Record URL copied to clipboard!');
         });
@@ -272,6 +296,65 @@ function initFormListeners() {
     });
     document.getElementById('btn-download-card-pdf')?.addEventListener('click', downloadBarrierCardPdf);
     document.getElementById('btn-download-mobile-pdf')?.addEventListener('click', downloadMobileBarrierCardPdf);
+}
+
+function persistRecordPicture(recordId) {
+    if (!uploadedRecordPicture || !recordId) return true;
+    try {
+        localStorage.setItem(getRecordPictureStorageKey(recordId), JSON.stringify(uploadedRecordPicture));
+        return true;
+    } catch (error) {
+        console.warn('Could not save uploaded record picture:', error);
+        return false;
+    }
+}
+
+function handleRecordPictureUpload(event) {
+    const file = event.target.files?.[0];
+    const status = document.getElementById('rec-picture-status');
+    if (!file) return;
+    if (!file.type.startsWith('image/')) {
+        if (status) status.textContent = 'Choose an image file (JPG, PNG, or WebP).';
+        event.target.value = '';
+        return;
+    }
+    if (file.size > 12 * 1024 * 1024) {
+        if (status) status.textContent = 'Image is too large. Please choose a file under 12 MB.';
+        event.target.value = '';
+        return;
+    }
+    if (status) status.textContent = 'Preparing picture…';
+
+    const objectUrl = URL.createObjectURL(file);
+    const image = new Image();
+    image.onload = () => {
+        URL.revokeObjectURL(objectUrl);
+        const maxSide = 1400;
+        const scale = Math.min(1, maxSide / Math.max(image.naturalWidth, image.naturalHeight));
+        const canvas = document.createElement('canvas');
+        canvas.width = Math.max(1, Math.round(image.naturalWidth * scale));
+        canvas.height = Math.max(1, Math.round(image.naturalHeight * scale));
+        canvas.getContext('2d').drawImage(image, 0, 0, canvas.width, canvas.height);
+        uploadedRecordPicture = {
+            name: file.name,
+            dataUrl: canvas.toDataURL('image/jpeg', 0.8)
+        };
+        const record = getRecordFromForm();
+        const saved = persistRecordPicture(record.recordId);
+        if (status) status.textContent = saved
+            ? `${file.name} attached to ${record.recordId}. The QR preview has been refreshed.`
+            : 'Could not save this picture in local browser storage. Free some browser storage and try again.';
+        if (!saved) return;
+        renderRecordToView(record);
+        if (activeGenType === 'qr') triggerCodeGeneration();
+        else setGenType('qr');
+    };
+    image.onerror = () => {
+        URL.revokeObjectURL(objectUrl);
+        uploadedRecordPicture = null;
+        if (status) status.textContent = 'The selected picture could not be opened. Please try another image.';
+    };
+    image.src = objectUrl;
 }
 
 function syncBadgeSettings() {

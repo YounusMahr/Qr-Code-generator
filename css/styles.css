@@ -904,6 +904,59 @@ input:checked+.slider:before {
     flex: 1;
 }
 
+.picture-upload-group .form-help {
+    display: block;
+    margin-top: .4rem;
+    color: #64748b;
+    font-size: .78rem;
+    line-height: 1.45;
+}
+
+.image1-record-card .record-picture-section {
+    margin: .25rem 1.1rem 1rem;
+    padding: .8rem;
+    border: 1px solid #d9e5e5;
+    border-radius: 8px;
+    background: #f8fbfb;
+}
+
+.record-picture-section[hidden],
+.record-picture-panel[hidden] {
+    display: none !important;
+}
+
+.record-picture-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: .75rem;
+}
+
+.record-picture-name {
+    min-width: 0;
+    overflow-wrap: anywhere;
+    color: #334155;
+    font-size: .9rem;
+}
+
+.record-picture-panel {
+    display: grid;
+    justify-items: center;
+    gap: .75rem;
+    margin-top: .8rem;
+    padding-top: .8rem;
+    border-top: 1px solid #d9e5e5;
+}
+
+.record-picture-panel img {
+    display: block;
+    width: 100%;
+    max-height: 72vh;
+    object-fit: contain;
+    border-radius: 5px;
+    background: #fff;
+}
+
 .records-table {
     width: 100%;
     border-collapse: collapse;

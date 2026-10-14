@@ -193,6 +193,12 @@
                             </div>
                         </div>
 
+                        <div class="form-group picture-upload-group">
+                            <label for="rec-picture" class="form-label">Side Barrier Picture</label>
+                            <input type="file" id="rec-picture" class="form-input" accept="image/*">
+                            <small id="rec-picture-status" class="form-help">Upload a picture to attach it to this record. It will be available after scanning on this same browser/device.</small>
+                        </div>
+
                         <!-- Three Main Action Buttons -->
                         <div class="form-actions-grid">
                             <button type="button" class="btn btn-primary" id="btn-generate-both">
@@ -468,6 +474,19 @@
                                     </div>
                                 </div>
 
+                                <section id="record-picture-section" class="record-picture-section" hidden>
+                                    <div class="record-picture-actions">
+                                        <span id="record-picture-name" class="record-picture-name"></span>
+                                        <button type="button" class="btn btn-secondary btn-sm" id="btn-view-record-picture">
+                                            <i class="fa-regular fa-eye"></i> View Picture · عرض الصورة
+                                        </button>
+                                    </div>
+                                    <div id="record-picture-panel" class="record-picture-panel" hidden>
+                                        <img id="record-picture-image" alt="Uploaded record picture">
+                                        <button type="button" class="btn btn-secondary btn-sm" id="btn-hide-record-picture">Close picture</button>
+                                    </div>
+                                </section>
+
                                 <!-- Footer Notice Section -->
                                 <div class="record-footer certificate-footer" dir="rtl">
                                     <div class="footer-contacts">
@@ -618,10 +637,10 @@
     <div id="toast" class="toast"></div>
 
     <!-- Application JS with Cache-Busting -->
-    <script src="js/record-viewer.js?v=6.4"></script>
+    <script src="js/record-viewer.js?v=6.5"></script>
     <script src="js/qr-generator.js?v=6.4"></script>
     <script src="js/barcode.js?v=6.4"></script>
-    <script src="js/app.js?v=7.9"></script>
+    <script src="js/app.js?v=8.0"></script>
 </body>
 
 </html>

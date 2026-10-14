@@ -19,6 +19,10 @@ const DEFAULT_RECORD = {
 
 let currentRecordState = { ...DEFAULT_RECORD };
 
+function getRecordPictureStorageKey(recordId) {
+    return `hattan_record_picture_${encodeURIComponent(String(recordId || ''))}`;
+}
+
 /**
  * Format YYYY-MM-DD date string to DD/MM/YYYY
  */
@@ -125,6 +129,29 @@ function renderRecordToView(data = currentRecordState) {
     if (viewMadeOn) viewMadeOn.textContent = data.madeOn;
     if (viewCardIssued) viewCardIssued.textContent = data.cardIssued;
     if (viewRecordId) viewRecordId.textContent = data.recordId;
+
+    const pictureSection = document.getElementById('record-picture-section');
+    const pictureName = document.getElementById('record-picture-name');
+    const pictureImage = document.getElementById('record-picture-image');
+    const picturePanel = document.getElementById('record-picture-panel');
+    if (pictureSection && pictureImage) {
+        let attachment = null;
+        try {
+            attachment = JSON.parse(localStorage.getItem(getRecordPictureStorageKey(data.recordId)) || 'null');
+        } catch (error) {
+            console.warn('Could not read the saved record picture:', error);
+        }
+        pictureSection.hidden = !attachment?.dataUrl;
+        picturePanel.hidden = true;
+        if (attachment?.dataUrl) {
+            pictureImage.src = attachment.dataUrl;
+            pictureImage.alt = attachment.name || `Picture for record ${data.recordId}`;
+            if (pictureName) pictureName.textContent = attachment.name || 'Uploaded picture';
+        } else {
+            pictureImage.removeAttribute('src');
+            if (pictureName) pictureName.textContent = '';
+        }
+    }
 }
 
 /**
