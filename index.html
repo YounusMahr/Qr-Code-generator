@@ -196,7 +196,9 @@
                         <div class="form-group picture-upload-group">
                             <label for="rec-picture" class="form-label">Side Barrier Picture</label>
                             <input type="file" id="rec-picture" class="form-input" accept="image/*">
-                            <small id="rec-picture-status" class="form-help">Upload a picture to attach it to this record. It will be available after scanning on this same browser/device.</small>
+                            <small id="rec-picture-status" class="form-help">Upload stores the picture online. Anyone with this QR code can view it; Vercel Blob storage usage may incur charges.</small>
+                            <input type="hidden" id="rec-picture-url">
+                            <input type="hidden" id="rec-picture-name">
                         </div>
 
                         <!-- Three Main Action Buttons -->
@@ -637,10 +639,10 @@
     <div id="toast" class="toast"></div>
 
     <!-- Application JS with Cache-Busting -->
-    <script src="js/record-viewer.js?v=6.5"></script>
+    <script src="js/record-viewer.js?v=6.6"></script>
     <script src="js/qr-generator.js?v=6.4"></script>
     <script src="js/barcode.js?v=6.4"></script>
-    <script src="js/app.js?v=8.0"></script>
+    <script src="js/app.js?v=8.1"></script>
 </body>
 
 </html>

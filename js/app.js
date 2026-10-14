@@ -5,7 +5,6 @@
 let activeGenType = 'qr';
 let html5QrCodeScanner = null;
 let savedRecordsList = [];
-let uploadedRecordPicture = null;
 
 document.addEventListener('DOMContentLoaded', () => {
     initTabNavigation();
@@ -117,7 +116,6 @@ function setGenType(type) {
  */
 function triggerCodeGeneration() {
     const record = getRecordFromForm();
-    persistRecordPicture(record.recordId);
     const content = encodeRecordToUrl(record);
 
     if (activeGenType === 'qr') {
@@ -203,9 +201,10 @@ function initFormListeners() {
         document.getElementById('rec-id').value = generateRandomRecordId();
         const pictureInput = document.getElementById('rec-picture');
         if (pictureInput) pictureInput.value = '';
-        uploadedRecordPicture = null;
+        document.getElementById('rec-picture-url').value = '';
+        document.getElementById('rec-picture-name').value = '';
         const pictureStatus = document.getElementById('rec-picture-status');
-        if (pictureStatus) pictureStatus.textContent = 'Upload a picture to attach it to this record. It will be available after scanning on this same browser/device.';
+        if (pictureStatus) pictureStatus.textContent = 'Upload a picture to attach it to this record. It will be viewable by anyone with the QR code.';
         showToast('Form cleared! Enter new record details.');
     });
 
@@ -227,7 +226,6 @@ function initFormListeners() {
     // View Details Button in Preview Column
     document.getElementById('btn-view-details')?.addEventListener('click', () => {
         const rec = getRecordFromForm();
-        persistRecordPicture(rec.recordId);
         renderRecordToView(rec);
         switchTab('tab-details');
     });
@@ -248,7 +246,6 @@ function initFormListeners() {
     // Copy Link
     document.getElementById('btn-copy-link')?.addEventListener('click', () => {
         const record = getRecordFromForm();
-        persistRecordPicture(record.recordId);
         const recUrl = encodeRecordToUrl(record);
         navigator.clipboard.writeText(recUrl).then(() => {
             showToast('Shareable Record URL copied to clipboard!');
@@ -257,7 +254,6 @@ function initFormListeners() {
 
     document.getElementById('btn-share-details')?.addEventListener('click', () => {
         const record = getRecordFromForm();
-        persistRecordPicture(record.recordId);
         const recUrl = encodeRecordToUrl(record);
         navigator.clipboard.writeText(recUrl).then(() => {
             showToast('Record URL copied to clipboard!');
@@ -298,18 +294,7 @@ function initFormListeners() {
     document.getElementById('btn-download-mobile-pdf')?.addEventListener('click', downloadMobileBarrierCardPdf);
 }
 
-function persistRecordPicture(recordId) {
-    if (!uploadedRecordPicture || !recordId) return true;
-    try {
-        localStorage.setItem(getRecordPictureStorageKey(recordId), JSON.stringify(uploadedRecordPicture));
-        return true;
-    } catch (error) {
-        console.warn('Could not save uploaded record picture:', error);
-        return false;
-    }
-}
-
-function handleRecordPictureUpload(event) {
+async function handleRecordPictureUpload(event) {
     const file = event.target.files?.[0];
     const status = document.getElementById('rec-picture-status');
     if (!file) return;
@@ -318,43 +303,59 @@ function handleRecordPictureUpload(event) {
         event.target.value = '';
         return;
     }
-    if (file.size > 12 * 1024 * 1024) {
-        if (status) status.textContent = 'Image is too large. Please choose a file under 12 MB.';
+    if (file.size > 15 * 1024 * 1024) {
+        if (status) status.textContent = 'Image is too large. Please choose a file under 15 MB.';
         event.target.value = '';
         return;
     }
-    if (status) status.textContent = 'Preparing picture…';
+    if (status) status.textContent = 'Preparing and uploading picture…';
 
     const objectUrl = URL.createObjectURL(file);
-    const image = new Image();
-    image.onload = () => {
-        URL.revokeObjectURL(objectUrl);
+    try {
+        const image = await new Promise((resolve, reject) => {
+            const loadedImage = new Image();
+            loadedImage.onload = () => resolve(loadedImage);
+            loadedImage.onerror = reject;
+            loadedImage.src = objectUrl;
+        });
         const maxSide = 1400;
         const scale = Math.min(1, maxSide / Math.max(image.naturalWidth, image.naturalHeight));
         const canvas = document.createElement('canvas');
         canvas.width = Math.max(1, Math.round(image.naturalWidth * scale));
         canvas.height = Math.max(1, Math.round(image.naturalHeight * scale));
-        canvas.getContext('2d').drawImage(image, 0, 0, canvas.width, canvas.height);
-        uploadedRecordPicture = {
-            name: file.name,
-            dataUrl: canvas.toDataURL('image/jpeg', 0.8)
-        };
+        const context = canvas.getContext('2d');
+        if (!context) throw new Error('Could not prepare the selected image.');
+        context.fillStyle = '#ffffff';
+        context.fillRect(0, 0, canvas.width, canvas.height);
+        context.drawImage(image, 0, 0, canvas.width, canvas.height);
+        const imageBlob = await new Promise((resolve, reject) => {
+            canvas.toBlob(blob => blob ? resolve(blob) : reject(new Error('Could not prepare the selected image.')), 'image/jpeg', 0.8);
+        });
+        if (imageBlob.size > 4 * 1024 * 1024) throw new Error('The optimized picture is still over 4 MB. Please use a smaller image.');
+
+        const response = await fetch('/api/record-picture', {
+            method: 'POST',
+            headers: { 'Content-Type': 'image/jpeg' },
+            body: imageBlob
+        });
+        const result = await response.json().catch(() => ({}));
+        if (!response.ok) throw new Error(result.error || 'Picture upload failed. Check that the Vercel Blob store is connected.');
+        if (!isVercelBlobPictureUrl(result.url)) throw new Error('Upload returned an invalid picture link.');
+
+        document.getElementById('rec-picture-url').value = result.url;
+        document.getElementById('rec-picture-name').value = file.name.slice(0, 120);
         const record = getRecordFromForm();
-        const saved = persistRecordPicture(record.recordId);
-        if (status) status.textContent = saved
-            ? `${file.name} attached to ${record.recordId}. The QR preview has been refreshed.`
-            : 'Could not save this picture in local browser storage. Free some browser storage and try again.';
-        if (!saved) return;
+        if (status) status.textContent = `${file.name} uploaded. The QR preview has been refreshed. Anyone with the QR can view this picture.`;
         renderRecordToView(record);
         if (activeGenType === 'qr') triggerCodeGeneration();
         else setGenType('qr');
-    };
-    image.onerror = () => {
+    } catch (error) {
+        console.error('Could not upload record picture:', error);
+        if (status) status.textContent = error.message || 'Could not upload this picture. Please try again.';
+        event.target.value = '';
+    } finally {
         URL.revokeObjectURL(objectUrl);
-        uploadedRecordPicture = null;
-        if (status) status.textContent = 'The selected picture could not be opened. Please try another image.';
-    };
-    image.src = objectUrl;
+    }
 }
 
 function syncBadgeSettings() {

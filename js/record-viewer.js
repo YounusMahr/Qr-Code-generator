@@ -14,14 +14,12 @@ const DEFAULT_RECORD = {
     modelYear: "2007",
     madeOn: "19/09/2026",
     cardIssued: "19/09/2026",
-    recordId: "HHH260466"
+    recordId: "HHH260466",
+    pictureUrl: "",
+    pictureName: ""
 };
 
 let currentRecordState = { ...DEFAULT_RECORD };
-
-function getRecordPictureStorageKey(recordId) {
-    return `hattan_record_picture_${encodeURIComponent(String(recordId || ''))}`;
-}
 
 /**
  * Format YYYY-MM-DD date string to DD/MM/YYYY
@@ -66,7 +64,9 @@ function getRecordFromForm() {
         modelYear: document.getElementById('rec-model-year')?.value.trim() || DEFAULT_RECORD.modelYear,
         madeOn: formatDateForDisplay(madeOnRaw),
         cardIssued: formatDateForDisplay(cardIssuedRaw),
-        recordId: document.getElementById('rec-id')?.value.trim() || DEFAULT_RECORD.recordId
+        recordId: document.getElementById('rec-id')?.value.trim() || DEFAULT_RECORD.recordId,
+        pictureUrl: document.getElementById('rec-picture-url')?.value.trim() || '',
+        pictureName: document.getElementById('rec-picture-name')?.value.trim() || ''
     };
 }
 
@@ -97,6 +97,8 @@ function loadRecordToForm(data) {
     if (document.getElementById('rec-made-on')) document.getElementById('rec-made-on').value = convertToIso(data.madeOn);
     if (document.getElementById('rec-card-issued')) document.getElementById('rec-card-issued').value = convertToIso(data.cardIssued);
     if (document.getElementById('rec-id')) document.getElementById('rec-id').value = data.recordId || generateRandomRecordId();
+    if (document.getElementById('rec-picture-url')) document.getElementById('rec-picture-url').value = data.pictureUrl || '';
+    if (document.getElementById('rec-picture-name')) document.getElementById('rec-picture-name').value = data.pictureName || '';
 }
 
 /**
@@ -135,22 +137,26 @@ function renderRecordToView(data = currentRecordState) {
     const pictureImage = document.getElementById('record-picture-image');
     const picturePanel = document.getElementById('record-picture-panel');
     if (pictureSection && pictureImage) {
-        let attachment = null;
-        try {
-            attachment = JSON.parse(localStorage.getItem(getRecordPictureStorageKey(data.recordId)) || 'null');
-        } catch (error) {
-            console.warn('Could not read the saved record picture:', error);
-        }
-        pictureSection.hidden = !attachment?.dataUrl;
+        const pictureUrl = isVercelBlobPictureUrl(data.pictureUrl) ? data.pictureUrl : '';
+        pictureSection.hidden = !pictureUrl;
         picturePanel.hidden = true;
-        if (attachment?.dataUrl) {
-            pictureImage.src = attachment.dataUrl;
-            pictureImage.alt = attachment.name || `Picture for record ${data.recordId}`;
-            if (pictureName) pictureName.textContent = attachment.name || 'Uploaded picture';
+        if (pictureUrl) {
+            pictureImage.src = pictureUrl;
+            pictureImage.alt = data.pictureName || `Picture for record ${data.recordId}`;
+            if (pictureName) pictureName.textContent = data.pictureName || 'Uploaded picture';
         } else {
             pictureImage.removeAttribute('src');
             if (pictureName) pictureName.textContent = '';
         }
+    }
+}
+
+function isVercelBlobPictureUrl(value) {
+    try {
+        const url = new URL(value);
+        return url.protocol === 'https:' && url.hostname.endsWith('.public.blob.vercel-storage.com');
+    } catch (_) {
+        return false;
     }
 }
 
@@ -162,7 +168,8 @@ function encodeRecordToUrl(record = currentRecordState) {
     const compactRecord = [
         record.workshop, record.makerCode, record.barrierNo, record.vehicleType,
         record.vin, record.brand, record.model, record.modelYear,
-        record.madeOn, record.cardIssued, record.recordId
+        record.madeOn, record.cardIssued, record.recordId,
+        record.pictureUrl || '', record.pictureName || ''
     ];
     const bytes = new TextEncoder().encode(JSON.stringify(compactRecord));
     const b64 = btoa(String.fromCharCode(...bytes))
@@ -189,8 +196,8 @@ function decodeRecordFromUrl() {
             const bytes = Uint8Array.from(binary, char => char.charCodeAt(0));
             const parsed = JSON.parse(new TextDecoder().decode(bytes));
             if (Array.isArray(parsed)) {
-                const [workshop, makerCode, barrierNo, vehicleType, vin, brand, model, modelYear, madeOn, cardIssued, recordId] = parsed;
-                return { workshop, makerCode, barrierNo, vehicleType, vin, brand, model, modelYear, madeOn, cardIssued, recordId };
+                const [workshop, makerCode, barrierNo, vehicleType, vin, brand, model, modelYear, madeOn, cardIssued, recordId, pictureUrl = '', pictureName = ''] = parsed;
+                return { workshop, makerCode, barrierNo, vehicleType, vin, brand, model, modelYear, madeOn, cardIssued, recordId, pictureUrl, pictureName };
             }
             return parsed;
         }
