@@ -3,14 +3,7 @@ import { put } from '@vercel/blob';
 
 const MAX_UPLOAD_BYTES = 4 * 1024 * 1024;
 
-export default async function handler(request) {
-    if (request.method !== 'POST') {
-        return Response.json({ error: 'Only POST is supported.' }, {
-            status: 405,
-            headers: { Allow: 'POST' }
-        });
-    }
-
+export async function POST(request) {
     const origin = request.headers.get('origin');
     const requestHost = request.headers.get('host');
     if (origin && requestHost) {
@@ -63,4 +56,11 @@ export default async function handler(request) {
         console.error('Vercel Blob upload failed:', error?.message || 'Unknown upload error');
         return Response.json({ error: 'Picture upload failed. Check the Vercel Blob connection and try again.' }, { status: 502 });
     }
+}
+
+export function GET() {
+    return Response.json({ error: 'Only POST is supported.' }, {
+        status: 405,
+        headers: { Allow: 'POST' }
+    });
 }
