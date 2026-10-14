@@ -13,13 +13,13 @@
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@700&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&family=Tajawal:wght@500;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@700&family=Cairo:wght@400;600;700&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&family=Tajawal:wght@500;700;800&display=swap" rel="stylesheet">
     
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <!-- CSS Styles with Cache-Busting -->
-    <link rel="stylesheet" href="css/styles.css?v=6.9">
+      <link rel="stylesheet" href="css/styles.css?v=9.3">
     
     <!-- QRCode, JsBarcode, and html5-qrcode scripts -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
@@ -461,31 +461,66 @@
                 <aside class="panel card-controls">
                     <div class="panel-header"><h2><i class="fa-solid fa-file-lines"></i> Barrier Card</h2><p class="panel-subtitle">A fully separate, editable document. It does not change the QR Generator record.</p></div>
                     <div class="card-form-grid">
-                        <div class="form-group"><label class="form-label" for="card-maker">Manufacturer name</label><input class="form-input" id="card-maker" value="مصنع مقطورات السحب"></div>
-                        <div class="form-group"><label class="form-label" for="card-maker-code">Manufacturer code</label><input class="form-input" id="card-maker-code" value="E35"></div>
-                        <div class="form-group"><label class="form-label" for="card-country">Country of origin</label><input class="form-input" id="card-country" value="السعودية"></div>
-                        <div class="form-group"><label class="form-label" for="card-manufacture-date">Date of manufacture</label><input class="form-input" id="card-manufacture-date" value="21.09.2026"></div>
-                        <div class="form-group"><label class="form-label" for="card-technical">Technical reference</label><input class="form-input" id="card-technical" value="اللائحة الفنية للحواجز الأمامية والخلفية والجانبية للشاحنات والمقطورات"></div>
-                        <div class="form-group"><label class="form-label" for="card-model">Vehicle model</label><input class="form-input" id="card-model" value="MMM / رأس"></div>
-                        <div class="form-group"><label class="form-label" for="card-brand">Vehicle brand</label><input class="form-input" id="card-brand" value="MERCEDES"></div>
-                        <div class="form-group"><label class="form-label" for="card-year">Vehicle model year</label><input class="form-input" id="card-year" value="2016"></div>
-                        <div class="form-group"><label class="form-label" for="card-upd-type">UPD type</label><select class="form-input" id="card-upd-type"><option>S/R/F</option><option>Front</option><option>Side</option><option>Rear</option></select></div>
-                        <div class="form-group"><label class="form-label" for="card-vin">Vehicle chassis number (VIN)</label><input class="form-input font-mono" id="card-vin" value="WDB96340310017495"></div>
-                        <div class="form-group"><label class="form-label" for="card-barrier">Distinguished barrier number</label><input class="form-input font-mono" id="card-barrier" value="KSA E35 S/R/F MMM 266376"></div>
-                        <div class="form-group"><label class="form-label" for="card-issue-date">Card issue date</label><input class="form-input" id="card-issue-date" value="21.09.2026"></div>
+                        <div class="form-group"><label class="form-label" for="card-vin">Vehicle chassis number (VIN)</label><input class="form-input font-mono" id="card-vin" value="WMA06XZZ1LP135687"></div>
+                        <div class="form-group"><label class="form-label" for="card-maker">Manufacturer name</label><input class="form-input" id="card-maker" value="مصنع المحاور والمقطورات"></div>
+                        <div class="form-group"><label class="form-label" for="card-maker-code">Manufacturer code</label><input class="form-input" id="card-maker-code" value=""></div>
+                        <div class="form-group"><label class="form-label" for="card-country">Country of origin</label><input class="form-input" id="card-country" value="Saudi Arabia / المملكة العربية السعودية"></div>
+                        <div class="form-group"><label class="form-label" for="card-manufacture-date">Date of manufacture</label><input class="form-input" id="card-manufacture-date" value="13/10/2026"></div>
+                        <div class="form-group"><label class="form-label" for="card-model">Vehicle model</label><input class="form-input" id="card-model" value="UPD for Truck Tractor / حواجز الحماية لرأس شاحنة"></div>
+                        <div class="form-group"><label class="form-label" for="card-brand">Vehicle brand</label><input class="form-input" id="card-brand" value="MAN / MAN"></div>
+                        <div class="form-group"><label class="form-label" for="card-year">Vehicle model year</label><input class="form-input" id="card-year" value="2020"></div>
+                        <div class="form-group"><label class="form-label" for="card-upd-type">UPD type</label><select class="form-input" id="card-upd-type"><option>S/R/F</option><option>Front</option><option selected>Side</option><option>Rear</option></select></div>
+                        <div class="form-group"><label class="form-label" for="card-barrier">Distinguished Under-Run Number</label><input class="form-input font-mono" id="card-barrier" value="KSASMMM264147"></div>
+                        <div class="form-group"><label class="form-label" for="card-technical">Technical reference</label><input class="form-input" id="card-technical" value="Technical Regulation for Front, Rear, and Side Barriers for Trucks and Trailers / اللائحة الفنية للحواجز الأمامية والخلفية والجانبية للشاحنات والمقطورات"></div>
                     </div>
                     <div class="card-source-note"><i class="fa-solid fa-pen-to-square"></i> Edit any value here. These fields stay in this card only; its QR uses the main QR Generator record.</div>
                     <div class="card-export-actions">
-                        <button type="button" class="btn btn-primary card-download" id="btn-download-card-pdf"><i class="fa-solid fa-print"></i> Print PDF (Landscape)</button>
+                        <button type="button" class="btn btn-primary card-download" id="btn-download-card-pdf"><i class="fa-solid fa-print"></i> Print PDF (A4)</button>
                         <button type="button" class="btn btn-secondary card-download" id="btn-download-mobile-pdf"><i class="fa-solid fa-mobile-screen-button"></i> Mobile PDF (Portrait)</button>
                     </div>
                 </aside>
                 <div class="card-preview-wrap">
-                    <div class="card-preview-bar"><span>LIVE DOCUMENT PREVIEW</span><span>Letter landscape</span></div>
+                    <div class="card-preview-bar"><span>LIVE DOCUMENT PREVIEW</span><span>A4 portrait</span></div>
                     <article id="barrier-card-document" class="barrier-card-document">
-                        <header class="barrier-card-header"><div class="barrier-card-qr" id="card-qr"></div><div class="barrier-card-title"><span>بطاقة الرقم المميز للحاجز</span><strong>Unique Under-run Protection Device UPD Card</strong><b>UPD Manufacturer’s Information / معلومات مصنع الحاجز</b></div></header>
+                        <header class="barrier-card-header">
+                            <!-- Left: English title + card info -->
+                            <div class="card-header-side card-header-english">
+                                <strong>Unique Under-run Protection Device (UPD) Card</strong>
+                                <span>Card Number: <b id="hdr-card-num-en">8801004743</b></span>
+                                <span>Card Issue Date: <b id="hdr-card-date-en">13/10/2026</b></span>
+                            </div>
+                            <!-- Center: spacing column (bg image covers full header) -->
+                            <div class="card-header-center"></div>
+                            <!-- Right: Arabic title + card info -->
+                            <div class="card-header-side card-header-arabic" dir="rtl">
+                                <strong>بطاقة الرقم المميز للحاجز</strong>
+                                <span>رقم البطاقة: <b id="hdr-card-num-ar">8801004743</b></span>
+                                <span>تاريخ إصدار البطاقة: <b id="hdr-card-date-ar">13/10/2026</b></span>
+                            </div>
+                        </header>
+                        <section class="card-intro">
+                            <div class="card-intro-copy">
+                                <p>SASO certifies that the Unique Under-run Protection Device (UPD) Card is granted for the device detailed below.</p>
+                                <p dir="rtl">تشهد الهيئة السعودية للمواصفات والمقاييس والجودة بأنه تم منح بطاقة الرقم المميز للحاجز الموضحة ببياناتها أدناه.</p>
+                            </div>
+                            <div class="card-intro-brand"><img class="card-intro-logo" src="assets/uploaded-registry-symbol.jfif?v=1" alt="Hattan Registry mark"></div>
+                        </section>
+                        <div class="card-vin-strip"><div class="vin-number-grid" id="card-vin-grid" aria-label="Vehicle chassis number"></div><div class="card-vin-label"><span dir="rtl">رقم هيكل المركبة (VIN)</span><span>Vehicle Chassis Number (VIN)</span></div></div>
                         <section class="card-table" id="card-table"></section>
-                        <footer class="barrier-card-note">This is an electronic demo card. Scan the QR code to view its record. Any changes or modification affect its validity.<br><span dir="rtl">هذه بطاقة تجريبية إلكترونية. امسح رمز QR لعرض السجل وتحقق من البيانات قبل الاستخدام.</span></footer>
+                        <div class="card-verification-area">
+                            <p>This card was issued electronically and does not require a stamp or signature. To verify the card and its details, you can scan the QR code.</p>
+                            <div class="barrier-card-qr" id="card-qr"></div>
+                            <p dir="rtl">هذه البطاقة صدرت إلكترونياً ولا تحتاج إلى ختم وتوقيع، وللتحقق من صحة البطاقة وتفاصيلها يمكنكم مسح الـ QR Code.</p>
+                        </div>
+                        <footer class="barrier-card-footer">
+                            <div class="barrier-card-notice">Any changes or modification on this card will affect its validity.&nbsp;&nbsp;<span dir="rtl">أي كشط أو تغيير في هذه البطاقة يلغيها.</span><br><span style="font-size:.85em;opacity:.85;">تخضع هذه الشهادة خلال مدة سريانها للأنظمة واللوائح ذات العلاقة في المملكة العربية السعودية وأي تعليمات أو تعديلات تصدرها الهيئة.</span></div>
+                            <div class="barrier-card-footer-band">
+                                <div><strong>Kingdom of Saudi Arabia</strong><small>المملكة العربية السعودية</small></div>
+                                <div><span>P.O.Box 3437 Riyadh 11471</span><small>ص.ب 3437 الرياض 11471</small></div>
+                                <div><span>T 8001160000 &nbsp;|&nbsp; F 0114520086</span><small>www.saso.gov.sa</small></div>
+                                <div dir="rtl"><span>info@saso.gov.sa</span><small>الهيئة السعودية للمواصفات والمقاييس والجودة</small></div>
+                            </div>
+                        </footer>
                     </article>
                     <article id="barrier-card-mobile-document" class="barrier-card-mobile-document" aria-hidden="true"></article>
                 </div>
@@ -501,6 +536,6 @@
     <script src="js/record-viewer.js?v=6.4"></script>
     <script src="js/qr-generator.js?v=6.4"></script>
     <script src="js/barcode.js?v=6.4"></script>
-    <script src="js/app.js?v=6.4"></script>
+    <script src="js/app.js?v=7.8"></script>
 </body>
 </html>

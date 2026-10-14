@@ -266,7 +266,7 @@ function initFormListeners() {
     document.getElementById('btn-start-scanner')?.addEventListener('click', startCameraScanner);
     document.getElementById('input-qr-file')?.addEventListener('change', scanQrFromFile);
 
-    ['card-maker', 'card-maker-code', 'card-country', 'card-manufacture-date', 'card-technical', 'card-model', 'card-brand', 'card-year', 'card-upd-type', 'card-vin', 'card-barrier', 'card-issue-date'].forEach(id => {
+    ['card-vin', 'card-maker', 'card-maker-code', 'card-country', 'card-manufacture-date', 'card-model', 'card-brand', 'card-year', 'card-upd-type', 'card-barrier', 'card-technical'].forEach(id => {
         document.getElementById(id)?.addEventListener('input', renderBarrierCard);
         document.getElementById(id)?.addEventListener('change', renderBarrierCard);
     });
@@ -298,57 +298,45 @@ function renderBarrierCard() {
     const updType = value('card-upd-type');
     const vin = value('card-vin');
     const barrier = value('card-barrier');
-    const issueDate = value('card-issue-date');
+    const vinGrid = document.getElementById('card-vin-grid');
+    if (vinGrid) {
+        vinGrid.innerHTML = '';
+        const characters = [...vin.replace(/\s+/g, '')];
+        vinGrid.style.gridTemplateColumns = `repeat(${Math.max(characters.length, 1)}, minmax(0, 1fr))`;
+        characters.forEach(character => {
+            const cell = document.createElement('span');
+            cell.textContent = character;
+            vinGrid.appendChild(cell);
+        });
+    }
     const rows = [
         ['Manufacturer’s Name', 'اسم المصنع/الورشة', maker],
         ['Manufacturer Assigned Code', 'رمز المنشأة', makerCode],
         ['Country of Origin', 'بلد المنشأ', country],
         ['Date of Manufacture', 'تاريخ الصنع', manufactureDate],
-        ['Technical References', 'المتطلبات الفنية', technical],
-        ['section', 'Vehicle (Truck/trailer) Information - بيانات المركبة'],
         ['Vehicle Model Name', 'اسم طراز المركبة', model],
         ['Vehicle Brand', 'ماركة المركبة', brand],
         ['Vehicle Model Year', 'سنة موديل المركبة', year],
         ['UPD Type (Front, Side, Rear)', 'نوع الحاجز (أمامي، جانبي، خلفي)', updType],
-        ['Vehicle Chassis Number (VIN)', 'رقم هيكل المركبة (VIN)', vin],
-        ['barrier-grid', 'الرقم المميز للحاجز', barrier],
-        ['Card’s issue date', 'تاريخ إصدار البطاقة', issueDate]
+        ['Sample Reference', 'مرجع تجريبي', barrier],
+        ['Technical References', 'المتطلبات الفنية', technical]
     ];
     table.innerHTML = '';
     rows.forEach(row => {
-        if (row[0] === 'section') {
-            const section = document.createElement('div');
-            section.className = 'card-table-section';
-            section.textContent = row[1];
-            table.appendChild(section);
-            return;
-        }
-        if (row[0] === 'barrier-grid') {
-            const item = document.createElement('div');
-            item.className = 'card-barrier-grid-row';
-            const left = document.createElement('b');
-            left.textContent = 'Distinguished Under-Run Number:';
-            const grid = document.createElement('div');
-            grid.className = 'barrier-number-grid';
-            const segments = getBarrierSegments(row[2]);
-            segments.forEach((segment, index) => {
-                const cell = document.createElement('span');
-                cell.innerHTML = `<i>${index + 1}</i><strong>${escapeHtml(segment)}</strong>`;
-                grid.appendChild(cell);
-            });
-            const right = document.createElement('b');
-            right.dir = 'rtl';
-            right.textContent = row[1];
-            item.append(left, grid, right);
-            table.appendChild(item);
-            return;
-        }
         const item = document.createElement('div');
-        item.className = row[0] === 'Distinguished Under-Run Number' ? 'card-table-row card-barrier-row' : 'card-table-row';
-        const left = document.createElement('b'); left.textContent = `${row[0]}:`;
-        const value = document.createElement('span'); value.className = 'card-table-value'; value.textContent = row[2] || '—';
-        const right = document.createElement('b'); right.dir = 'rtl'; right.textContent = row[1];
-        item.append(left, value, right);
+        item.className = 'card-field';
+        const fieldValue = document.createElement('span');
+        fieldValue.className = 'card-field-value';
+        fieldValue.textContent = row[2] || '—';
+        const labels = document.createElement('div');
+        labels.className = 'card-field-labels';
+        const english = document.createElement('span');
+        english.textContent = row[0];
+        const arabic = document.createElement('bdi');
+        arabic.dir = 'rtl';
+        arabic.textContent = row[1];
+        labels.append(english, arabic);
+        item.append(fieldValue, labels);
         table.appendChild(item);
     });
     qrTarget.innerHTML = '';
@@ -356,8 +344,6 @@ function renderBarrierCard() {
     if (mainQrCanvas) {
         const image = new Image();
         image.src = mainQrCanvas.toDataURL('image/png');
-        image.width = 86;
-        image.height = 86;
         image.alt = 'Generated record QR code';
         qrTarget.appendChild(image);
     } else {
@@ -376,32 +362,28 @@ function renderMobileBarrierCard() {
         ['Manufacturer Assigned Code', 'رمز المنشأة', value('card-maker-code')],
         ['Country of Origin', 'بلد المنشأ', value('card-country')],
         ['Date of Manufacture', 'تاريخ الصنع', value('card-manufacture-date')],
-        ['Technical References', 'المتطلبات الفنية', value('card-technical')],
         ['Vehicle Model Name', 'اسم طراز المركبة', value('card-model')],
         ['Vehicle Brand', 'ماركة المركبة', value('card-brand')],
         ['Vehicle Model Year', 'سنة موديل المركبة', value('card-year')],
         ['UPD Type (Front, Side, Rear)', 'نوع الحاجز', value('card-upd-type')],
         ['Vehicle Chassis Number (VIN)', 'رقم هيكل المركبة (VIN)', value('card-vin')],
-        ['Distinguished Under-Run Number', 'الرقم المميز للحاجز', value('card-barrier')],
-        ['Card’s issue date', 'تاريخ إصدار البطاقة', value('card-issue-date')]
+        ['Sample Reference', 'مرجع تجريبي', value('card-barrier')],
+        ['Technical References', 'المتطلبات الفنية', value('card-technical')]
     ];
     documentEl.innerHTML = `
-        <header><div class="mobile-card-qr" id="mobile-card-qr"></div><div><span>بطاقة الرقم المميز للحاجز</span><h1>Unique Under-run Protection Device UPD Card</h1><p>UPD Manufacturer’s Information / معلومات مصنع الحاجز</p></div></header>
+        <header><div class="card-header-saso-img" style="width:100%;overflow:hidden;max-height:90px;"><img src="assets/saso-header.jpg" alt="Saudi Standards - SASO" style="display:block;width:100%;height:90px;object-fit:cover;object-position:center;"></div><div class="mobile-card-meta" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:8px 14px;background:#eaf5f6;border-top:1px solid #d3e8e9;"><div><span>Card Number</span><b>DEMO-0001</b><span>Card Issue Date</span><b>14/10/2026</b></div><div dir="rtl"><span>رقم البطاقة</span><b>DEMO-0001</b><span>تاريخ إصدار البطاقة</span><b>14/10/2026</b></div></div></header>
+        <section class="card-intro"><div class="card-intro-copy"><p>Hattan Registry organizes sample fleet information in a clear, easy-to-review workspace.</p><p dir="rtl">ينظم Hattan Registry معلومات الأسطول التجريبية في مساحة واضحة وسهلة المراجعة.</p></div><div class="card-intro-brand"><img class="card-intro-logo" src="assets/uploaded-registry-symbol.jfif?v=1" alt="Hattan Registry sample mark"></div></section>
         <section class="mobile-card-maker">${fields.slice(0, 5).map(([english, arabic, content]) => `<div><b>${escapeHtml(english)}</b><span>${escapeHtml(content)}</span><em dir="rtl">${escapeHtml(arabic)}</em></div>`).join('')}</section>
-        <h2>Vehicle (Truck/trailer) Information - بيانات المركبة</h2>
+        <h2>Vehicle Details · بيانات المركبة (نموذج تجريبي)</h2>
         <section>${fields.slice(5).map(([english, arabic, content]) => `<div><b>${escapeHtml(english)}</b><span>${escapeHtml(content)}</span><em dir="rtl">${escapeHtml(arabic)}</em></div>`).join('')}</section>
-        <footer>This is an electronic demo card and does not require a stamp or signature.<br><span dir="rtl">هذه بطاقة تجريبية إلكترونية. تحقق من البيانات قبل الاستخدام.</span></footer>`;
+        <div class="mobile-card-verification"><p>This Hattan Registry sample links to its demo record. Scan the QR to view the sample details.</p><div class="mobile-card-qr" id="mobile-card-qr"></div><p dir="rtl">هذا نموذج تجريبي من Hattan Registry. امسح رمز QR لعرض بيانات النموذج.</p></div>
+        <div class="mobile-card-notice">DEMO WORKSPACE · This sample is not an official certificate or government record.<br><span dir="rtl">مساحة تجريبية · هذا النموذج ليس شهادة رسمية أو سجلاً حكومياً.</span></div>
+        <div class="mobile-card-footer-band"><div><strong>Hattan<span>Registry</span></strong><small>Demo workspace</small></div><div><span>Sample record</span><small>Editable vehicle details</small></div><div><span>QR-linked preview</span><small>Opens this demo record</small></div><div dir="rtl"><span>معاينة تجريبية</span><small>بيانات قابلة للتعديل</small></div></div>`;
     const target = document.getElementById('mobile-card-qr');
     const mainQrCanvas = document.querySelector('#qr-canvas-container canvas');
     if (target && mainQrCanvas) {
         const image = new Image(); image.src = mainQrCanvas.toDataURL('image/png'); image.width = 116; image.height = 116; target.appendChild(image);
     }
-}
-
-function getBarrierSegments(barrier) {
-    const words = String(barrier || '').trim().split(/\s+/).filter(Boolean);
-    const chars = words.flatMap(word => word === 'S/R/F' ? [word] : [...word]);
-    return [...chars.slice(0, 16), ...Array(Math.max(0, 16 - chars.length)).fill('—')];
 }
 
 async function downloadBarrierCardPdf() {
@@ -412,13 +394,14 @@ async function downloadBarrierCardPdf() {
     }
     renderBarrierCard();
     try {
+        if (document.fonts) await document.fonts.ready;
         const canvas = await html2canvas(card, { backgroundColor: '#ffffff', scale: 4, useCORS: true });
         const { jsPDF } = window.jspdf;
-        // Original supplied design is US Letter landscape (792 × 612 pt).
-        const pdf = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'letter' });
+        // A4 portrait document with print-safe margins.
+        const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
         const pageWidth = pdf.internal.pageSize.getWidth();
         const pageHeight = pdf.internal.pageSize.getHeight();
-        const margin = 6;
+        const margin = 5;
         const maxWidth = pageWidth - (margin * 2);
         const maxHeight = pageHeight - (margin * 2);
         const scale = Math.min(maxWidth / canvas.width, maxHeight / canvas.height);
@@ -442,6 +425,7 @@ async function downloadMobileBarrierCardPdf() {
     }
     renderBarrierCard();
     try {
+        if (document.fonts) await document.fonts.ready;
         const canvas = await html2canvas(card, { backgroundColor: '#ffffff', scale: 4, useCORS: true });
         const { jsPDF } = window.jspdf;
         const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
