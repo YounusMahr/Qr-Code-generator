@@ -16,7 +16,11 @@ const DEFAULT_RECORD = {
     cardIssued: "19/09/2026",
     recordId: "HHH260466",
     pictureUrl: "",
-    pictureName: ""
+    pictureName: "",
+    picture2Url: "",
+    picture2Name: "",
+    picture3Url: "",
+    picture3Name: ""
 };
 
 let currentRecordState = { ...DEFAULT_RECORD };
@@ -66,7 +70,11 @@ function getRecordFromForm() {
         cardIssued: formatDateForDisplay(cardIssuedRaw),
         recordId: document.getElementById('rec-id')?.value.trim() || DEFAULT_RECORD.recordId,
         pictureUrl: document.getElementById('rec-picture-url')?.value.trim() || '',
-        pictureName: document.getElementById('rec-picture-name')?.value.trim() || ''
+        pictureName: document.getElementById('rec-picture-name')?.value.trim() || '',
+        picture2Url: document.getElementById('rec-picture-url-2')?.value.trim() || '',
+        picture2Name: document.getElementById('rec-picture-name-2')?.value.trim() || '',
+        picture3Url: document.getElementById('rec-picture-url-3')?.value.trim() || '',
+        picture3Name: document.getElementById('rec-picture-name-3')?.value.trim() || ''
     };
 }
 
@@ -99,6 +107,10 @@ function loadRecordToForm(data) {
     if (document.getElementById('rec-id')) document.getElementById('rec-id').value = data.recordId || generateRandomRecordId();
     if (document.getElementById('rec-picture-url')) document.getElementById('rec-picture-url').value = data.pictureUrl || '';
     if (document.getElementById('rec-picture-name')) document.getElementById('rec-picture-name').value = data.pictureName || '';
+    if (document.getElementById('rec-picture-url-2')) document.getElementById('rec-picture-url-2').value = data.picture2Url || '';
+    if (document.getElementById('rec-picture-name-2')) document.getElementById('rec-picture-name-2').value = data.picture2Name || '';
+    if (document.getElementById('rec-picture-url-3')) document.getElementById('rec-picture-url-3').value = data.picture3Url || '';
+    if (document.getElementById('rec-picture-name-3')) document.getElementById('rec-picture-name-3').value = data.picture3Name || '';
 }
 
 /**
@@ -132,23 +144,65 @@ function renderRecordToView(data = currentRecordState) {
     if (viewCardIssued) viewCardIssued.textContent = data.cardIssued;
     if (viewRecordId) viewRecordId.textContent = data.recordId;
 
-    const pictureSection = document.getElementById('record-picture-section');
-    const pictureName = document.getElementById('record-picture-name');
-    const pictureImage = document.getElementById('record-picture-image');
-    const picturePanel = document.getElementById('record-picture-panel');
-    if (pictureSection && pictureImage) {
-        const pictureUrl = isVercelBlobPictureUrl(data.pictureUrl) ? data.pictureUrl : '';
-        pictureSection.hidden = !pictureUrl;
-        picturePanel.hidden = true;
-        if (pictureUrl) {
-            pictureImage.src = pictureUrl;
-            pictureImage.alt = data.pictureName || `Picture for record ${data.recordId}`;
-            if (pictureName) pictureName.textContent = data.pictureName || 'Uploaded picture';
-        } else {
-            pictureImage.removeAttribute('src');
-            if (pictureName) pictureName.textContent = '';
-        }
-    }
+    renderRecordPictures(data);
+}
+
+function renderRecordPictures(data) {
+    const section = document.getElementById('record-picture-section');
+    const list = document.getElementById('record-picture-items');
+    if (!section || !list) return;
+
+    const pictures = [
+        { url: data.pictureUrl, name: data.pictureName, title: 'Side Barrier Picture' },
+        { url: data.picture2Url, name: data.picture2Name, title: 'Front Barrier Picture' },
+        { url: data.picture3Url, name: data.picture3Name, title: 'Rear Barrier Picture' }
+    ].filter(picture => isVercelBlobPictureUrl(picture.url));
+
+    list.replaceChildren();
+    section.hidden = pictures.length === 0;
+
+    pictures.forEach((picture, position) => {
+        const item = document.createElement('div');
+        item.className = 'record-picture-item';
+
+        const actions = document.createElement('div');
+        actions.className = 'record-picture-actions';
+        const text = document.createElement('div');
+        const title = document.createElement('strong');
+        title.className = 'record-picture-title';
+        title.textContent = picture.title;
+        const fileName = document.createElement('span');
+        fileName.className = 'record-picture-name';
+        fileName.textContent = picture.name || `Picture ${position + 1}`;
+        text.append(title, fileName);
+
+        const panelId = `record-picture-panel-${position + 1}`;
+        const viewButton = document.createElement('button');
+        viewButton.type = 'button';
+        viewButton.className = 'btn btn-secondary btn-sm';
+        viewButton.dataset.pictureAction = 'show';
+        viewButton.dataset.picturePanel = panelId;
+        viewButton.innerHTML = '<i class="fa-regular fa-eye"></i> View Picture · عرض الصورة';
+        actions.append(text, viewButton);
+
+        const panel = document.createElement('div');
+        panel.id = panelId;
+        panel.className = 'record-picture-panel';
+        panel.hidden = true;
+        const image = document.createElement('img');
+        image.src = picture.url;
+        image.alt = picture.name || `${picture.title} for record ${data.recordId}`;
+        const hideButton = document.createElement('button');
+        hideButton.type = 'button';
+        hideButton.className = 'btn btn-secondary btn-sm';
+        hideButton.dataset.pictureAction = 'hide';
+        hideButton.dataset.picturePanel = panelId;
+        hideButton.textContent = 'Close picture';
+        panel.append(image, hideButton);
+
+        item.append(actions, panel);
+        list.append(item);
+    });
 }
 
 function isVercelBlobPictureUrl(value) {
@@ -169,7 +223,9 @@ function encodeRecordToUrl(record = currentRecordState) {
         record.workshop, record.makerCode, record.barrierNo, record.vehicleType,
         record.vin, record.brand, record.model, record.modelYear,
         record.madeOn, record.cardIssued, record.recordId,
-        record.pictureUrl || '', record.pictureName || ''
+        record.pictureUrl || '', record.pictureName || '',
+        record.picture2Url || '', record.picture2Name || '',
+        record.picture3Url || '', record.picture3Name || ''
     ];
     const bytes = new TextEncoder().encode(JSON.stringify(compactRecord));
     const b64 = btoa(String.fromCharCode(...bytes))
@@ -196,8 +252,8 @@ function decodeRecordFromUrl() {
             const bytes = Uint8Array.from(binary, char => char.charCodeAt(0));
             const parsed = JSON.parse(new TextDecoder().decode(bytes));
             if (Array.isArray(parsed)) {
-                const [workshop, makerCode, barrierNo, vehicleType, vin, brand, model, modelYear, madeOn, cardIssued, recordId, pictureUrl = '', pictureName = ''] = parsed;
-                return { workshop, makerCode, barrierNo, vehicleType, vin, brand, model, modelYear, madeOn, cardIssued, recordId, pictureUrl, pictureName };
+                const [workshop, makerCode, barrierNo, vehicleType, vin, brand, model, modelYear, madeOn, cardIssued, recordId, pictureUrl = '', pictureName = '', picture2Url = '', picture2Name = '', picture3Url = '', picture3Name = ''] = parsed;
+                return { workshop, makerCode, barrierNo, vehicleType, vin, brand, model, modelYear, madeOn, cardIssued, recordId, pictureUrl, pictureName, picture2Url, picture2Name, picture3Url, picture3Name };
             }
             return parsed;
         }

@@ -156,16 +156,16 @@ function getQrLinkLabel(recordUrl) {
  * Form Event Listeners & Action Buttons
  */
 function initFormListeners() {
-    document.getElementById('rec-picture')?.addEventListener('change', handleRecordPictureUpload);
-    document.getElementById('btn-view-record-picture')?.addEventListener('click', () => {
-        const panel = document.getElementById('record-picture-panel');
-        if (!panel) return;
-        panel.hidden = false;
-        document.getElementById('record-picture-image')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    document.querySelectorAll('[data-picture-index]').forEach(input => {
+        input.addEventListener('change', handleRecordPictureUpload);
     });
-    document.getElementById('btn-hide-record-picture')?.addEventListener('click', () => {
-        const panel = document.getElementById('record-picture-panel');
-        if (panel) panel.hidden = true;
+    document.getElementById('record-picture-items')?.addEventListener('click', event => {
+        const button = event.target.closest('[data-picture-action]');
+        if (!button) return;
+        const panel = document.getElementById(button.dataset.picturePanel);
+        if (!panel) return;
+        panel.hidden = button.dataset.pictureAction !== 'show';
+        if (!panel.hidden) panel.querySelector('img')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
     });
 
     // 1. Generate QR & Barcode Button
@@ -199,12 +199,16 @@ function initFormListeners() {
         document.getElementById('rec-made-on').value = '';
         document.getElementById('rec-card-issued').value = '';
         document.getElementById('rec-id').value = generateRandomRecordId();
-        const pictureInput = document.getElementById('rec-picture');
-        if (pictureInput) pictureInput.value = '';
-        document.getElementById('rec-picture-url').value = '';
-        document.getElementById('rec-picture-name').value = '';
-        const pictureStatus = document.getElementById('rec-picture-status');
-        if (pictureStatus) pictureStatus.textContent = 'Upload a picture to attach it to this record. It will be viewable by anyone with the QR code.';
+        [1, 2, 3].forEach(index => {
+            const input = document.getElementById(index === 1 ? 'rec-picture' : `rec-picture-${index}`);
+            const url = document.getElementById(index === 1 ? 'rec-picture-url' : `rec-picture-url-${index}`);
+            const name = document.getElementById(index === 1 ? 'rec-picture-name' : `rec-picture-name-${index}`);
+            const status = document.getElementById(index === 1 ? 'rec-picture-status' : `rec-picture-status-${index}`);
+            if (input) input.value = '';
+            if (url) url.value = '';
+            if (name) name.value = '';
+            if (status) status.textContent = 'Optional picture. Anyone with the QR code can view an uploaded image.';
+        });
         showToast('Form cleared! Enter new record details.');
     });
 
@@ -296,7 +300,11 @@ function initFormListeners() {
 
 async function handleRecordPictureUpload(event) {
     const file = event.target.files?.[0];
-    const status = document.getElementById('rec-picture-status');
+    const pictureIndex = Number(event.currentTarget.dataset.pictureIndex || 1);
+    const statusId = pictureIndex === 1 ? 'rec-picture-status' : `rec-picture-status-${pictureIndex}`;
+    const urlId = pictureIndex === 1 ? 'rec-picture-url' : `rec-picture-url-${pictureIndex}`;
+    const nameId = pictureIndex === 1 ? 'rec-picture-name' : `rec-picture-name-${pictureIndex}`;
+    const status = document.getElementById(statusId);
     if (!file) return;
     if (!file.type.startsWith('image/')) {
         if (status) status.textContent = 'Choose an image file (JPG, PNG, or WebP).';
@@ -356,10 +364,10 @@ async function handleRecordPictureUpload(event) {
         }
         if (!isVercelBlobPictureUrl(result.url)) throw new Error('Upload returned an invalid picture link.');
 
-        document.getElementById('rec-picture-url').value = result.url;
-        document.getElementById('rec-picture-name').value = file.name.slice(0, 120);
+        document.getElementById(urlId).value = result.url;
+        document.getElementById(nameId).value = file.name.slice(0, 120);
         const record = getRecordFromForm();
-        if (status) status.textContent = `${file.name} uploaded. The QR preview has been refreshed. Anyone with the QR can view this picture.`;
+        if (status) status.textContent = `${file.name} uploaded as picture ${pictureIndex}. The QR preview has been refreshed.`;
         renderRecordToView(record);
         if (activeGenType === 'qr') triggerCodeGeneration();
         else setGenType('qr');

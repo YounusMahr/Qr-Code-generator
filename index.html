@@ -22,7 +22,7 @@
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <link rel="stylesheet" href="css/styles.css?v=9.3">
+    <link rel="stylesheet" href="css/styles.css?v=9.4">
 
     <!-- QRCode, JsBarcode, and html5-qrcode scripts -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
@@ -195,11 +195,25 @@
 
                         <div class="form-group picture-upload-group">
                             <label for="rec-picture" class="form-label">Side Barrier Picture</label>
-                            <input type="file" id="rec-picture" class="form-input" accept="image/*">
+                            <input type="file" id="rec-picture" class="form-input" data-picture-index="1" accept="image/*">
                             <small id="rec-picture-status" class="form-help">Upload stores the picture online. Anyone
                                 with this QR code can view it; Vercel Blob storage usage may incur charges.</small>
                             <input type="hidden" id="rec-picture-url">
                             <input type="hidden" id="rec-picture-name">
+                        </div>
+                        <div class="form-group picture-upload-group">
+                            <label for="rec-picture-2" class="form-label">Front Barrier Picture</label>
+                            <input type="file" id="rec-picture-2" class="form-input" data-picture-index="2" accept="image/*">
+                            <small id="rec-picture-status-2" class="form-help">Optional second picture; it will be linked separately in the QR code.</small>
+                            <input type="hidden" id="rec-picture-url-2">
+                            <input type="hidden" id="rec-picture-name-2">
+                        </div>
+                        <div class="form-group picture-upload-group">
+                            <label for="rec-picture-3" class="form-label">Rear Barrier Picture</label>
+                            <input type="file" id="rec-picture-3" class="form-input" data-picture-index="3" accept="image/*">
+                            <small id="rec-picture-status-3" class="form-help">Optional third picture; it will be linked separately in the QR code.</small>
+                            <input type="hidden" id="rec-picture-url-3">
+                            <input type="hidden" id="rec-picture-name-3">
                         </div>
 
                         <!-- Three Main Action Buttons -->
@@ -478,18 +492,7 @@
                                 </div>
 
                                 <section id="record-picture-section" class="record-picture-section" hidden>
-                                    <div class="record-picture-actions">
-                                        <span id="record-picture-name" class="record-picture-name"></span>
-                                        <button type="button" class="btn btn-secondary btn-sm"
-                                            id="btn-view-record-picture">
-                                            <i class="fa-regular fa-eye"></i> View Picture · عرض الصورة
-                                        </button>
-                                    </div>
-                                    <div id="record-picture-panel" class="record-picture-panel" hidden>
-                                        <img id="record-picture-image" alt="Uploaded record picture">
-                                        <button type="button" class="btn btn-secondary btn-sm"
-                                            id="btn-hide-record-picture">Close picture</button>
-                                    </div>
+                                    <div id="record-picture-items" class="record-picture-items"></div>
                                 </section>
 
                                 <!-- Footer Notice Section -->
@@ -642,10 +645,10 @@
     <div id="toast" class="toast"></div>
 
     <!-- Application JS with Cache-Busting -->
-    <script src="js/record-viewer.js?v=6.6"></script>
+    <script src="js/record-viewer.js?v=6.7"></script>
     <script src="js/qr-generator.js?v=6.4"></script>
     <script src="js/barcode.js?v=6.4"></script>
-    <script src="js/app.js?v=8.2"></script>
+    <script src="js/app.js?v=8.3"></script>
 </body>
 
 </html>
