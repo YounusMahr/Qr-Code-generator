@@ -5,6 +5,10 @@
 let activeGenType = 'qr';
 let html5QrCodeScanner = null;
 let savedRecordsList = [];
+let lastStoredRecordSignature = '';
+let lastStoredRecordUrl = '';
+const pendingRecordSaves = new Map();
+let qrGenerationSequence = 0;
 
 document.addEventListener('DOMContentLoaded', () => {
     initTabNavigation();
@@ -70,13 +74,32 @@ function switchTab(tabId) {
 function initPresetData() {
     loadRecordToForm(DEFAULT_RECORD);
     renderRecordToView(DEFAULT_RECORD);
-    triggerCodeGeneration();
+    // Keep the initial demo preview local; only explicit generation/saving writes a snapshot.
+    triggerCodeGeneration({ persist: false });
 }
 
 /**
  * URL Parameter Handling
  */
-function initUrlState() {
+async function initUrlState() {
+    const params = new URLSearchParams(window.location.search);
+    const sharedId = params.get('id');
+    if (sharedId) {
+        document.body.classList.add('shared-record-mode');
+        try {
+            const response = await fetch(`/api/records?id=${encodeURIComponent(sharedId)}`, { cache: 'no-store' });
+            const result = await response.json();
+            if (!response.ok || !result.record) throw new Error(result.error || 'Shared record could not be loaded.');
+            loadRecordToForm(result.record);
+            renderRecordToView(result.record);
+            switchTab('tab-details');
+        } catch (error) {
+            console.error('Could not load shared record:', error);
+            showToast(error.message || 'Could not load this shared record.');
+        }
+        return;
+    }
+
     const decodedRecord = decodeRecordFromUrl();
     if (decodedRecord) {
         document.body.classList.add('shared-record-mode');
@@ -108,17 +131,37 @@ function setGenType(type) {
         barContainer.style.display = 'block';
     }
 
-    triggerCodeGeneration();
+    return triggerCodeGeneration();
 }
 
 /**
  * Trigger Generation
  */
-function triggerCodeGeneration() {
+async function triggerCodeGeneration({ persist = true } = {}) {
     const record = getRecordFromForm();
-    const content = encodeRecordToUrl(record);
 
     if (activeGenType === 'qr') {
+        const sequence = ++qrGenerationSequence;
+        let content;
+        const signature = JSON.stringify(record);
+        try {
+            if (persist && signature === lastStoredRecordSignature && lastStoredRecordUrl) {
+                content = lastStoredRecordUrl;
+            } else if (persist) {
+                content = await saveRecordAndGetShortUrl(record, signature);
+            } else {
+                content = encodeRecordToUrl(record);
+            }
+        } catch (error) {
+            console.error('Could not save record for QR generation:', error);
+            // Keep the QR usable if the API is unavailable, while making the fallback clear.
+            content = encodeRecordToUrl(record);
+            if (sequence === qrGenerationSequence) {
+                showToast('Record storage is unavailable; generated a longer fallback QR. Check the Vercel records API and Blob connection.');
+            }
+        }
+        if (sequence !== qrGenerationSequence) return null;
+
         // Canonical QR style: plain black/white modules with no label or decoration.
         const enableBadge = false;
         const badgeText = '';
@@ -134,11 +177,44 @@ function triggerCodeGeneration() {
             badgeText: badgeText,
             badgeIcon: 'fa-globe'
         });
+        renderBarrierCard();
+        return content;
     } else {
         renderCustomBarcode({
             content: record.recordId || 'HHH260466',
             format: 'CODE128'
         });
+        return null;
+    }
+}
+
+async function saveRecordAndGetShortUrl(record, signature = JSON.stringify(record)) {
+    if (signature === lastStoredRecordSignature && lastStoredRecordUrl) return lastStoredRecordUrl;
+    if (pendingRecordSaves.has(signature)) return pendingRecordSaves.get(signature);
+
+    const savePromise = (async () => {
+        const response = await fetch('/api/records', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(record)
+        });
+        const result = await response.json().catch(() => ({}));
+        if (!response.ok || !result.id) {
+            throw new Error(result.error || `Record storage failed (HTTP ${response.status}).`);
+        }
+
+        const url = new URL(window.location.pathname, window.location.origin);
+        url.searchParams.set('id', result.id);
+        lastStoredRecordSignature = signature;
+        lastStoredRecordUrl = url.href;
+        return url.href;
+    })();
+
+    pendingRecordSaves.set(signature, savePromise);
+    try {
+        return await savePromise;
+    } finally {
+        pendingRecordSaves.delete(signature);
     }
 }
 
@@ -169,20 +245,24 @@ function initFormListeners() {
     });
 
     // 1. Generate QR & Barcode Button
-    document.getElementById('btn-generate-both')?.addEventListener('click', () => {
+    document.getElementById('btn-generate-both')?.addEventListener('click', async () => {
         const record = getRecordFromForm();
-        triggerCodeGeneration();
+        const qrUrl = await triggerCodeGeneration();
         renderRecordToView(record);
-        showToast('Generated QR Code & Barcode updated!');
+        showToast(qrUrl
+            ? (qrUrl.includes('id=') ? 'Record saved and short-link QR generated.' : 'Backend unavailable; generated a longer fallback QR.')
+            : 'Barcode generated.');
     });
 
     // 2. Save Record & Generate Button
-    document.getElementById('btn-save-record')?.addEventListener('click', () => {
+    document.getElementById('btn-save-record')?.addEventListener('click', async () => {
         const record = getRecordFromForm();
         saveRecordToLocalStorage(record);
-        triggerCodeGeneration();
+        const qrUrl = await triggerCodeGeneration();
         renderRecordToView(record);
-        showToast(`Record ${record.recordId} saved & QR generated!`);
+        if (qrUrl) showToast(qrUrl.includes('id=')
+            ? `Record ${record.recordId} saved and short-link QR generated.`
+            : 'Backend unavailable; generated a longer fallback QR.');
         switchTab('tab-details');
     });
 
@@ -220,11 +300,13 @@ function initFormListeners() {
     });
 
     // Load Sample Data
-    document.getElementById('btn-load-preset')?.addEventListener('click', () => {
+    document.getElementById('btn-load-preset')?.addEventListener('click', async () => {
         loadRecordToForm(DEFAULT_RECORD);
         renderRecordToView(DEFAULT_RECORD);
-        triggerCodeGeneration();
-        showToast('Loaded Hattan Fleet Registry sample data!');
+        const qrUrl = await triggerCodeGeneration();
+        if (qrUrl) showToast(qrUrl.includes('id=')
+            ? 'Loaded sample data and generated its short-link QR.'
+            : 'Backend unavailable; generated a longer fallback QR.');
     });
 
     // View Details Button in Preview Column
@@ -238,7 +320,6 @@ function initFormListeners() {
     const badgeToggle = document.getElementById('check-enable-badge');
     badgeToggle?.addEventListener('change', () => {
         syncBadgeSettings();
-        triggerCodeGeneration();
     });
     syncBadgeSettings();
 
@@ -248,20 +329,26 @@ function initFormListeners() {
     });
 
     // Copy Link
-    document.getElementById('btn-copy-link')?.addEventListener('click', () => {
-        const record = getRecordFromForm();
-        const recUrl = encodeRecordToUrl(record);
-        navigator.clipboard.writeText(recUrl).then(() => {
-            showToast('Shareable Record URL copied to clipboard!');
-        });
+    document.getElementById('btn-copy-link')?.addEventListener('click', async () => {
+        try {
+            const recUrl = await setGenType('qr');
+            if (!recUrl) throw new Error('Could not generate a record link.');
+            await navigator.clipboard.writeText(recUrl);
+            showToast(recUrl.includes('id=') ? 'Short record link copied to clipboard.' : 'Long fallback record link copied to clipboard.');
+        } catch (error) {
+            showToast(error.message || 'Could not copy the record link.');
+        }
     });
 
-    document.getElementById('btn-share-details')?.addEventListener('click', () => {
-        const record = getRecordFromForm();
-        const recUrl = encodeRecordToUrl(record);
-        navigator.clipboard.writeText(recUrl).then(() => {
-            showToast('Record URL copied to clipboard!');
-        });
+    document.getElementById('btn-share-details')?.addEventListener('click', async () => {
+        try {
+            const recUrl = await setGenType('qr');
+            if (!recUrl) throw new Error('Could not generate a record link.');
+            await navigator.clipboard.writeText(recUrl);
+            showToast(recUrl.includes('id=') ? 'Short record link copied to clipboard.' : 'Long fallback record link copied to clipboard.');
+        } catch (error) {
+            showToast(error.message || 'Could not copy the record link.');
+        }
     });
 
     // Lookup Button in Scan/Lookup Tab
@@ -368,8 +455,8 @@ async function handleRecordPictureUpload(event) {
         document.getElementById(nameId).value = file.name.slice(0, 120);
         const record = getRecordFromForm();
         renderRecordToView(record);
-        if (activeGenType === 'qr') triggerCodeGeneration();
-        else setGenType('qr');
+        if (activeGenType === 'qr') await triggerCodeGeneration();
+        else await setGenType('qr');
         // Keep the card's QR preview in sync with the freshly generated main-record QR.
         renderBarrierCard();
         if (status) status.textContent = `${file.name} uploaded as picture ${pictureIndex}. The QR preview has been refreshed.`;
@@ -747,9 +834,14 @@ function handleScanSuccess(text) {
 
     if (openBtn) {
         openBtn.onclick = () => {
-            if (text.includes('rec=')) {
+            let isRecordLink = text.includes('rec=');
+            try {
+                isRecordLink ||= new URL(text).searchParams.has('id');
+            } catch (_) {
+                // Non-URL scan content remains visible as plain text.
+            }
+            if (isRecordLink) {
                 window.location.href = text;
-                initUrlState();
             } else {
                 showToast('Scanned text: ' + text);
                 window.open(text, '_blank');
