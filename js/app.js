@@ -367,10 +367,12 @@ async function handleRecordPictureUpload(event) {
         document.getElementById(urlId).value = result.url;
         document.getElementById(nameId).value = file.name.slice(0, 120);
         const record = getRecordFromForm();
-        if (status) status.textContent = `${file.name} uploaded as picture ${pictureIndex}. The QR preview has been refreshed.`;
         renderRecordToView(record);
         if (activeGenType === 'qr') triggerCodeGeneration();
         else setGenType('qr');
+        // Keep the card's QR preview in sync with the freshly generated main-record QR.
+        renderBarrierCard();
+        if (status) status.textContent = `${file.name} uploaded as picture ${pictureIndex}. The QR preview has been refreshed.`;
     } catch (error) {
         console.error('Could not upload record picture:', error);
         if (status) status.textContent = error.message || 'Could not upload this picture. Please try again.';
