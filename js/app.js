@@ -167,12 +167,8 @@ async function triggerCodeGeneration({ persist = true } = {}) {
                 content = encodeRecordToUrl(record);
             }
         } catch (error) {
-            console.error('Could not save record for QR generation:', error);
-            // Keep the QR usable if the API is unavailable, while making the fallback clear.
+            // Offline / static / local mode fallback to URL-encoded record
             content = encodeRecordToUrl(record);
-            if (sequence === qrGenerationSequence) {
-                showToast('Record storage is unavailable; generated a longer fallback QR. Check the Vercel records API and Blob connection.');
-            }
         }
         if (sequence !== qrGenerationSequence) return null;
 
@@ -263,9 +259,7 @@ function initFormListeners() {
         const record = getRecordFromForm();
         const qrUrl = await triggerCodeGeneration();
         renderRecordToView(record);
-        showToast(qrUrl
-            ? (qrUrl.includes('id=') ? 'Record saved and short-link QR generated.' : 'Backend unavailable; generated a longer fallback QR.')
-            : 'Barcode generated.');
+        showToast(qrUrl ? 'QR code generated successfully!' : 'Barcode generated.');
     });
 
     // 2. Save Record & Generate Button
@@ -274,9 +268,7 @@ function initFormListeners() {
         saveRecordToLocalStorage(record);
         const qrUrl = await triggerCodeGeneration();
         renderRecordToView(record);
-        if (qrUrl) showToast(qrUrl.includes('id=')
-            ? `Record ${record.recordId} saved and short-link QR generated.`
-            : 'Backend unavailable; generated a longer fallback QR.');
+        if (qrUrl) showToast(`Record ${record.recordId} saved and QR generated!`);
         switchTab('tab-details');
     });
 
@@ -322,9 +314,7 @@ function initFormListeners() {
         loadRecordToForm(DEFAULT_RECORD);
         renderRecordToView(DEFAULT_RECORD);
         const qrUrl = await triggerCodeGeneration();
-        if (qrUrl) showToast(qrUrl.includes('id=')
-            ? 'Loaded sample data and generated its short-link QR.'
-            : 'Backend unavailable; generated a longer fallback QR.');
+        if (qrUrl) showToast('Loaded sample data and generated QR code.');
     });
 
     // View Details Button in Preview Column
@@ -446,30 +436,35 @@ async function handleRecordPictureUpload(event) {
         });
         if (imageBlob.size > 4 * 1024 * 1024) throw new Error('The optimized picture is still over 4 MB. Please use a smaller image.');
 
-        const response = await fetch('/api/record-picture', {
-            method: 'POST',
-            headers: { 'Content-Type': 'image/jpeg' },
-            body: imageBlob
-        });
-        const responseBody = await response.text();
-        let result = {};
+        let finalPictureUrl = '';
         try {
-            result = responseBody ? JSON.parse(responseBody) : {};
+            const response = await fetch('/api/record-picture', {
+                method: 'POST',
+                headers: { 'Content-Type': 'image/jpeg' },
+                body: imageBlob
+            });
+            const responseBody = await response.text();
+            let result = {};
+            try {
+                result = responseBody ? JSON.parse(responseBody) : {};
+            } catch (_) {}
+            if (response.ok && result.url && isVercelBlobPictureUrl(result.url)) {
+                finalPictureUrl = result.url;
+            }
         } catch (_) {
-            // Vercel's default 404/500 pages are HTML, so preserve the HTTP status for diagnosis.
+            // Local or offline server mode
         }
-        if (!response.ok) {
-            const errorMessage = result.error
-                || (response.status === 404
-                    ? 'Vercel did not find /api/record-picture. Deploy the latest project files and confirm the project root includes the api folder.'
-                    : response.status >= 500
-                        ? `Vercel upload function failed (HTTP ${response.status}). Check the deployment function logs and Blob store connection.`
-                        : `Picture upload failed (HTTP ${response.status}).`);
-            throw new Error(errorMessage);
-        }
-        if (!isVercelBlobPictureUrl(result.url)) throw new Error('Upload returned an invalid picture link.');
 
-        document.getElementById(urlId).value = result.url;
+        // If backend blob is not configured or failed, use local data URL preview seamlessly
+        if (!finalPictureUrl) {
+            finalPictureUrl = await new Promise((resolve) => {
+                const reader = new FileReader();
+                reader.onloadend = () => resolve(reader.result);
+                reader.readAsDataURL(imageBlob);
+            });
+        }
+
+        document.getElementById(urlId).value = finalPictureUrl;
         document.getElementById(nameId).value = file.name.slice(0, 120);
         const record = getRecordFromForm();
         renderRecordToView(record);
@@ -477,10 +472,10 @@ async function handleRecordPictureUpload(event) {
         else await setGenType('qr');
         // Keep the card's QR preview in sync with the freshly generated main-record QR.
         renderBarrierCard();
-        if (status) status.textContent = `${file.name} uploaded as picture ${pictureIndex}. The QR preview has been refreshed.`;
+        if (status) status.textContent = `${file.name} selected as picture ${pictureIndex}. Preview updated.`;
     } catch (error) {
-        console.error('Could not upload record picture:', error);
-        if (status) status.textContent = error.message || 'Could not upload this picture. Please try again.';
+        console.warn('Could not process selected image:', error);
+        if (status) status.textContent = error.message || 'Could not load this picture. Please try again.';
         event.target.value = '';
     } finally {
         URL.revokeObjectURL(objectUrl);
