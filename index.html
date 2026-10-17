@@ -22,7 +22,7 @@
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <link rel="stylesheet" href="css/styles.css?v=10.0">
+    <link rel="stylesheet" href="css/styles.css?v=10.1">
 
     <!-- QRCode, JsBarcode, and html5-qrcode scripts -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
@@ -299,6 +299,18 @@
                         <button class="segmented-btn" id="btn-type-barcode" onclick="setGenType('barcode')">
                             <i class="fa-solid fa-barcode"></i> Barcode
                         </button>
+                    </div>
+
+                    <!-- QR Destination Host Option -->
+                    <div class="card-option" style="margin-bottom: 0.85rem;">
+                        <div class="option-header">
+                            <span class="option-title"><i class="fa-solid fa-network-wired"></i> QR Destination Domain</span>
+                        </div>
+                        <div class="option-body" style="display:block; margin-top:0.4rem; padding-top:0.4rem; border-top:none;">
+                            <input type="text" id="input-qr-host" class="form-input font-mono" style="font-size: 0.82rem;"
+                                placeholder="Auto-detect (e.g. http://192.168.1.6:8088 or https://domain.com)">
+                            <small class="form-help">Scanned by mobile phone camera. Automatically configured for Wi-Fi / Web.</small>
+                        </div>
                     </div>
 
                     <!-- QR Customization Toggle Card -->
@@ -845,10 +857,10 @@
     <div id="toast" class="toast"></div>
 
     <!-- Application JS with Cache-Busting -->
-    <script src="js/record-viewer.js?v=10.0"></script>
-    <script src="js/qr-generator.js?v=10.0"></script>
-    <script src="js/barcode.js?v=10.0"></script>
-    <script src="js/app.js?v=10.0"></script>
+    <script src="js/record-viewer.js?v=10.1"></script>
+    <script src="js/qr-generator.js?v=10.1"></script>
+    <script src="js/barcode.js?v=10.1"></script>
+    <script src="js/app.js?v=10.1"></script>
 </body>
 
 </html>

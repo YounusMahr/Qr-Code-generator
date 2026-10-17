@@ -331,6 +331,11 @@ function initFormListeners() {
     });
     syncBadgeSettings();
 
+    // QR Target Host Listener
+    document.getElementById('input-qr-host')?.addEventListener('input', () => {
+        triggerCodeGeneration();
+    });
+
     // Download PNG
     document.getElementById('btn-download-png')?.addEventListener('click', () => {
         downloadQRPNG();
