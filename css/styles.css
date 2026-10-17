@@ -1903,7 +1903,7 @@ body {
 
 /* Shared QR destination: a focused record page, not the generator workspace. */
 .shared-record-mode {
-    background: #edf3f1;
+    background: #f2f4f8;
 }
 
 .shared-record-mode .global-demo-banner,
@@ -1916,7 +1916,7 @@ body {
 }
 
 .shared-record-mode .app-main {
-    padding: 2.5rem 1rem;
+    padding: 1.5rem 0.75rem;
 }
 
 .shared-record-mode .tab-content {
@@ -1928,7 +1928,9 @@ body {
 }
 
 .shared-record-mode .viewer-page-wrapper {
-    max-width: 760px;
+    max-width: 540px;
+    margin: 0 auto;
+    padding: 0;
 }
 
 .shared-record-mode .phone-mockup-wrapper {
