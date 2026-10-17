@@ -19,12 +19,12 @@ const DEFAULT_RECORD = {
     serialNumber: "5144",
     barrierNo: "KSAS/RMMM265144",
     makerCode: "E13",
-    pictureUrl: "assets/barrier-sample.jpg",
-    pictureName: "b7bb2372ebf34c32bbdb.jpg",
+    pictureUrl: "",
+    pictureName: "",
     picture2Url: "",
     picture2Name: "",
-    picture3Url: "assets/barrier-sample.jpg",
-    picture3Name: "b7bb2372ebf34c32bbdb.jpg"
+    picture3Url: "",
+    picture3Name: ""
 };
 
 let currentRecordState = { ...DEFAULT_RECORD };
@@ -89,12 +89,12 @@ function getRecordFromForm() {
         serialNumber: document.getElementById('rec-serial-no')?.value.trim() || DEFAULT_RECORD.serialNumber,
         barrierNo: document.getElementById('rec-barrier-no')?.value.trim() || DEFAULT_RECORD.barrierNo,
         makerCode: document.getElementById('rec-maker-code')?.value.trim() || DEFAULT_RECORD.makerCode,
-        pictureUrl: document.getElementById('rec-picture-url')?.value.trim() || DEFAULT_RECORD.pictureUrl,
-        pictureName: document.getElementById('rec-picture-name')?.value.trim() || DEFAULT_RECORD.pictureName,
+        pictureUrl: document.getElementById('rec-picture-url')?.value.trim() || '',
+        pictureName: document.getElementById('rec-picture-name')?.value.trim() || '',
         picture2Url: document.getElementById('rec-picture-url-2')?.value.trim() || '',
         picture2Name: document.getElementById('rec-picture-name-2')?.value.trim() || '',
-        picture3Url: document.getElementById('rec-picture-url-3')?.value.trim() || DEFAULT_RECORD.picture3Url,
-        picture3Name: document.getElementById('rec-picture-name-3')?.value.trim() || DEFAULT_RECORD.picture3Name
+        picture3Url: document.getElementById('rec-picture-url-3')?.value.trim() || '',
+        picture3Name: document.getElementById('rec-picture-name-3')?.value.trim() || ''
     };
 }
 
@@ -131,11 +131,11 @@ function loadRecordToForm(data) {
     if (document.getElementById('rec-card-issued')) document.getElementById('rec-card-issued').value = convertToIso(data.cardIssued);
 
     if (document.getElementById('rec-picture-url')) document.getElementById('rec-picture-url').value = data.pictureUrl || '';
-    if (document.getElementById('rec-picture-name')) document.getElementById('rec-picture-name').value = data.pictureName || DEFAULT_RECORD.pictureName;
+    if (document.getElementById('rec-picture-name')) document.getElementById('rec-picture-name').value = data.pictureName || '';
     if (document.getElementById('rec-picture-url-2')) document.getElementById('rec-picture-url-2').value = data.picture2Url || '';
     if (document.getElementById('rec-picture-name-2')) document.getElementById('rec-picture-name-2').value = data.picture2Name || '';
     if (document.getElementById('rec-picture-url-3')) document.getElementById('rec-picture-url-3').value = data.picture3Url || '';
-    if (document.getElementById('rec-picture-name-3')) document.getElementById('rec-picture-name-3').value = data.picture3Name || DEFAULT_RECORD.picture3Name;
+    if (document.getElementById('rec-picture-name-3')) document.getElementById('rec-picture-name-3').value = data.picture3Name || '';
 }
 
 /**
@@ -191,53 +191,55 @@ function renderRecordToView(data = currentRecordState) {
 }
 
 function renderPictureRows(data) {
+    const sideGroup = document.getElementById('view-side-picture-group');
     const sideNameEl = document.getElementById('view-side-picture-name');
+    const sideBtn = document.getElementById('view-side-picture-btn');
+
+    const rearGroup = document.getElementById('view-rear-picture-group');
     const rearNameEl = document.getElementById('view-rear-picture-name');
-    const frontNameEl = document.getElementById('view-front-picture-name');
+    const rearBtn = document.getElementById('view-rear-picture-btn');
+
     const frontGroup = document.getElementById('view-front-picture-group');
+    const frontNameEl = document.getElementById('view-front-picture-name');
+    const frontBtn = document.getElementById('view-front-picture-btn');
 
-    const sideFileName = data.pictureName || DEFAULT_RECORD.pictureName;
-    const rearFileName = data.picture3Name || DEFAULT_RECORD.picture3Name;
-    const frontFileName = data.picture2Name || '';
-
-    if (sideNameEl) sideNameEl.textContent = sideFileName;
-    if (rearNameEl) rearNameEl.textContent = rearFileName;
-
-    if (frontGroup && frontNameEl) {
-        if (frontFileName || data.picture2Url) {
-            frontGroup.style.display = 'flex';
-            frontNameEl.textContent = frontFileName || 'front_barrier.jpg';
-        } else {
-            frontGroup.style.display = 'none';
+    // Side Barrier Picture - only show if uploaded
+    const hasSidePic = Boolean(data.pictureUrl || data.pictureName);
+    if (sideGroup) {
+        sideGroup.style.display = hasSidePic ? 'flex' : 'none';
+        if (hasSidePic && sideNameEl) {
+            const sideFileName = data.pictureName || 'side_barrier.jpg';
+            sideNameEl.textContent = sideFileName;
+            if (sideBtn) {
+                sideBtn.onclick = () => openPictureModal('Side Barrier Picture', data.pictureUrl, sideFileName);
+            }
         }
     }
 
-    // Attach click handlers to open picture modal
-    const sideBtn = document.getElementById('view-side-picture-btn');
-    if (sideBtn) {
-        sideBtn.onclick = () => openPictureModal(
-            'Side Barrier Picture',
-            data.pictureUrl || 'assets/barrier-sample.jpg',
-            sideFileName
-        );
+    // Rear Barrier Picture - only show if uploaded
+    const hasRearPic = Boolean(data.picture3Url || data.picture3Name);
+    if (rearGroup) {
+        rearGroup.style.display = hasRearPic ? 'flex' : 'none';
+        if (hasRearPic && rearNameEl) {
+            const rearFileName = data.picture3Name || 'rear_barrier.jpg';
+            rearNameEl.textContent = rearFileName;
+            if (rearBtn) {
+                rearBtn.onclick = () => openPictureModal('Rear Barrier Picture', data.picture3Url, rearFileName);
+            }
+        }
     }
 
-    const rearBtn = document.getElementById('view-rear-picture-btn');
-    if (rearBtn) {
-        rearBtn.onclick = () => openPictureModal(
-            'Rear Barrier Picture',
-            data.picture3Url || 'assets/barrier-sample.jpg',
-            rearFileName
-        );
-    }
-
-    const frontBtn = document.getElementById('view-front-picture-btn');
-    if (frontBtn) {
-        frontBtn.onclick = () => openPictureModal(
-            'Front Barrier Picture',
-            data.picture2Url || 'assets/barrier-sample.jpg',
-            frontFileName || 'front_barrier.jpg'
-        );
+    // Front Barrier Picture - only show if uploaded
+    const hasFrontPic = Boolean(data.picture2Url || data.picture2Name);
+    if (frontGroup) {
+        frontGroup.style.display = hasFrontPic ? 'flex' : 'none';
+        if (hasFrontPic && frontNameEl) {
+            const frontFileName = data.picture2Name || 'front_barrier.jpg';
+            frontNameEl.textContent = frontFileName;
+            if (frontBtn) {
+                frontBtn.onclick = () => openPictureModal('Front Barrier Picture', data.picture2Url, frontFileName);
+            }
+        }
     }
 }
 
@@ -369,8 +371,8 @@ function decodeRecordFromUrl() {
                         applicantType: applicantType || DEFAULT_RECORD.applicantType,
                         status: status || DEFAULT_RECORD.status,
                         makerCode: makerCode || DEFAULT_RECORD.makerCode,
-                        pictureName: pictureName || DEFAULT_RECORD.pictureName,
-                        picture3Name: picture3Name || DEFAULT_RECORD.picture3Name
+                        pictureName: pictureName || '',
+                        picture3Name: picture3Name || ''
                     };
                 }
 

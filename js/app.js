@@ -88,6 +88,7 @@ function switchTab(tabId) {
 function initPresetData() {
     loadRecordToForm(DEFAULT_RECORD);
     renderRecordToView(DEFAULT_RECORD);
+    syncRecordToCard(DEFAULT_RECORD);
     // Keep the initial demo preview local; only explicit generation/saving writes a snapshot.
     triggerCodeGeneration({ persist: false });
 }
@@ -187,6 +188,7 @@ async function triggerCodeGeneration({ persist = true } = {}) {
             badgeText: badgeText,
             badgeIcon: 'fa-globe'
         });
+        syncRecordToCard(record);
         renderBarrierCard();
         return content;
     } else {
@@ -390,7 +392,15 @@ function initFormListeners() {
     document.getElementById('btn-start-scanner')?.addEventListener('click', startCameraScanner);
     document.getElementById('input-qr-file')?.addEventListener('change', scanQrFromFile);
 
-    ['card-vin', 'card-maker', 'card-maker-code', 'card-country', 'card-manufacture-date', 'card-issue-date', 'card-model', 'card-brand', 'card-year', 'card-upd-type', 'card-barrier', 'card-technical'].forEach(id => {
+    // Sync rec-id input in Create Record to card-unique-id
+    document.getElementById('rec-id')?.addEventListener('input', (e) => {
+        const val = e.target.value.trim();
+        const cardUniqueEl = document.getElementById('card-unique-id');
+        if (cardUniqueEl) cardUniqueEl.value = val;
+        renderBarrierCard();
+    });
+
+    ['card-unique-id', 'card-vin', 'card-maker', 'card-maker-code', 'card-country', 'card-manufacture-date', 'card-issue-date', 'card-model', 'card-brand', 'card-year', 'card-upd-type', 'card-barrier', 'card-technical'].forEach(id => {
         document.getElementById(id)?.addEventListener('input', renderBarrierCard);
         document.getElementById(id)?.addEventListener('change', renderBarrierCard);
     });
@@ -493,16 +503,44 @@ function syncBadgeSettings() {
     if (settings && toggle) settings.hidden = !toggle.checked;
 }
 
+function syncRecordToCard(record = getRecordFromForm()) {
+    if (!record) return;
+    const setIfPresent = (cardId, val) => {
+        const el = document.getElementById(cardId);
+        if (el && val !== undefined && val !== null && val !== '') el.value = val;
+    };
+    // Sync Barrier Unique ID Number (رقم البطاقة المميز)
+    setIfPresent('card-unique-id', record.recordId);
+    setIfPresent('card-vin', record.vin);
+    setIfPresent('card-maker', record.workshop);
+    setIfPresent('card-maker-code', record.makerCode);
+    setIfPresent('card-barrier', record.barrierNo);
+    setIfPresent('card-manufacture-date', record.madeOn);
+    setIfPresent('card-issue-date', record.cardIssued);
+    setIfPresent('card-brand', record.brand);
+    setIfPresent('card-year', record.modelYear);
+    if (record.vehicleType) setIfPresent('card-upd-type', record.vehicleType);
+}
+
 function renderBarrierCard() {
     const table = document.getElementById('card-table');
     const qrTarget = document.getElementById('card-qr');
     if (!table || !qrTarget) return;
     const value = (id, fallback = '—') => document.getElementById(id)?.value.trim() || fallback;
-    const cardIssueDate = value('card-issue-date', '13/10/2026');
-    document.getElementById('hdr-card-date-en').textContent = cardIssueDate;
-    document.getElementById('hdr-card-date-ar').textContent = cardIssueDate;
-    // All values are intentionally sourced from the Barrier Card editor only.
-    // This template never changes the main QR generator or its record data.
+
+    // Dynamic Barrier Unique ID Number (رقم البطاقة المميز)
+    const uniqueId = value('card-unique-id', document.getElementById('rec-id')?.value.trim() || '8801005508');
+    const cardNumEn = document.getElementById('hdr-card-num-en');
+    const cardNumAr = document.getElementById('hdr-card-num-ar');
+    if (cardNumEn) cardNumEn.textContent = uniqueId;
+    if (cardNumAr) cardNumAr.textContent = uniqueId;
+
+    const cardIssueDate = value('card-issue-date', document.getElementById('rec-card-issued')?.value.trim() || '14/10/2026');
+    const hdrDateEn = document.getElementById('hdr-card-date-en');
+    const hdrDateAr = document.getElementById('hdr-card-date-ar');
+    if (hdrDateEn) hdrDateEn.textContent = cardIssueDate;
+    if (hdrDateAr) hdrDateAr.textContent = cardIssueDate;
+
     const maker = value('card-maker');
     const makerCode = value('card-maker-code');
     const country = document.getElementById('card-country')?.value.trim() || 'Saudi Arabia';
@@ -573,7 +611,8 @@ function renderMobileBarrierCard() {
     const documentEl = document.getElementById('barrier-card-mobile-document');
     if (!documentEl) return;
     const value = (id, fallback = '—') => document.getElementById(id)?.value.trim() || fallback;
-    const cardIssueDate = value('card-issue-date', '13/10/2026');
+    const uniqueId = value('card-unique-id', document.getElementById('rec-id')?.value.trim() || '8801005508');
+    const cardIssueDate = value('card-issue-date', document.getElementById('rec-card-issued')?.value.trim() || '14/10/2026');
     const fields = [
         ['Manufacturer’s Name', 'اسم المصنع/الورشة', value('card-maker')],
         ['Manufacturer Assigned Code', 'رمز المنشأة', value('card-maker-code')],
@@ -585,10 +624,10 @@ function renderMobileBarrierCard() {
         ['UPD Type (Front, Side, Rear)', 'نوع الحاجز', value('card-upd-type')],
         ['Vehicle Chassis Number (VIN)', 'رقم هيكل المركبة (VIN)', value('card-vin')],
         ['Sample Reference', 'مرجع تجريبي', value('card-barrier')],
-        ['Technical References', 'المتطلبات الفنية', value('card-technical')]
+        ['Technical References', 'المتطلبات الفنية', technical]
     ];
     documentEl.innerHTML = `
-        <header><div class="card-header-saso-img" style="width:100%;overflow:hidden;max-height:90px;"><img src="assets/saso-header.png" alt="Saudi Standards - SASO" style="display:block;width:100%;height:90px;object-fit:cover;object-position:center;"></div><div class="mobile-card-meta" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:8px 14px;background:#eaf5f6;border-top:1px solid #d3e8e9;"><div><span>Card Number</span><b>8801004743</b><span>Card Issue Date</span><b>${escapeHtml(cardIssueDate)}</b></div><div dir="rtl"><span>رقم البطاقة</span><b>8801004743</b><span>تاريخ إصدار البطاقة</span><b>${escapeHtml(cardIssueDate)}</b></div></div></header>
+        <header><div class="card-header-saso-img" style="width:100%;overflow:hidden;max-height:90px;"><img src="assets/saso-header.png" alt="Saudi Standards - SASO" style="display:block;width:100%;height:90px;object-fit:cover;object-position:center;"></div><div class="mobile-card-meta" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:8px 14px;background:#eaf5f6;border-top:1px solid #d3e8e9;"><div><span>Card Number</span><b>${escapeHtml(uniqueId)}</b><span>Card Issue Date</span><b>${escapeHtml(cardIssueDate)}</b></div><div dir="rtl"><span>رقم البطاقة</span><b>${escapeHtml(uniqueId)}</b><span>تاريخ إصدار البطاقة</span><b>${escapeHtml(cardIssueDate)}</b></div></div></header>
         <section class="card-intro"><div class="card-intro-copy"><p>Hattan Registry organizes sample fleet information in a clear, easy-to-review workspace.</p><p dir="rtl">ينظم Hattan Registry معلومات الأسطول التجريبية في مساحة واضحة وسهلة المراجعة.</p></div><div class="card-intro-brand"><img class="card-intro-logo" src="assets/uploaded-registry-symbol.jfif?v=1" alt="Hattan Registry sample mark"></div></section>
         <section class="mobile-card-maker">${fields.slice(0, 5).map(([english, arabic, content]) => `<div><b>${escapeHtml(english)}</b><span>${escapeHtml(content)}</span><em dir="rtl">${escapeHtml(arabic)}</em></div>`).join('')}</section>
         <h2>Vehicle Details · بيانات المركبة (نموذج تجريبي)</h2>
