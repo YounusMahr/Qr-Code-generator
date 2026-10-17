@@ -37,14 +37,14 @@ function renderCustomQRCode(options = {}) {
     const qrDiv = document.createElement('div');
     container.appendChild(qrDiv);
 
-    // Instantiate QRCode.js
+    // Instantiate QRCode.js with Low error correction (creates largest, easiest-to-scan modules)
     qrCodeInstance = new QRCode(qrDiv, {
         text: content,
-        width: 250,
-        height: 250,
+        width: 280,
+        height: 280,
         colorDark: darkColor,
         colorLight: lightColor,
-        correctLevel: QRCode.CorrectLevel.M // Lower density improves scan reliability for the embedded record URL
+        correctLevel: QRCode.CorrectLevel.L
     });
 
     // Wait for canvas to draw then attach overlay badge pill if enabled

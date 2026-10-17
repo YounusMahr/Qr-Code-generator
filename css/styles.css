@@ -635,9 +635,13 @@ input:checked+.slider:before {
 #qr-canvas-container canvas,
 #qr-canvas-container img {
     display: block;
-    border-radius: 12px;
+    border-radius: 0 !important;
     max-width: 100%;
     height: auto;
+    padding: 12px;
+    background: #ffffff;
+    box-sizing: content-box;
+    image-rendering: pixelated;
 }
 
 /* Image 2 Overlay Badge Pill */

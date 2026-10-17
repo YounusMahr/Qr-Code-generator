@@ -282,45 +282,56 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 /**
- * Encode current record data into URL Hash or Search Param
+ * Encode current record data into an ultra-compact, high-scan-reliability URL
  */
 function encodeRecordToUrl(record = currentRecordState) {
+    // Determine the base web URL
+    let baseUrl;
+    const customHost = document.getElementById('input-qr-host')?.value.trim();
+    if (customHost) {
+        baseUrl = customHost.replace(/\/+$/, '');
+    } else if (window.location.protocol === 'file:') {
+        // file:/// cannot be scanned or opened by mobile phones; point to local Wi-Fi IP or current host
+        baseUrl = 'http://192.168.1.6:8088';
+    } else {
+        baseUrl = window.location.origin + window.location.pathname.replace(/\/index\.html$/, '');
+    }
+
+    // Ultra-compact array: only store primary identifiers and custom diffs
     const compactRecord = [
-        record.workshop || '',
-        record.makerCode || '',
-        record.barrierNo || '',
-        record.vehicleType || '',
-        record.vin || '',
-        record.brand || '',
-        record.model || '',
-        record.modelYear || '',
-        record.madeOn || '',
-        record.cardIssued || '',
-        record.recordId || '',
-        record.pictureUrl || '',
-        record.pictureName || '',
-        record.picture2Url || '',
-        record.picture2Name || '',
-        record.picture3Url || '',
-        record.picture3Name || '',
-        record.serialNumber || '',
-        record.applicantType || '',
-        record.address || '',
-        record.status || ''
+        record.recordId || DEFAULT_RECORD.recordId,
+        record.vin || DEFAULT_RECORD.vin,
+        record.barrierNo || DEFAULT_RECORD.barrierNo,
+        record.serialNumber || DEFAULT_RECORD.serialNumber,
+        record.madeOn || DEFAULT_RECORD.madeOn,
+        record.cardIssued || DEFAULT_RECORD.cardIssued,
+        record.modelYear || DEFAULT_RECORD.modelYear,
+        record.brand === DEFAULT_RECORD.brand ? '' : (record.brand || ''),
+        record.vehicleType === DEFAULT_RECORD.vehicleType ? '' : (record.vehicleType || ''),
+        record.workshop === DEFAULT_RECORD.workshop ? '' : (record.workshop || ''),
+        record.address === DEFAULT_RECORD.address ? '' : (record.address || ''),
+        record.applicantType === DEFAULT_RECORD.applicantType ? '' : (record.applicantType || ''),
+        record.status === DEFAULT_RECORD.status ? '' : (record.status || ''),
+        record.makerCode === DEFAULT_RECORD.makerCode ? '' : (record.makerCode || ''),
+        record.pictureName === DEFAULT_RECORD.pictureName ? '' : (record.pictureName || ''),
+        record.picture3Name === DEFAULT_RECORD.picture3Name ? '' : (record.picture3Name || '')
     ];
 
-    const bytes = new TextEncoder().encode(JSON.stringify(compactRecord));
+    // Trim trailing empty entries to keep QR size minimal
+    while (compactRecord.length > 7 && compactRecord[compactRecord.length - 1] === '') {
+        compactRecord.pop();
+    }
+
+    const json = JSON.stringify(compactRecord);
+    const bytes = new TextEncoder().encode(json);
     const b64 = btoa(String.fromCharCode(...bytes))
         .replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
 
-    const baseUrl = window.location.protocol === 'file:'
-        ? window.location.href.split('?')[0].split('#')[0]
-        : window.location.origin + window.location.pathname;
     return `${baseUrl}?rec=${b64}`;
 }
 
 /**
- * Decode record data from current URL if query params exist
+ * Decode record data from current URL query params
  */
 function decodeRecordFromUrl() {
     try {
@@ -332,7 +343,38 @@ function decodeRecordFromUrl() {
             const binary = atob(padded);
             const bytes = Uint8Array.from(binary, char => char.charCodeAt(0));
             const parsed = JSON.parse(new TextDecoder().decode(bytes));
+
             if (Array.isArray(parsed)) {
+                // New compact format (starts with recordId / numeric card number)
+                if (parsed.length >= 1 && (parsed[0].startsWith('880') || /^\d+$/.test(parsed[0]))) {
+                    const [
+                        recordId, vin, barrierNo, serialNumber, madeOn, cardIssued, modelYear,
+                        brand, vehicleType, workshop, address, applicantType, status, makerCode,
+                        pictureName, picture3Name
+                    ] = parsed;
+
+                    return {
+                        ...DEFAULT_RECORD,
+                        recordId: recordId || DEFAULT_RECORD.recordId,
+                        vin: vin || DEFAULT_RECORD.vin,
+                        barrierNo: barrierNo || DEFAULT_RECORD.barrierNo,
+                        serialNumber: serialNumber || DEFAULT_RECORD.serialNumber,
+                        madeOn: madeOn || DEFAULT_RECORD.madeOn,
+                        cardIssued: cardIssued || DEFAULT_RECORD.cardIssued,
+                        modelYear: modelYear || DEFAULT_RECORD.modelYear,
+                        brand: brand || DEFAULT_RECORD.brand,
+                        vehicleType: vehicleType || DEFAULT_RECORD.vehicleType,
+                        workshop: workshop || DEFAULT_RECORD.workshop,
+                        address: address || DEFAULT_RECORD.address,
+                        applicantType: applicantType || DEFAULT_RECORD.applicantType,
+                        status: status || DEFAULT_RECORD.status,
+                        makerCode: makerCode || DEFAULT_RECORD.makerCode,
+                        pictureName: pictureName || DEFAULT_RECORD.pictureName,
+                        picture3Name: picture3Name || DEFAULT_RECORD.picture3Name
+                    };
+                }
+
+                // Legacy format (array starting with workshop)
                 const [
                     workshop = DEFAULT_RECORD.workshop,
                     makerCode = DEFAULT_RECORD.makerCode,
