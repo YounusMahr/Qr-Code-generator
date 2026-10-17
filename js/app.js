@@ -10,6 +10,20 @@ let lastStoredRecordUrl = '';
 const pendingRecordSaves = new Map();
 let qrGenerationSequence = 0;
 
+function isVercelBlobPictureUrl(value) {
+    if (!value) return false;
+    try {
+        const url = new URL(value, window.location.origin);
+        return url.hostname.endsWith('.public.blob.vercel-storage.com') ||
+               url.protocol === 'blob:' ||
+               url.protocol === 'data:' ||
+               url.pathname.includes('assets/');
+    } catch (_) {
+        return typeof value === 'string' && (value.startsWith('data:') || value.startsWith('blob:') || value.includes('assets/'));
+    }
+}
+window.isVercelBlobPictureUrl = isVercelBlobPictureUrl;
+
 document.addEventListener('DOMContentLoaded', () => {
     initTabNavigation();
     initFormListeners();

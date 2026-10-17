@@ -30,6 +30,23 @@ const DEFAULT_RECORD = {
 let currentRecordState = { ...DEFAULT_RECORD };
 
 /**
+ * Check if a picture URL is valid (Vercel Blob, local blob, data URL, or local asset)
+ */
+function isVercelBlobPictureUrl(value) {
+    if (!value) return false;
+    try {
+        const url = new URL(value, window.location.origin);
+        return url.hostname.endsWith('.public.blob.vercel-storage.com') ||
+               url.protocol === 'blob:' ||
+               url.protocol === 'data:' ||
+               url.pathname.includes('assets/');
+    } catch (_) {
+        return typeof value === 'string' && (value.startsWith('data:') || value.startsWith('blob:') || value.includes('assets/'));
+    }
+}
+window.isVercelBlobPictureUrl = isVercelBlobPictureUrl;
+
+/**
  * Format date string to DD/MM/YYYY or YYYY-MM-DD
  */
 function formatDateForDisplay(dateStr) {
