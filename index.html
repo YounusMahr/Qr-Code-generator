@@ -116,76 +116,16 @@
                     </div>
 
                     <form id="form-create-record" onsubmit="event.preventDefault();">
-                        <!-- Workshop / Maker -->
+                        <!-- Section 1 Fields: Unique ID Card Info -->
+                        <div class="form-section-title">
+                            <span><i class="fa-solid fa-id-card"></i> Section 1: Unique ID & Company Details</span>
+                        </div>
+
+                        <!-- Barrier Unique ID Card Number -->
                         <div class="form-group">
-                            <label for="rec-workshop" class="form-label" dir="rtl">الشركة / الجهة المصنعة</label>
-                            <input type="text" id="rec-workshop" class="form-input"
-                                placeholder="e.g. شركة وهج الإبداع المميزة" value="شركة وهج الإبداع المميزة">
-                        </div>
-
-                        <!-- Maker Code & Unique Barrier No -->
-                        <div class="grid-2col">
-                            <div class="form-group">
-                                <label for="rec-maker-code" class="form-label" dir="rtl">رمز الصانع</label>
-                                <input type="text" id="rec-maker-code" class="form-input" placeholder="e.g. E13"
-                                    value="E13">
-                            </div>
-                            <div class="form-group">
-                                <label for="rec-barrier-no" class="form-label" dir="rtl">الرقم المميز للحاجز</label>
-                                <input type="text" id="rec-barrier-no" class="form-input font-mono"
-                                    placeholder="e.g. KSA E13 S/R/F HHH 260466" value="KSA E13 S/R/F HHH 260466">
-                            </div>
-                        </div>
-
-                        <!-- Vehicle Type & VIN -->
-                        <div class="grid-2col">
-                            <div class="form-group">
-                                <label for="rec-vehicle-type" class="form-label" dir="rtl">نوع المركبة</label>
-                                <input type="text" id="rec-vehicle-type" class="form-input" placeholder="e.g. شاحنة"
-                                    value="شاحنة">
-                            </div>
-                            <div class="form-group">
-                                <label for="rec-vin" class="form-label" dir="rtl">رقم الهيكل للمركبة</label>
-                                <input type="text" id="rec-vin" class="form-input font-mono"
-                                    placeholder="e.g. WDB9340321L164157" value="WDB9340321L164157">
-                            </div>
-                        </div>
-
-                        <!-- Brand & Model -->
-                        <div class="grid-2col">
-                            <div class="form-group">
-                                <label for="rec-brand" class="form-label" dir="rtl">ماركة المركبة</label>
-                                <input type="text" id="rec-brand" class="form-input" placeholder="e.g. MERCEDES"
-                                    value="MERCEDES">
-                            </div>
-                            <div class="form-group">
-                                <label for="rec-model" class="form-label" dir="rtl">اسم طراز المركبة</label>
-                                <input type="text" id="rec-model" class="form-input" placeholder="e.g. رأس" value="رأس">
-                            </div>
-                        </div>
-
-                        <!-- Model Year, Made On, Card Issued -->
-                        <div class="grid-3col">
-                            <div class="form-group">
-                                <label for="rec-model-year" class="form-label" dir="rtl">سنة موديل المركبة</label>
-                                <input type="text" id="rec-model-year" class="form-input" placeholder="e.g. 2007"
-                                    value="2007">
-                            </div>
-                            <div class="form-group">
-                                <label for="rec-made-on" class="form-label" dir="rtl">تاريخ صنع الحاجز</label>
-                                <input type="date" id="rec-made-on" class="form-input" value="2026-09-19">
-                            </div>
-                            <div class="form-group">
-                                <label for="rec-card-issued" class="form-label" dir="rtl">تاريخ إصدار البطاقة</label>
-                                <input type="date" id="rec-card-issued" class="form-input" value="2026-09-19">
-                            </div>
-                        </div>
-
-                        <!-- Record ID (Readonly or auto-generated) -->
-                        <div class="form-group">
-                            <label for="rec-id" class="form-label" dir="rtl">معرّف السجل</label>
+                            <label for="rec-id" class="form-label">Barrier Unique ID Number (رقم البطاقة المميز)</label>
                             <div class="input-with-action">
-                                <input type="text" id="rec-id" class="form-input font-mono" value="HHH260466">
+                                <input type="text" id="rec-id" class="form-input font-mono" value="8801005508" placeholder="e.g. 8801005508">
                                 <button type="button" class="btn btn-secondary btn-icon" id="btn-gen-id"
                                     title="Generate New ID">
                                     <i class="fa-solid fa-arrows-rotate"></i>
@@ -193,27 +133,131 @@
                             </div>
                         </div>
 
+                        <!-- Company Name -->
+                        <div class="form-group">
+                            <label for="rec-workshop" class="form-label">Company Name (اسم المنشأة / الشركة)</label>
+                            <input type="text" id="rec-workshop" class="form-input"
+                                placeholder="e.g. almahawir walmaqturat Factory For Manufacturing" value="almahawir walmaqturat Factory For Manufacturing">
+                        </div>
+
+                        <!-- Address -->
+                        <div class="form-group">
+                            <label for="rec-address" class="form-label">Address (العنوان)</label>
+                            <textarea id="rec-address" class="form-input" rows="2"
+                                placeholder="e.g. Building 5187, Al Mariad 6, Al Maarid Dist., KHAMIS MUSHAYT, 62451, Saudi Arabia">Building 5187, Al Mariad 6, Al Maarid Dist.,&#10;KHAMIS MUSHAYT, 62451, Saudi Arabia</textarea>
+                        </div>
+
+                        <!-- Applicant Type & Status -->
+                        <div class="grid-2col">
+                            <div class="form-group">
+                                <label for="rec-applicant-type" class="form-label">Applicant Type (نوع مقدم الطلب)</label>
+                                <input type="text" id="rec-applicant-type" class="form-input" placeholder="e.g. Factory"
+                                    value="Factory">
+                            </div>
+                            <div class="form-group">
+                                <label for="rec-status" class="form-label">Status (الحالة)</label>
+                                <select id="rec-status" class="form-select">
+                                    <option value="Valid" selected>Valid (ساري)</option>
+                                    <option value="Expired">Expired (منتهي)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Issuance Date -->
+                        <div class="form-group">
+                            <label for="rec-card-issued" class="form-label">Issuance Date (تاريخ إصدار البطاقة)</label>
+                            <input type="date" id="rec-card-issued" class="form-input" value="2026-10-14">
+                        </div>
+
+                        <!-- Section 2 Fields: Card Data -->
+                        <div class="form-section-title" style="margin-top: 1.25rem;">
+                            <span><i class="fa-solid fa-truck"></i> Section 2: Card Data (بيانات الحاجز والمركبة)</span>
+                        </div>
+
+                        <!-- Brand Name & Protective Device Type -->
+                        <div class="grid-2col">
+                            <div class="form-group">
+                                <label for="rec-brand" class="form-label">Brand Name (ماركة المركبة)</label>
+                                <input type="text" id="rec-brand" class="form-input" placeholder="e.g. VOLVO/VOLVO"
+                                    value="VOLVO/VOLVO">
+                            </div>
+                            <div class="form-group">
+                                <label for="rec-vehicle-type" class="form-label">Protective Device Type (نوع وسيلة الحماية)</label>
+                                <input type="text" id="rec-vehicle-type" class="form-input"
+                                    placeholder="e.g. Front Barrier, Side Barrier, Rear Barrier"
+                                    value="Front Barrier, Side Barrier, Rear Barrier">
+                            </div>
+                        </div>
+
+                        <!-- Model Year & VIN -->
+                        <div class="grid-2col">
+                            <div class="form-group">
+                                <label for="rec-model-year" class="form-label">Model Year (سنة موديل المركبة)</label>
+                                <input type="text" id="rec-model-year" class="form-input" placeholder="e.g. 2022"
+                                    value="2022">
+                            </div>
+                            <div class="form-group">
+                                <label for="rec-vin" class="form-label">Vehicle Identification Number (VIN) (رقم الهيكل)</label>
+                                <input type="text" id="rec-vin" class="form-input font-mono"
+                                    placeholder="e.g. YV2RTY0A6NA898438" value="YV2RTY0A6NA898438">
+                            </div>
+                        </div>
+
+                        <!-- Date of UDP Manufacture & UDP Serial Number -->
+                        <div class="grid-2col">
+                            <div class="form-group">
+                                <label for="rec-made-on" class="form-label">Date of UDP Manufacture (تاريخ صنع الحاجز)</label>
+                                <input type="date" id="rec-made-on" class="form-input" value="2026-10-14">
+                            </div>
+                            <div class="form-group">
+                                <label for="rec-serial-no" class="form-label">UDP Serial Number (الرقم التسلسلي للحاجز)</label>
+                                <input type="text" id="rec-serial-no" class="form-input font-mono" placeholder="e.g. 5144"
+                                    value="5144">
+                            </div>
+                        </div>
+
+                        <!-- UDP Unique Number & Maker Code -->
+                        <div class="grid-2col">
+                            <div class="form-group">
+                                <label for="rec-barrier-no" class="form-label">UDP Unique Number (الرقم المميز للحاجز)</label>
+                                <input type="text" id="rec-barrier-no" class="form-input font-mono"
+                                    placeholder="e.g. KSAS/RMMM265144" value="KSAS/RMMM265144">
+                            </div>
+                            <div class="form-group">
+                                <label for="rec-maker-code" class="form-label">Maker Code (رمز الصانع)</label>
+                                <input type="text" id="rec-maker-code" class="form-input" placeholder="e.g. E13"
+                                    value="E13">
+                            </div>
+                        </div>
+
+                        <!-- Hidden Model field for legacy compatibility -->
+                        <input type="hidden" id="rec-model" value="رأس">
+
+                        <!-- Barrier Pictures -->
+                        <div class="form-section-title" style="margin-top: 1.25rem;">
+                            <span><i class="fa-solid fa-camera"></i> Barrier Pictures (صور الحواجز)</span>
+                        </div>
+
                         <div class="form-group picture-upload-group">
-                            <label for="rec-picture" class="form-label">Side Barrier Picture</label>
+                            <label for="rec-picture" class="form-label">Side Barrier Picture (صورة الحاجز الجانبي)</label>
                             <input type="file" id="rec-picture" class="form-input" data-picture-index="1" accept="image/*">
-                            <small id="rec-picture-status" class="form-help">Upload stores the picture online. Anyone
-                                with this QR code can view it; Vercel Blob storage usage may incur charges.</small>
-                            <input type="hidden" id="rec-picture-url">
-                            <input type="hidden" id="rec-picture-name">
+                            <small id="rec-picture-status" class="form-help">Uploaded picture will be viewable when scanning the QR code.</small>
+                            <input type="hidden" id="rec-picture-url" value="assets/barrier-sample.jpg">
+                            <input type="hidden" id="rec-picture-name" value="b7bb2372ebf34c32bbdb.jpg">
                         </div>
                         <div class="form-group picture-upload-group">
-                            <label for="rec-picture-2" class="form-label">Front Barrier Picture</label>
+                            <label for="rec-picture-2" class="form-label">Front Barrier Picture (Optional)</label>
                             <input type="file" id="rec-picture-2" class="form-input" data-picture-index="2" accept="image/*">
-                            <small id="rec-picture-status-2" class="form-help">Optional second picture; it will be linked separately in the QR code.</small>
+                            <small id="rec-picture-status-2" class="form-help">Optional front barrier picture.</small>
                             <input type="hidden" id="rec-picture-url-2">
                             <input type="hidden" id="rec-picture-name-2">
                         </div>
                         <div class="form-group picture-upload-group">
-                            <label for="rec-picture-3" class="form-label">Rear Barrier Picture</label>
+                            <label for="rec-picture-3" class="form-label">Rear Barrier Picture (صورة الحاجز الخلفي)</label>
                             <input type="file" id="rec-picture-3" class="form-input" data-picture-index="3" accept="image/*">
-                            <small id="rec-picture-status-3" class="form-help">Optional third picture; it will be linked separately in the QR code.</small>
-                            <input type="hidden" id="rec-picture-url-3">
-                            <input type="hidden" id="rec-picture-name-3">
+                            <small id="rec-picture-status-3" class="form-help">Rear barrier picture will be viewable when scanning the QR code.</small>
+                            <input type="hidden" id="rec-picture-url-3" value="assets/barrier-sample.jpg">
+                            <input type="hidden" id="rec-picture-name-3" value="b7bb2372ebf34c32bbdb.jpg">
                         </div>
 
                         <!-- Three Main Action Buttons -->
@@ -418,100 +462,253 @@
                     </div>
                     <div class="toolbar-right">
                         <button class="btn btn-secondary btn-sm" onclick="window.print()">
-                            <i class="fa-solid fa-print"></i> Print Card
-                        </button>
-                        <button class="btn btn-primary btn-sm" id="btn-share-details">
-                            <i class="fa-solid fa-share-nodes"></i> Share URL
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Smartphone Bezel Mockup Container -->
-                <div class="phone-mockup-wrapper">
-                    <div class="phone-bezel">
-                        <div class="phone-speaker"></div>
-                        <div class="phone-screen">
-
-                            <!-- Top Browser Bar Mockup -->
+                                                   <!-- Top Browser Bar Mockup -->
                             <div class="browser-bar">
-                                <button class="browser-icon"><i class="fa-solid fa-xmark"></i></button>
-                                <button class="browser-icon"><i class="fa-solid fa-chevron-down"></i></button>
+                                <button class="browser-icon" type="button"><i class="fa-solid fa-xmark"></i></button>
+                                <button class="browser-icon" type="button"><i class="fa-solid fa-chevron-down"></i></button>
                                 <div class="browser-url-pill">
-                                    <span id="display-browser-url">hattan-registry.local</span>
+                                    <span id="display-browser-url">saso.gov.sa</span>
                                 </div>
-                                <button class="browser-icon"><i class="fa-solid fa-share-nodes"></i></button>
-                                <button class="browser-icon"><i class="fa-solid fa-language"></i></button>
-                                <button class="browser-icon"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+                                <button class="browser-icon" type="button"><i class="fa-solid fa-share-nodes"></i></button>
+                                <button class="browser-icon" type="button"><i class="fa-solid fa-language"></i></button>
+                                <button class="browser-icon" type="button"><i class="fa-solid fa-ellipsis-vertical"></i></button>
                             </div>
 
-                            <!-- Dynamic QR destination and record preview -->
-                            <div class="image1-record-card" id="image1-record-view">
+                            <!-- SASO Official Government Verification Interface -->
+                            <div class="saso-verification-view" id="image1-record-view">
 
-                                <!-- Top Red Demo Banner -->
-                                <div class="red-demo-banner">
-                                    DEMO BUILD 2.14 – not a government site
-                                </div>
-
-                                <!-- Dark Blue Header Box -->
-                                <div class="certificate-header" dir="rtl">
-                                    <div class="certificate-brand"><span class="certificate-mark"><i></i><b></b></span>
-                                        سجل هتان</div>
-                                    <h2>نظام سجلات المركبات</h2>
-                                    <p>بطاقة الرقم المميز لحواجز الشاحنات والمقطورات</p>
-                                </div>
-
-                                <!-- Section Header Notice -->
-                                <div class="company-band" dir="rtl">
-                                    <strong id="view-workshop">شركة وهج الإبداع المميزة</strong>
-                                    <span>تاريخ صنع الحاجز <b id="view-made-on">19/09/2026</b></span>
-                                </div>
-
-                                <!-- Field Data Table -->
-                                <div class="records-table-container">
-                                    <div class="vehicle-records" dir="rtl">
-                                        <div class="vehicle-field"><label>الرقم المميز للحاجز</label><output
-                                                class="font-mono" id="view-barrier-no">KSA E13 S/R/F HHH 260466</output>
+                                <!-- Top Saudi Government Banner -->
+                                <div class="gov-top-banner">
+                                    <div class="gov-top-content">
+                                        <div class="gov-flag-icon">
+                                            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" aria-hidden="true">
+                                                <rect width="24" height="24" rx="4" fill="#006c35"/>
+                                                <!-- Crossed swords and palm tree simplified emblem -->
+                                                <path d="M12 4v11M10 7c1-1 3-1 4 0M8 10c2-1 6-1 8 0" stroke="#ffffff" stroke-width="1.2" stroke-linecap="round"/>
+                                                <path d="M7 17l10-4M17 17L7 13" stroke="#ffffff" stroke-width="1.2" stroke-linecap="round"/>
+                                            </svg>
                                         </div>
-                                        <div class="vehicle-field"><label>نوع المركبة</label><output
-                                                id="view-vehicle-type">شاحنة</output></div>
-                                        <div class="vehicle-field"><label>رقم الهيكل للمركبة</label><output
-                                                class="font-mono" id="view-vin">WDB9340321L164157</output></div>
-                                        <div class="vehicle-field"><label>ماركة المركبة</label><output
-                                                id="view-brand">MERCEDES</output></div>
-                                        <div class="vehicle-field"><label>اسم طراز المركبة</label><output
-                                                id="view-model">رأس</output></div>
-                                        <div class="vehicle-field"><label>سنة موديل المركبة</label><output
-                                                id="view-model-year">2007</output></div>
-                                        <div class="vehicle-field vehicle-field--meta"><label>رمز الصانع</label><output
-                                                id="view-maker-code">E13</output></div>
-                                        <div class="vehicle-field vehicle-field--meta"><label>تاريخ إصدار
-                                                البطاقة</label><output id="view-card-issued">19/09/2026</output></div>
-                                        <div class="vehicle-field vehicle-field--meta"><label>معرّف السجل</label><output
-                                                class="font-mono" id="view-record-id">HHH260466</output></div>
+                                        <div class="gov-top-text">
+                                            <span class="gov-top-title">Official government website of the Government of the Kingdom of Saudi Arabia</span>
+                                            <a href="javascript:void(0);" class="gov-verify-link">How to verify <i class="fa-solid fa-chevron-down"></i></a>
+                                        </div>
                                     </div>
                                 </div>
 
-                                <section id="record-picture-section" class="record-picture-section" hidden>
-                                    <div id="record-picture-items" class="record-picture-items"></div>
-                                </section>
-
-                                <!-- Footer Notice Section -->
-                                <div class="record-footer certificate-footer" dir="rtl">
-                                    <div class="footer-contacts">
-                                        <span><i class="fa-solid fa-phone"></i><bdi>+966 00 000 0000</bdi></span>
-                                        <span><i class="fa-solid fa-print"></i><bdi>+966 00 000 0001</bdi></span>
-                                        <span><i
-                                                class="fa-solid fa-envelope"></i><bdi>support@hattan-registry.example</bdi></span>
+                                <!-- SASO Navigation Header -->
+                                <header class="saso-nav-header">
+                                    <div class="saso-nav-top">
+                                        <div class="saso-nav-left">
+                                            <button type="button" class="saso-menu-btn" aria-label="Menu">
+                                                <span class="bar"></span>
+                                                <span class="bar"></span>
+                                                <span class="bar"></span>
+                                            </button>
+                                            <div class="saso-title-block">
+                                                <span class="saso-title-ar">المواصفات السعودية</span>
+                                                <span class="saso-title-en">Saudi Standards</span>
+                                            </div>
+                                        </div>
+                                        <div class="saso-nav-right">
+                                            <!-- Official SASO Tri-Color Emblem -->
+                                            <div class="saso-logo-badge" title="Saudi Standards, Metrology and Quality Organization">
+                                                <svg width="44" height="40" viewBox="0 0 100 88" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="SASO Logo">
+                                                    <!-- Right Sector: Cyan / Teal -->
+                                                    <path d="M51 6 C58 18, 79 50, 93 62 C82 64, 62 61, 52 44 Z" fill="#009bb3"/>
+                                                    <!-- Left Sector: Green -->
+                                                    <path d="M49 6 C42 18, 21 50, 7 62 C18 64, 38 61, 48 44 Z" fill="#3da649"/>
+                                                    <!-- Bottom Sector: Ochre / Brown with SASO text -->
+                                                    <path d="M8 66 C26 63, 74 63, 92 66 C80 84, 20 84, 8 66 Z" fill="#8c5828"/>
+                                                    <text x="50" y="78" fill="#ffffff" font-family="'Plus Jakarta Sans', Arial, sans-serif" font-weight="800" font-size="12.5" text-anchor="middle" letter-spacing="1">SASO</text>
+                                                </svg>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <button type="button" class="certificate-action">إرسال ملاحظة على السجل <i
-                                            class="fa-solid fa-clipboard-check"></i></button>
-                                    <div class="footer-legal">© سجل هتان التجريبي 2026</div>
-                                    <div class="footer-bottom"><span>الأسئلة الشائعة</span><span
-                                            class="footer-divider">|</span><span>Hattan Registry</span></div>
+
+                                    <!-- Action row with Beta badge, Translation, and Profile -->
+                                    <div class="saso-nav-actions">
+                                        <span class="saso-badge-beta">Beta</span>
+                                        <button type="button" class="saso-action-btn saso-lang-btn" aria-label="Translate / Language">
+                                            <i class="fa-solid fa-language"></i>
+                                        </button>
+                                        <button type="button" class="saso-action-btn saso-profile-btn" aria-label="User Profile">
+                                            <i class="fa-regular fa-user"></i>
+                                        </button>
+                                    </div>
+                                </header>
+
+                                <!-- SASO Details Main Cards Container -->
+                                <div class="saso-cards-container">
+
+                                    <!-- SECTION 1: Unique ID & Company Information -->
+                                    <div class="saso-card saso-card-primary">
+                                        <div class="saso-id-header">
+                                            <h2 class="saso-unique-id font-mono" id="view-record-id">8801005508</h2>
+                                            <p class="saso-card-subtitle">Barrier Unique ID Card</p>
+                                        </div>
+
+                                        <div class="saso-field">
+                                            <span class="saso-label">Company Name</span>
+                                            <div class="saso-value" id="view-workshop">almahawir walmaqturat Factory For Manufacturing</div>
+                                        </div>
+
+                                        <div class="saso-field">
+                                            <span class="saso-label">Address</span>
+                                            <div class="saso-value saso-address-text" id="view-address">Building 5187, Al Mariad 6, Al Maarid Dist.,<br>KHAMIS MUSHAYT, 62451, Saudi Arabia</div>
+                                        </div>
+
+                                        <div class="saso-field">
+                                            <span class="saso-label">Applicant Type</span>
+                                            <div class="saso-value" id="view-applicant-type">Factory</div>
+                                        </div>
+
+                                        <div class="saso-field">
+                                            <span class="saso-label">Issuance Date</span>
+                                            <div class="saso-value" id="view-card-issued">14/10/2026</div>
+                                        </div>
+
+                                        <div class="saso-field saso-field-status">
+                                            <span class="saso-label">Status</span>
+                                            <div class="saso-status-wrap">
+                                                <span class="saso-status-pill valid" id="view-status">Valid</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- SECTION 2: Card Data -->
+                                    <div class="saso-card saso-card-data">
+                                        <div class="saso-card-header">
+                                            <h3 class="saso-card-title">Card Data</h3>
+                                        </div>
+
+                                        <div class="saso-card-body">
+                                            <div class="saso-field">
+                                                <span class="saso-label">Brand Name</span>
+                                                <div class="saso-value" id="view-brand">VOLVO/VOLVO</div>
+                                            </div>
+
+                                            <div class="saso-field">
+                                                <span class="saso-label">Protective Device Type</span>
+                                                <div class="saso-value" id="view-vehicle-type">Front Barrier, Side Barrier, Rear Barrier</div>
+                                            </div>
+
+                                            <div class="saso-field">
+                                                <span class="saso-label">Model Year</span>
+                                                <div class="saso-value" id="view-model-year">2022</div>
+                                            </div>
+
+                                            <div class="saso-field">
+                                                <span class="saso-label">Vehicle Identification Number(VIN)</span>
+                                                <div class="saso-value font-mono" id="view-vin">YV2RTY0A6NA898438</div>
+                                            </div>
+
+                                            <div class="saso-field">
+                                                <span class="saso-label">Date of UDP Manufacture</span>
+                                                <div class="saso-value" id="view-made-on">2026-10-14</div>
+                                            </div>
+
+                                            <div class="saso-field">
+                                                <span class="saso-label">UDP Serial Number</span>
+                                                <div class="saso-value font-mono" id="view-serial-no">5144</div>
+                                            </div>
+
+                                            <div class="saso-field">
+                                                <span class="saso-label">UDP Unique Number</span>
+                                                <div class="saso-value font-mono" id="view-barrier-no">KSAS/RMMM265144</div>
+                                            </div>
+
+                                            <!-- Picture Rows -->
+                                            <div class="saso-field saso-field-pic" id="view-side-picture-group">
+                                                <span class="saso-label">Side Barrier Picture</span>
+                                                <div class="saso-pic-pill">
+                                                    <span class="saso-pic-icon"><i class="fa-solid fa-circle-check"></i></span>
+                                                    <span class="saso-pic-filename" id="view-side-picture-name">b7bb2372ebf34c32bbdb.jpg</span>
+                                                    <button type="button" class="saso-pic-eye-btn" id="view-side-picture-btn" title="View Picture" aria-label="View Side Barrier Picture">
+                                                        <i class="fa-regular fa-eye"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+
+                                            <div class="saso-field saso-field-pic" id="view-front-picture-group" style="display:none;">
+                                                <span class="saso-label">Front Barrier Picture</span>
+                                                <div class="saso-pic-pill">
+                                                    <span class="saso-pic-icon"><i class="fa-solid fa-circle-check"></i></span>
+                                                    <span class="saso-pic-filename" id="view-front-picture-name">b7bb2372ebf34c32bbdb.jpg</span>
+                                                    <button type="button" class="saso-pic-eye-btn" id="view-front-picture-btn" title="View Picture" aria-label="View Front Barrier Picture">
+                                                        <i class="fa-regular fa-eye"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+
+                                            <div class="saso-field saso-field-pic" id="view-rear-picture-group">
+                                                <span class="saso-label">Rear Barrier Picture</span>
+                                                <div class="saso-pic-pill">
+                                                    <span class="saso-pic-icon"><i class="fa-solid fa-circle-check"></i></span>
+                                                    <span class="saso-pic-filename" id="view-rear-picture-name">b7bb2372ebf34c32bbdb.jpg</span>
+                                                    <button type="button" class="saso-pic-eye-btn" id="view-rear-picture-btn" title="View Picture" aria-label="View Rear Barrier Picture">
+                                                        <i class="fa-regular fa-eye"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Back Button -->
+                                    <div class="saso-back-container">
+                                        <button type="button" class="saso-btn-back" id="saso-btn-back">
+                                            <i class="fa-solid fa-arrow-left"></i>
+                                            <span>Back</span>
+                                        </button>
+                                    </div>
                                 </div>
 
+                                <!-- Deep Green Footer -->
+                                <footer class="saso-footer">
+                                    <div class="saso-footer-col">
+                                        <h4 class="saso-footer-heading">Contact & Support</h4>
+                                        <div class="saso-footer-links">
+                                            <a href="javascript:void(0);">Frequently Asked Questions</a>
+                                            <a href="javascript:void(0);">Terms & Conditions</a>
+                                            <a href="javascript:void(0);">Terms & Conditions</a>
+                                        </div>
+                                    </div>
+
+                                    <div class="saso-footer-col saso-footer-social-wrap">
+                                        <h4 class="saso-footer-heading">Social Media</h4>
+                                        <div class="saso-social-icons">
+                                            <a href="javascript:void(0);" class="saso-social-link" aria-label="X (Twitter)">
+                                                <i class="fa-brands fa-x-twitter"></i>
+                                            </a>
+                                            <a href="javascript:void(0);" class="saso-social-link" aria-label="Facebook">
+                                                <i class="fa-brands fa-facebook-f"></i>
+                                            </a>
+                                            <a href="javascript:void(0);" class="saso-social-link" aria-label="YouTube">
+                                                <i class="fa-brands fa-youtube"></i>
+                                            </a>
+                                            <a href="javascript:void(0);" class="saso-social-link" aria-label="Snapchat">
+                                                <i class="fa-brands fa-snapchat"></i>
+                                            </a>
+                                            <a href="javascript:void(0);" class="saso-social-link" aria-label="Instagram">
+                                                <i class="fa-brands fa-instagram"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </footer>
+
+                                <!-- Picture Viewer Modal -->
+                                <div id="saso-picture-modal" class="saso-modal" hidden>
+                                    <div class="saso-modal-backdrop"></div>
+                                    <div class="saso-modal-dialog">
+                                        <div class="saso-modal-header">
+                                            <span class="saso-modal-title" id="saso-modal-title">Barrier Inspection Picture</span>
+                                            <button type="button" class="saso-modal-close" id="saso-modal-close-btn" aria-label="Close">&times;</button>
+                                        </div>
+                                        <div class="saso-modal-body">
+                                            <img id="saso-modal-img" src="assets/barrier-sample.jpg" alt="Barrier Picture">
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-
                         </div>
                     </div>
                 </div>

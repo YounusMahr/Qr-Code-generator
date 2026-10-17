@@ -269,6 +269,10 @@ function initFormListeners() {
     // 3. Clear Form Button
     document.getElementById('btn-clear-form')?.addEventListener('click', () => {
         document.getElementById('rec-workshop').value = '';
+        document.getElementById('rec-address').value = '';
+        document.getElementById('rec-applicant-type').value = 'Factory';
+        document.getElementById('rec-status').value = 'Valid';
+        document.getElementById('rec-serial-no').value = '';
         document.getElementById('rec-maker-code').value = '';
         document.getElementById('rec-barrier-no').value = '';
         document.getElementById('rec-vehicle-type').value = '';

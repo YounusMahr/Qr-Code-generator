@@ -20,7 +20,11 @@ const FIELD_LIMITS = {
     picture2Url: 600,
     picture2Name: 120,
     picture3Url: 600,
-    picture3Name: 120
+    picture3Name: 120,
+    address: 500,
+    applicantType: 100,
+    status: 50,
+    serialNumber: 100
 };
 
 function getHeader(request, name) {
