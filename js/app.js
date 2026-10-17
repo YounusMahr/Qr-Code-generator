@@ -624,7 +624,7 @@ function renderMobileBarrierCard() {
         ['UPD Type (Front, Side, Rear)', 'نوع الحاجز', value('card-upd-type')],
         ['Vehicle Chassis Number (VIN)', 'رقم هيكل المركبة (VIN)', value('card-vin')],
         ['Sample Reference', 'مرجع تجريبي', value('card-barrier')],
-        ['Technical References', 'المتطلبات الفنية', technical]
+        ['Technical References', 'المتطلبات الفنية', value('card-technical')]
     ];
     documentEl.innerHTML = `
         <header><div class="card-header-saso-img" style="width:100%;overflow:hidden;max-height:90px;"><img src="assets/saso-header.png" alt="Saudi Standards - SASO" style="display:block;width:100%;height:90px;object-fit:cover;object-position:center;"></div><div class="mobile-card-meta" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:8px 14px;background:#eaf5f6;border-top:1px solid #d3e8e9;"><div><span>Card Number</span><b>${escapeHtml(uniqueId)}</b><span>Card Issue Date</span><b>${escapeHtml(cardIssueDate)}</b></div><div dir="rtl"><span>رقم البطاقة</span><b>${escapeHtml(uniqueId)}</b><span>تاريخ إصدار البطاقة</span><b>${escapeHtml(cardIssueDate)}</b></div></div></header>
