@@ -8,6 +8,15 @@
     <meta name="theme-color" content="#123d38">
     <link rel="icon" href="assets/favicon.svg?v=1" type="image/svg+xml">
 
+    <script>
+        (() => {
+            const params = new URLSearchParams(window.location.search);
+            if (params.has('id') || params.has('rec')) {
+                document.documentElement.classList.add('shared-record-pending');
+            }
+        })();
+    </script>
+
     <!-- Meta SEO -->
     <meta name="description"
         content="Hattan Registry — create, store and scan shareable fleet records with QR and barcode identifiers.">
@@ -22,7 +31,7 @@
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <link rel="stylesheet" href="css/styles.css?v=10.1">
+    <link rel="stylesheet" href="css/styles.css?v=10.2">
 
     <!-- QRCode, JsBarcode, and html5-qrcode scripts -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
@@ -33,6 +42,11 @@
 </head>
 
 <body>
+
+    <div id="shared-record-loading" role="status" aria-live="polite">
+        <span class="shared-record-loader-spinner" aria-hidden="true"></span>
+        <span id="shared-record-loading-message">Loading record…</span>
+    </div>
 
     <!-- Top Demo Build Banner -->
     <div class="global-demo-banner">
@@ -870,7 +884,7 @@
     <script src="js/record-viewer.js?v=10.1"></script>
     <script src="js/qr-generator.js?v=10.1"></script>
     <script src="js/barcode.js?v=10.1"></script>
-    <script src="js/app.js?v=10.1"></script>
+    <script src="js/app.js?v=10.2"></script>
 </body>
 
 </html>

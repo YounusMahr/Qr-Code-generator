@@ -28,8 +28,16 @@ document.addEventListener('DOMContentLoaded', () => {
     initTabNavigation();
     initFormListeners();
     initSavedRecordsStorage();
-    initPresetData();
-    initUrlState();
+    const params = new URLSearchParams(window.location.search);
+    const hasSharedRecord = params.has('id') || params.has('rec');
+    if (hasSharedRecord) {
+        // Don't initialize the sample record on a shared URL; that could flash
+        // unrelated details while the requested record is being fetched.
+        document.body.classList.add('shared-record-mode');
+    } else {
+        initPresetData();
+    }
+    void initUrlState();
 });
 
 /**
@@ -99,8 +107,11 @@ function initPresetData() {
 async function initUrlState() {
     const params = new URLSearchParams(window.location.search);
     const sharedId = params.get('id');
+    if (params.has('id') && !sharedId) {
+        showSharedRecordError('This record link is missing its record ID.');
+        return;
+    }
     if (sharedId) {
-        document.body.classList.add('shared-record-mode');
         try {
             const response = await fetch(`/api/records?id=${encodeURIComponent(sharedId)}`, { cache: 'no-store' });
             const result = await response.json();
@@ -108,20 +119,29 @@ async function initUrlState() {
             loadRecordToForm(result.record);
             renderRecordToView(result.record);
             switchTab('tab-details');
+            document.documentElement.classList.remove('shared-record-pending', 'shared-record-error');
         } catch (error) {
             console.error('Could not load shared record:', error);
-            showToast(error.message || 'Could not load this shared record.');
+            showSharedRecordError(error.message || 'Could not load this shared record.');
         }
         return;
     }
 
     const decodedRecord = decodeRecordFromUrl();
     if (decodedRecord) {
-        document.body.classList.add('shared-record-mode');
         loadRecordToForm(decodedRecord);
         renderRecordToView(decodedRecord);
         switchTab('tab-details');
+        document.documentElement.classList.remove('shared-record-pending', 'shared-record-error');
+    } else if (params.has('rec')) {
+        showSharedRecordError('This record link is invalid or incomplete.');
     }
+}
+
+function showSharedRecordError(message) {
+    const messageElement = document.getElementById('shared-record-loading-message');
+    if (messageElement) messageElement.textContent = message;
+    document.documentElement.classList.add('shared-record-error');
 }
 
 /**
