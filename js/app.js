@@ -113,11 +113,13 @@ async function initUrlState() {
     }
     if (sharedId) {
         try {
-            const response = await fetch(`/api/records?id=${encodeURIComponent(sharedId)}`, { cache: 'no-store' });
-            const result = await response.json();
-            if (!response.ok || !result.record) throw new Error(result.error || 'Shared record could not be loaded.');
-            loadRecordToForm(result.record);
-            renderRecordToView(result.record);
+            const record = await (window.sharedRecordRequest || fetch(`/api/records?id=${encodeURIComponent(sharedId)}`).then(async response => {
+                const result = await response.json();
+                if (!response.ok || !result.record) throw new Error(result.error || 'Shared record could not be loaded.');
+                return result.record;
+            }));
+            loadRecordToForm(record);
+            renderRecordToView(record);
             switchTab('tab-details');
             document.documentElement.classList.remove('shared-record-pending', 'shared-record-error');
         } catch (error) {
@@ -139,8 +141,8 @@ async function initUrlState() {
 }
 
 function showSharedRecordError(message) {
-    const messageElement = document.getElementById('shared-record-loading-message');
-    if (messageElement) messageElement.textContent = message;
+    const errorElement = document.getElementById('shared-record-error');
+    if (errorElement && message) errorElement.textContent = message;
     document.documentElement.classList.add('shared-record-error');
 }
 

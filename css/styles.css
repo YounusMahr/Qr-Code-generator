@@ -1902,15 +1902,19 @@ body {
 }
 
 /* Shared QR destination: a focused record page, not the generator workspace. */
-.shared-record-pending body > :not(#shared-record-loading) {
+.shared-record-pending body > :not(#shared-record-error) {
     visibility: hidden !important;
 }
 
-#shared-record-loading {
+#shared-record-error {
     display: none;
 }
 
-.shared-record-pending #shared-record-loading {
+.shared-record-pending {
+    background: #ffffff;
+}
+
+.shared-record-error #shared-record-error {
     position: fixed;
     inset: 0;
     z-index: 100000;
@@ -1918,29 +1922,11 @@ body {
     align-items: center;
     justify-content: center;
     flex-direction: column;
-    gap: 14px;
     padding: 24px;
-    background: #f2f4f8;
+    background: #ffffff;
     color: #334155;
-    font: 600 16px/1.5 Inter, Arial, sans-serif;
+    font: 500 16px/1.6 Inter, Arial, sans-serif;
     text-align: center;
-}
-
-.shared-record-loader-spinner {
-    width: 34px;
-    height: 34px;
-    border: 3px solid #d8e5e3;
-    border-top-color: #147b70;
-    border-radius: 50%;
-    animation: shared-record-spin .8s linear infinite;
-}
-
-.shared-record-error .shared-record-loader-spinner {
-    display: none;
-}
-
-@keyframes shared-record-spin {
-    to { transform: rotate(360deg); }
 }
 
 .shared-record-mode {

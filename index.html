@@ -14,6 +14,18 @@
             if (params.has('id') || params.has('rec')) {
                 document.documentElement.classList.add('shared-record-pending');
             }
+            const sharedId = params.get('id');
+            if (sharedId) {
+                // Start fetching the record immediately, while styles and libraries load.
+                window.sharedRecordRequest = fetch(`/api/records?id=${encodeURIComponent(sharedId)}`)
+                    .then(async response => {
+                        const result = await response.json();
+                        if (!response.ok || !result.record) {
+                            throw new Error(result.error || 'Shared record could not be loaded.');
+                        }
+                        return result.record;
+                    });
+            }
         })();
     </script>
 
@@ -43,9 +55,8 @@
 
 <body>
 
-    <div id="shared-record-loading" role="status" aria-live="polite">
-        <span class="shared-record-loader-spinner" aria-hidden="true"></span>
-        <span id="shared-record-loading-message">Loading record…</span>
+    <div id="shared-record-error" role="alert">
+        The record could not be loaded. Check your connection and try scanning again.
     </div>
 
     <!-- Top Demo Build Banner -->
