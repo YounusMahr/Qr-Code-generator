@@ -428,6 +428,9 @@ function initFormListeners() {
     });
     document.getElementById('btn-download-card-pdf')?.addEventListener('click', downloadBarrierCardPdf);
     document.getElementById('btn-download-mobile-pdf')?.addEventListener('click', downloadMobileBarrierCardPdf);
+    document.getElementById('btn-share-card-pdf')?.addEventListener('click', shareBarrierCardPdf);
+    document.getElementById('wa-btn-view')?.addEventListener('click', viewBarrierCardPdf);
+    document.getElementById('wa-btn-save')?.addEventListener('click', downloadBarrierCardPdf);
 }
 
 async function handleRecordPictureUpload(event) {
@@ -644,6 +647,7 @@ function renderBarrierCard() {
         new QRCode(qrTarget, { text: encodeRecordToUrl(getRecordFromForm()), width: 180, height: 180, colorDark: '#000000', colorLight: '#ffffff', correctLevel: QRCode.CorrectLevel.M });
     }
     renderMobileBarrierCard();
+    updateWhatsAppPreview();
 }
 
 function renderMobileBarrierCard() {
@@ -682,53 +686,166 @@ function renderMobileBarrierCard() {
     }
 }
 
-async function downloadBarrierCardPdf() {
+function getBarrierCardFilename() {
+    const vin = document.getElementById('card-vin')?.value.trim();
+    const barrier = document.getElementById('card-barrier')?.value.trim();
+    const uniqueId = document.getElementById('card-unique-id')?.value.trim();
+    const id = (vin || barrier || uniqueId || 'record').replace(/[^a-z0-9]+/gi, '-').replace(/^-|-$/g, '');
+    return `truck-and-trailer-barriers-id-card-${id}.pdf`;
+}
+
+function updateWhatsAppPreview() {
+    const filenameEl = document.getElementById('wa-preview-filename');
+    const timeEl = document.getElementById('wa-preview-time');
+    const bannerImg = document.getElementById('whatsapp-banner-img');
+    const filename = getBarrierCardFilename();
+    if (filenameEl) filenameEl.textContent = filename;
+
+    if (timeEl && !timeEl.dataset.initialized) {
+        const now = new Date();
+        timeEl.textContent = now.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit', hour12: true }).toLowerCase();
+        timeEl.dataset.initialized = 'true';
+    }
+
+    clearTimeout(window._waBannerTimer);
+    window._waBannerTimer = setTimeout(async () => {
+        const card = document.getElementById('barrier-card-document');
+        if (!card || !window.html2canvas || !bannerImg) return;
+        try {
+            const logo = card.querySelector('.card-intro-logo');
+            const logoSrc = getBarrierCardLogoSrc();
+            if (logo && logo.getAttribute('src') !== logoSrc) logo.src = logoSrc;
+            
+            const canvas = await html2canvas(card, {
+                backgroundColor: '#ffffff',
+                scale: 1.5,
+                useCORS: true,
+                allowTaint: true,
+                height: Math.floor(card.offsetHeight * 0.33),
+                windowHeight: card.offsetHeight,
+                onclone: (clonedDoc) => {
+                    const clonedLogo = clonedDoc.querySelector('.card-intro-logo');
+                    if (clonedLogo) clonedLogo.src = logoSrc;
+                }
+            });
+            bannerImg.src = canvas.toDataURL('image/jpeg', 0.85);
+        } catch (e) {
+            console.debug('WhatsApp preview note:', e);
+        }
+    }, 350);
+}
+
+async function buildBarrierCardPdfDoc() {
     const card = document.getElementById('barrier-card-document');
     if (!card || !window.html2canvas || !window.jspdf) {
-        showToast('PDF export library is not available. Please check your connection.');
-        return;
+        throw new Error('PDF export library is not available.');
     }
     renderBarrierCard();
-    try {
-        if (document.fonts) await document.fonts.ready;
-        const logo = card.querySelector('.card-intro-logo');
-        const logoSrc = getBarrierCardLogoSrc();
-        if (logo) {
-            logo.src = logoSrc;
-            if (!logo.complete) {
-                await new Promise(r => { logo.onload = logo.onerror = r; setTimeout(r, 600); });
-            }
+    if (document.fonts) await document.fonts.ready;
+    const logo = card.querySelector('.card-intro-logo');
+    const logoSrc = getBarrierCardLogoSrc();
+    if (logo) {
+        logo.src = logoSrc;
+        if (!logo.complete) {
+            await new Promise(r => { logo.onload = logo.onerror = r; setTimeout(r, 600); });
         }
-        const canvas = await html2canvas(card, {
-            backgroundColor: '#ffffff',
-            scale: 4,
-            useCORS: true,
-            allowTaint: true,
-            onclone: (clonedDoc) => {
-                const clonedLogo = clonedDoc.querySelector('.card-intro-logo');
-                if (clonedLogo) {
-                    clonedLogo.src = logoSrc;
-                }
-            }
-        });
-        const { jsPDF } = window.jspdf;
-        // A4 portrait document with print-safe margins.
-        const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
-        const pageWidth = pdf.internal.pageSize.getWidth();
-        const pageHeight = pdf.internal.pageSize.getHeight();
-        const margin = 5;
-        const maxWidth = pageWidth - (margin * 2);
-        const maxHeight = pageHeight - (margin * 2);
-        const scale = Math.min(maxWidth / canvas.width, maxHeight / canvas.height);
-        const pdfWidth = canvas.width * scale;
-        const pdfHeight = canvas.height * scale;
-        pdf.addImage(canvas.toDataURL('image/png'), 'PNG', (pageWidth - pdfWidth) / 2, (pageHeight - pdfHeight) / 2, pdfWidth, pdfHeight);
-        const filename = (document.getElementById('card-barrier')?.value || 'record').replace(/[^a-z0-9]+/gi, '-').replace(/^-|-$/g, '');
-        pdf.save(`barrier-card-${filename || 'record'}.pdf`);
-        showToast('Barrier card PDF downloaded.');
+    }
+
+    // Scale 2.2 produces high definition (1750x2475) while keeping file size ~137 kB
+    const canvas = await html2canvas(card, {
+        backgroundColor: '#ffffff',
+        scale: 2.2,
+        useCORS: true,
+        allowTaint: true,
+        onclone: (clonedDoc) => {
+            const clonedLogo = clonedDoc.querySelector('.card-intro-logo');
+            if (clonedLogo) clonedLogo.src = logoSrc;
+        }
+    });
+
+    const { jsPDF } = window.jspdf;
+    // Standard A4 portrait (210 x 297 mm)
+    const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+
+    // JPEG DCTDecode at 0.90 compression creates the exact ~137 kB PDF
+    // which allows WhatsApp to render the first-page banner thumbnail preview!
+    const imgData = canvas.toDataURL('image/jpeg', 0.90);
+    pdf.addImage(imgData, 'JPEG', 0, 0, 210, 297, undefined, 'FAST');
+
+    const filename = getBarrierCardFilename();
+    pdf.setProperties({
+        title: filename,
+        subject: 'Unique Under-run Protection Device (UPD) Card',
+        author: 'Saudi Standards, Metrology and Quality Organization (SASO)',
+        creator: 'SASO Barrier Unique ID System'
+    });
+
+    // Update in-app banner immediately with top 32% of this sharp canvas
+    const bannerImg = document.getElementById('whatsapp-banner-img');
+    if (bannerImg) {
+        try {
+            const cropCanvas = document.createElement('canvas');
+            cropCanvas.width = canvas.width;
+            cropCanvas.height = Math.floor(canvas.height * 0.32);
+            const ctx = cropCanvas.getContext('2d');
+            ctx.drawImage(canvas, 0, 0, canvas.width, cropCanvas.height, 0, 0, canvas.width, cropCanvas.height);
+            bannerImg.src = cropCanvas.toDataURL('image/jpeg', 0.88);
+        } catch (_) {}
+    }
+
+    return { pdf, filename };
+}
+
+async function downloadBarrierCardPdf() {
+    try {
+        const { pdf, filename } = await buildBarrierCardPdfDoc();
+        pdf.save(filename);
+        showToast(`Downloaded: ${filename}`);
     } catch (error) {
         console.error('PDF export failed:', error);
         showToast('Could not create PDF. Please try again.');
+    }
+}
+
+async function viewBarrierCardPdf() {
+    try {
+        const { pdf } = await buildBarrierCardPdfDoc();
+        const blob = pdf.output('blob');
+        const url = URL.createObjectURL(blob);
+        window.open(url, '_blank');
+        showToast('Opening PDF preview...');
+    } catch (error) {
+        console.error('PDF view failed:', error);
+        showToast('Could not view PDF.');
+    }
+}
+
+async function shareBarrierCardPdf() {
+    try {
+        showToast('Preparing PDF for WhatsApp...');
+        const { pdf, filename } = await buildBarrierCardPdfDoc();
+        const blob = pdf.output('blob');
+        const file = new File([blob], filename, { type: 'application/pdf' });
+
+        if (navigator.canShare && navigator.canShare({ files: [file] })) {
+            await navigator.share({
+                files: [file],
+                title: filename,
+                text: 'Unique Under-run Protection Device (UPD) Card'
+            });
+            showToast('Shared successfully!');
+        } else {
+            // Fallback: download PDF and open WhatsApp web/app
+            pdf.save(filename);
+            const waUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent('Here is the Unique Under-run Protection Device (UPD) Card: ' + filename)}`;
+            window.open(waUrl, '_blank');
+            showToast('PDF downloaded! Opening WhatsApp to share...');
+        }
+    } catch (error) {
+        if (error.name !== 'AbortError') {
+            console.error('Share failed:', error);
+            downloadBarrierCardPdf();
+        }
     }
 }
 

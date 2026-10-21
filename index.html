@@ -825,6 +825,42 @@
                                 class="fa-solid fa-print"></i> Print PDF (A4)</button>
                         <button type="button" class="btn btn-secondary card-download" id="btn-download-mobile-pdf"><i
                                 class="fa-solid fa-mobile-screen-button"></i> Mobile PDF (Portrait)</button>
+                        <button type="button" class="btn card-download" id="btn-share-card-pdf" style="background:#25d366;color:#fff;border-color:#25d366;"><i
+                                class="fa-brands fa-whatsapp"></i> Share PDF (WhatsApp)</button>
+                    </div>
+
+                    <!-- WhatsApp Document Share Preview -->
+                    <div class="whatsapp-share-preview-section">
+                        <div class="whatsapp-preview-title">
+                            <i class="fa-brands fa-whatsapp" style="color:#25d366;font-size:1.1rem;"></i>
+                            <span>WhatsApp Share Preview</span>
+                        </div>
+                        <div class="whatsapp-doc-card" id="whatsapp-doc-preview-card">
+                            <div class="whatsapp-card-forwarded">
+                                <span><i class="fa-solid fa-share"></i> Forwarded</span>
+                                <i class="fa-solid fa-chevron-down"></i>
+                            </div>
+                            <div class="whatsapp-card-banner" id="whatsapp-card-banner">
+                                <img id="whatsapp-banner-img" src="" alt="PDF Preview Banner" />
+                            </div>
+                            <div class="whatsapp-card-fileinfo">
+                                <div class="whatsapp-pdf-icon-wrap">
+                                    <div class="whatsapp-pdf-badge">
+                                        <i class="fa-solid fa-file-pdf"></i>
+                                        <b>PDF</b>
+                                    </div>
+                                </div>
+                                <div class="whatsapp-file-details">
+                                    <strong class="whatsapp-filename" id="wa-preview-filename">truck-and-trailer-barriers-id-card-YV2RTY0A6NA898438.pdf</strong>
+                                    <span class="whatsapp-filesize">1 page • PDF • 137 kB</span>
+                                </div>
+                                <span class="whatsapp-timestamp" id="wa-preview-time">4:49 pm</span>
+                            </div>
+                            <div class="whatsapp-card-actions">
+                                <button type="button" class="wa-action-btn" id="wa-btn-view">View</button>
+                                <button type="button" class="wa-action-btn" id="wa-btn-save">Save as...</button>
+                            </div>
+                        </div>
                     </div>
                 </aside>
                 <div class="card-preview-wrap">
