@@ -546,9 +546,12 @@ function syncRecordToCard(record = getRecordFromForm()) {
 
 function getBarrierCardLogoSrc() {
     const choice = document.getElementById('card-logo-select')?.value || 'logo1';
-    if (choice === 'logo2') return 'assets/barrier-logo-2.svg';
-    if (choice === 'logo3') return 'assets/barrier-logo-3.svg';
-    return 'assets/uploaded-registry-symbol.jfif?v=1';
+    if (typeof BARRIER_LOGOS !== 'undefined' && BARRIER_LOGOS && BARRIER_LOGOS[choice]) {
+        return BARRIER_LOGOS[choice];
+    }
+    if (choice === 'logo2') return 'assets/barrier-logo-2.png';
+    if (choice === 'logo3') return 'assets/barrier-logo-3.png';
+    return 'assets/barrier-logo-1.png';
 }
 
 function renderBarrierCard() {
@@ -689,10 +692,25 @@ async function downloadBarrierCardPdf() {
     try {
         if (document.fonts) await document.fonts.ready;
         const logo = card.querySelector('.card-intro-logo');
-        if (logo && !logo.complete) {
-            await new Promise(r => { logo.onload = logo.onerror = r; setTimeout(r, 600); });
+        const logoSrc = getBarrierCardLogoSrc();
+        if (logo) {
+            logo.src = logoSrc;
+            if (!logo.complete) {
+                await new Promise(r => { logo.onload = logo.onerror = r; setTimeout(r, 600); });
+            }
         }
-        const canvas = await html2canvas(card, { backgroundColor: '#ffffff', scale: 4, useCORS: true });
+        const canvas = await html2canvas(card, {
+            backgroundColor: '#ffffff',
+            scale: 4,
+            useCORS: true,
+            allowTaint: true,
+            onclone: (clonedDoc) => {
+                const clonedLogo = clonedDoc.querySelector('.card-intro-logo');
+                if (clonedLogo) {
+                    clonedLogo.src = logoSrc;
+                }
+            }
+        });
         const { jsPDF } = window.jspdf;
         // A4 portrait document with print-safe margins.
         const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
@@ -724,10 +742,25 @@ async function downloadMobileBarrierCardPdf() {
     try {
         if (document.fonts) await document.fonts.ready;
         const logo = card.querySelector('.card-intro-logo');
-        if (logo && !logo.complete) {
-            await new Promise(r => { logo.onload = logo.onerror = r; setTimeout(r, 600); });
+        const logoSrc = getBarrierCardLogoSrc();
+        if (logo) {
+            logo.src = logoSrc;
+            if (!logo.complete) {
+                await new Promise(r => { logo.onload = logo.onerror = r; setTimeout(r, 600); });
+            }
         }
-        const canvas = await html2canvas(card, { backgroundColor: '#ffffff', scale: 4, useCORS: true });
+        const canvas = await html2canvas(card, {
+            backgroundColor: '#ffffff',
+            scale: 4,
+            useCORS: true,
+            allowTaint: true,
+            onclone: (clonedDoc) => {
+                const clonedLogo = clonedDoc.querySelector('.card-intro-logo');
+                if (clonedLogo) {
+                    clonedLogo.src = logoSrc;
+                }
+            }
+        });
         const { jsPDF } = window.jspdf;
         const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
         const maxWidth = 190;
