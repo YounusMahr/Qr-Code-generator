@@ -2398,13 +2398,13 @@ body {
     position: relative;
     display: flex;
     flex-direction: column;
-    width: min(100%, 794px);
-    min-width: 620px;
+    width: 100%;
+    max-width: 794px;
     aspect-ratio: 210 / 297;
     box-sizing: border-box;
     overflow: hidden;
-    background: #fff;
-    padding: 0 0 1.7%;
+    background: #ffffff;
+    padding: 0;
     color: #172b2b;
     font-family: "Cairo", Arial, sans-serif;
     font-weight: 400;
@@ -2418,9 +2418,9 @@ body {
     inset: 0;
     background-image: url('../assets/saso-watermark.png');
     background-repeat: no-repeat;
-    background-position: center 65%;
-    background-size: 45%;
-    opacity: 1;
+    background-position: center 60%;
+    background-size: 50%;
+    opacity: 0.12;
     pointer-events: none;
 }
 
@@ -2432,10 +2432,10 @@ body {
 /* --- Barrier Card Header: single bg cover + text overlay --- */
 .barrier-card-header {
     position: relative;
-    flex: 0 0 17%;
+    flex: 0 0 16.5%;
     display: grid;
-    grid-template-columns: 1.1fr 1fr 1.1fr;
-    align-items: stretch;
+    grid-template-columns: 1.15fr 1fr 1.15fr;
+    align-items: center;
     gap: 0;
     min-height: 0;
     overflow: hidden;
@@ -2443,55 +2443,8 @@ body {
     background-size: cover;
     background-position: center center;
     background-repeat: no-repeat;
-}
-
-/* Decorative diamond shapes on left side */
-.barrier-card-header::before {
-    content: "";
-    position: absolute;
-    left: -18%;
-    top: -30%;
-    width: 55%;
-    height: 160%;
-    background-image:
-        linear-gradient(135deg, rgba(100, 185, 180, .18) 0%, transparent 50%),
-        linear-gradient(315deg, rgba(100, 185, 180, .12) 0%, transparent 50%);
-    clip-path: polygon(30% 0%, 100% 50%, 70% 100%, 0% 50%);
-    pointer-events: none;
-}
-
-/* Decorative diamond shapes on right side */
-.barrier-card-header::after {
-    content: "";
-    position: absolute;
-    right: -18%;
-    top: -30%;
-    width: 55%;
-    height: 160%;
-    background-image:
-        linear-gradient(315deg, rgba(100, 185, 180, .18) 0%, transparent 50%),
-        linear-gradient(135deg, rgba(100, 185, 180, .12) 0%, transparent 50%);
-    clip-path: polygon(30% 0%, 100% 50%, 70% 100%, 0% 50%);
-    pointer-events: none;
-}
-
-/* Center column: SASO logo */
-.card-header-center {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: .4rem .6rem;
-    z-index: 1;
-}
-
-.saso-center-img {
-    display: block;
-    width: auto;
-    height: 100%;
-    max-height: 90%;
-    max-width: 100%;
-    object-fit: contain;
-    object-position: center;
+    padding: 0.8rem 1.4rem;
+    box-sizing: border-box;
 }
 
 /* Left/Right text columns */
@@ -2501,36 +2454,47 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    gap: .28rem;
+    gap: 0.25rem;
     min-width: 0;
-    padding: .6rem 1rem;
-    height: 100%;
 }
 
-.card-header-side>strong {
+.card-header-side strong {
     display: block;
-    color: #0a2e30;
-    font-size: clamp(.58rem, .88vw, .78rem);
-    font-weight: 800;
+    color: #172b2b;
+    font-size: 0.82rem;
+    font-weight: 700;
     line-height: 1.25;
-    margin-bottom: .12rem;
+    margin-bottom: 0.15rem;
 }
 
-.card-header-side>span {
+.card-header-meta-row {
     display: flex;
     align-items: baseline;
-    gap: .3rem;
-    color: #3a5c5a;
-    font-size: clamp(.4rem, .6vw, .54rem);
-    line-height: 1.4;
+    gap: 0.35rem;
+    font-size: 0.65rem;
+    line-height: 1.35;
+    color: #333333;
 }
 
-.card-header-side>span b {
-    color: #b85c00;
+.card-header-meta-row span {
+    color: #3a5c5a;
+    font-weight: 500;
+}
+
+.card-header-meta-row b {
+    color: #856a42;
     font-family: var(--font-mono, monospace);
-    font-size: 1.1em;
+    font-size: 0.72rem;
     font-weight: 700;
-    letter-spacing: .01em;
+    letter-spacing: 0.02em;
+}
+
+.card-header-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.4rem 0.6rem;
+    z-index: 1;
 }
 
 .card-header-arabic {
@@ -2539,198 +2503,77 @@ body {
     font-family: "Cairo", Arial, sans-serif;
 }
 
-.card-header-arabic>strong {
-    display: block;
-    font-size: clamp(.65rem, 1vw, .88rem);
-    font-weight: 800;
-    text-align: right;
-    width: 100%;
+.card-header-arabic strong {
+    font-size: 0.95rem;
+    font-weight: 700;
 }
 
-.card-header-arabic>span {
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-start;
-    align-items: baseline;
-    gap: .3rem;
-    text-align: right;
-    width: 100%;
-    direction: rtl;
-}
-
-.card-header-arabic>span b {
-    display: inline-block;
-    direction: ltr;
-    unicode-bidi: isolate;
-}
-
+/* --- Intro Row: English, Arabic, Road Emblem on same horizontal line --- */
 .card-intro {
-    flex: 0 0 10%;
+    flex: 0 0 auto;
     display: grid;
-    grid-template-rows: 1fr 48px;
-    gap: .35rem;
-    margin: .8% 3.2% 1%;
-    padding: .5rem .55rem;
-    border-bottom: 1px solid #d9e6e6;
-    background: #fff;
-}
-
-.card-intro-copy {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr 1fr 72px;
     align-items: center;
-    gap: 2%;
+    gap: 1.2rem;
+    margin: 0.5rem 2rem 0.6rem;
+    padding: 0.1rem 0;
+    background: transparent;
 }
 
-.card-intro-copy p {
+.card-intro-en p,
+.card-intro-ar p {
     margin: 0;
-    color: #59686a;
-    font-size: clamp(.5rem, .74vw, .63rem);
+    color: #4a5c5e;
+    font-size: 0.61rem;
     line-height: 1.45;
 }
 
-.card-intro-copy p:last-child {
+.card-intro-ar {
     text-align: right;
+    font-family: "Cairo", Arial, sans-serif;
 }
 
 .card-intro-brand {
     display: flex;
     align-items: center;
     justify-content: flex-end;
-    padding: .15rem .4rem .2rem;
 }
 
 .card-intro-logo {
     display: block;
-    width: 64px;
-    height: 56px;
+    width: 68px;
+    height: 52px;
     object-fit: contain;
 }
 
-.card-identity {
-    display: flex;
-    align-items: center;
-    gap: .55rem;
-    min-width: 0;
-}
-
-.card-brand-logo {
-    position: relative;
-    flex: 0 0 42px;
-    width: 42px;
-    height: 42px;
-    overflow: hidden;
-    border-radius: 12px;
-    background: #123d38;
-    box-shadow: 0 5px 14px rgba(9, 77, 69, .2);
-}
-
-.card-identity>div:last-child {
-    min-width: 0;
-}
-
-.card-identity strong {
-    display: block;
-    color: #102c28;
-    font-family: var(--font-heading);
-    font-size: clamp(.75rem, 1.35vw, 1rem);
-    font-weight: 800;
-    line-height: 1.1;
-    white-space: nowrap;
-}
-
-.card-identity strong span {
-    color: #08766c;
-}
-
-.card-identity small {
-    display: block;
-    margin-top: .24rem;
-    color: #657976;
-    font-size: clamp(.48rem, .78vw, .64rem);
-    line-height: 1.2;
-}
-
-.barrier-card-qr {
-    box-sizing: border-box;
-    width: 86%;
-    aspect-ratio: 1;
-    justify-self: center;
-    padding: 0;
-    border: 0;
-    background: transparent;
-}
-
-.barrier-card-qr canvas,
-.barrier-card-qr img {
-    display: block;
-    width: 100% !important;
-    height: 100% !important;
-}
-
-.barrier-card-qr img {
-    image-rendering: pixelated;
-    border-radius: 0;
-}
-
-.barrier-card-title {
-    min-width: 0;
-    text-align: center;
-    padding-top: .1%;
-}
-
-.barrier-card-title span {
-    display: block;
-    color: #086f71;
-    font-family: var(--font-arabic);
-    font-size: clamp(.95rem, 1.65vw, 1.3rem);
-    font-weight: 800;
-}
-
-.barrier-card-title strong,
-.barrier-card-title b {
-    display: block;
-    margin-top: .22rem;
-    font-size: clamp(.7rem, 1.1vw, .9rem);
-}
-
-.barrier-card-title b {
-    color: #5e7470;
-    font-size: clamp(.58rem, .9vw, .74rem);
-    font-weight: 600;
-}
-
-.card-meta {
-    display: grid;
-    gap: .12rem;
-    padding: .5rem .65rem;
-    border-radius: 8px;
-    background: #edf7f6;
-    text-align: right;
-}
-
-.card-meta span {
-    color: #63817d;
-    font-size: clamp(.48rem, .7vw, .6rem);
-}
-
-.card-meta strong {
-    color: #164b49;
-    font-family: var(--font-mono);
-    font-size: clamp(.56rem, .84vw, .72rem);
-    overflow-wrap: anywhere;
-}
-
+/* --- VIN Strip: 17 character cells + Label box on right --- */
 .card-vin-strip {
-    flex: 0 0 5.5%;
+    flex: 0 0 auto;
     display: grid;
-    grid-template-columns: minmax(0, 1fr) 19%;
+    grid-template-columns: 1fr 165px;
     align-items: stretch;
-    gap: .45rem;
-    margin: 0 3.2% 1%;
-    padding: .28rem .45rem;
-    border: 1px solid #b9dfe0;
-    background: #fff;
+    gap: 0.45rem;
+    margin: 0 2rem 0.65rem;
+    padding: 0;
+    background: #ffffff;
+}
+
+.vin-number-grid {
+    display: grid;
+    grid-template-columns: repeat(17, minmax(0, 1fr));
+    height: 28px;
+}
+
+.vin-number-grid span {
+    display: grid;
+    place-items: center;
+    border: 1px solid #c9e3e6;
+    margin-right: -1px;
+    color: #000000;
+    background: #ffffff;
+    font-family: var(--font-mono, monospace);
+    font-size: 0.8rem;
+    font-weight: 700;
 }
 
 .card-vin-label {
@@ -2738,71 +2581,52 @@ body {
     flex-direction: column;
     align-items: flex-end;
     justify-content: center;
-    gap: .16rem;
-    padding: .22rem .25rem;
-    background: #e5f3f4;
-    color: #286d70;
+    gap: 0.1rem;
+    padding: 0.2rem 0.5rem;
+    background: #eaf5f7;
+    border: 1px solid #c9e3e6;
+    border-radius: 3px;
+    color: #155d68;
     text-align: right;
 }
 
-.card-vin-label span {
-    font-size: clamp(.38rem, .56vw, .5rem);
-    font-weight: 400;
-    line-height: 1.15;
-}
-
 .card-vin-label span:first-child {
-    font-family: Arial, Tahoma, sans-serif;
-    font-size: clamp(.46rem, .7vw, .58rem);
+    font-family: "Cairo", Arial, sans-serif;
+    font-size: 0.63rem;
+    font-weight: 700;
 }
 
-.vin-number-grid {
-    display: grid;
-    min-width: 0;
-    grid-template-columns: repeat(17, minmax(0, 1fr));
+.card-vin-label span:last-child {
+    font-size: 0.52rem;
+    font-weight: 500;
 }
 
-.vin-number-grid span {
-    display: grid;
-    place-items: center;
-    min-width: 0;
-    border: 1px solid #cfe4e6;
-    color: #111;
-    font-family: var(--font-mono);
-    font-size: clamp(.44rem, .68vw, .6rem);
-    font-weight: 800;
-}
-
-.barrier-card-demo {
-    justify-self: end;
-    border: 2px solid #555;
-    padding: .3rem .42rem;
-    color: #b21e1e;
-    font-size: .55rem;
-    font-weight: 800;
-    text-align: center;
-}
-
+/* --- Main Table: 3 columns x 4 rows --- */
 .card-table {
     flex: 1 1 auto;
-    min-height: 0;
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    grid-auto-rows: minmax(68px, auto);
+    grid-auto-rows: minmax(46px, auto);
     align-content: start;
-    gap: 7px;
-    margin: 0 3.2%;
+    gap: 8px 10px;
+    margin: 0 2rem 0.4rem;
 }
 
 .card-field {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1.1fr 1fr;
     min-width: 0;
-    min-height: 0;
+    min-height: 46px;
     overflow: hidden;
-    border: 1px solid #cfdfdf;
-    border-radius: 5px;
-    background: #f4f6f6;
+    border: 1px solid #c8e3e6;
+    border-radius: 3px;
+    background: #ffffff;
+}
+
+.card-field-empty {
+    border: none;
+    background: transparent;
+    pointer-events: none;
 }
 
 .card-field-value {
@@ -2810,10 +2634,13 @@ body {
     align-items: center;
     justify-content: center;
     min-width: 0;
-    padding: .25rem .35rem;
-    background: #fff;
+    padding: 0.3rem 0.4rem;
+    background: #ffffff;
+    color: #1a202c;
     text-align: center;
-    font-size: clamp(.44rem, .66vw, .56rem);
+    font-size: 0.65rem;
+    font-weight: 600;
+    line-height: 1.3;
     overflow-wrap: anywhere;
 }
 
@@ -2821,143 +2648,152 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    gap: .22rem;
+    gap: 0.15rem;
     min-width: 0;
-    padding: .28rem .38rem;
-    background: #dceff1;
-    color: #176373;
+    padding: 0.3rem 0.5rem;
+    background: #eaf5f7;
+    border-left: 1px solid #c8e3e6;
+    color: #155d68;
     text-align: right;
-}
-
-.card-field-labels span {
-    font-size: clamp(.38rem, .56vw, .48rem);
-    font-weight: 600;
-    line-height: 1.15;
-    overflow-wrap: anywhere;
 }
 
 .card-field-labels bdi {
     font-family: "Cairo", Arial, sans-serif;
-    font-size: clamp(.46rem, .7vw, .58rem);
-    font-weight: 600;
+    font-size: 0.68rem;
+    font-weight: 700;
+    line-height: 1.2;
+    overflow-wrap: anywhere;
+}
+
+.card-field-labels span {
+    font-size: 0.54rem;
+    font-weight: 500;
     line-height: 1.15;
     overflow-wrap: anywhere;
 }
 
 .card-field-technical {
-    min-height: 84px;
+    min-height: 78px;
 }
 
 .card-field-technical .card-field-value {
+    font-size: 0.57rem;
+    line-height: 1.35;
+    padding: 0.4rem 0.35rem;
+}
+
+/* --- Validity Notice Bar Under Table --- */
+.card-validity-notice {
+    flex: 0 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0.15rem 2rem 0.5rem;
+    padding: 0;
+    color: #65777a;
+    font-size: 0.58rem;
+    line-height: 1.2;
+}
+
+.card-validity-notice span:last-child {
+    font-family: "Cairo", Arial, sans-serif;
+    text-align: right;
+}
+
+/* --- Verification Area: Left Box + Center QR + Right Box --- */
+.card-verification-area {
+    flex: 0 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 92px 1fr;
+    align-items: center;
+    gap: 1.2rem;
+    margin: 0 2rem 0.6rem;
+    padding: 0;
+    background: transparent;
+}
+
+.card-verification-box {
+    padding: 0.6rem 0.8rem;
+    border-radius: 3px;
+    background: #eaf5f7;
+    border: 1px solid #c9e3e6;
+}
+
+.card-verification-box p {
+    margin: 0;
+    color: #3b5558;
+    font-size: 0.6rem;
     line-height: 1.45;
 }
 
-.card-table-section {
-    grid-column: 1 / -1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 30px;
-    padding: .3rem;
-    border-bottom: 2px solid #9fcaca;
-    color: #155d5c;
-    text-align: center;
-    font-weight: 800;
-    font-size: clamp(.68rem, 1vw, .84rem);
-}
-
-.card-verification-area {
-    flex: 0 0 15%;
-    display: grid;
-    grid-template-columns: 1fr 96px 1fr;
-    align-items: center;
-    gap: 2%;
-    margin: 1% 3.2% 0;
-    padding: .8% 1%;
-    border-top: 1px solid #c8e1e0;
-    border-bottom: 1px solid #c8e1e0;
-    background: #fff;
-}
-
-.card-verification-area p {
-    margin: 0;
-    padding: .75rem;
-    border-radius: 2px;
-    background: #e8f4f5;
-    color: #466166;
-    font-size: clamp(.52rem, .78vw, .66rem);
-    line-height: 1.55;
-}
-
-.card-verification-area p:last-child {
+.card-verification-ar {
     text-align: right;
-    font-family: var(--font-arabic);
+    font-family: "Cairo", Arial, sans-serif;
 }
 
 .card-verification-area .barrier-card-qr {
-    width: 92px;
+    width: 90px;
+    height: 90px;
+    justify-self: center;
 }
 
+.card-verification-area .barrier-card-qr canvas,
+.card-verification-area .barrier-card-qr img {
+    display: block;
+    width: 100% !important;
+    height: 100% !important;
+}
+
+/* --- Footer --- */
 .barrier-card-footer {
-    flex: 0 0 10%;
-    display: grid;
-    grid-template-rows: 42% 58%;
-    margin: .5% 3.2% 0;
+    flex: 0 0 auto;
+    margin: auto 0 0 0;
+    width: 100%;
 }
 
 .barrier-card-notice {
-    display: grid;
-    align-content: center;
-    padding: .2rem .5rem;
-    background: #f8f0e7;
-    color: #65605c;
+    padding: 0.35rem 1rem;
+    background: #fbf1e8;
+    color: #68615b;
     text-align: center;
-    font-size: clamp(.48rem, .68vw, .58rem);
+    font-family: "Cairo", Arial, sans-serif;
+    font-size: 0.62rem;
     line-height: 1.35;
 }
 
 .barrier-card-footer-band {
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(4, 1fr);
     align-items: center;
-    padding: .3rem .55rem;
-    background: #e8f4f5;
-    color: #536b70;
-    font-size: clamp(.46rem, .65vw, .56rem);
+    padding: 0.5rem 1.4rem;
+    background: #eaf5f7;
+    border-top: 1px solid #d2e8ea;
 }
 
 .barrier-card-footer-band>div {
     display: flex;
-    min-width: 0;
-    min-height: 70%;
     flex-direction: column;
+    align-items: center;
     justify-content: center;
-    gap: .18rem;
-    padding: 0 .55rem;
-    border-right: 1px solid #c8d8d9;
+    gap: 0.15rem;
+    text-align: center;
+    border-right: 1px solid #cae3e5;
+    padding: 0 0.5rem;
 }
 
 .barrier-card-footer-band>div:last-child {
-    border-right: 0;
-}
-
-.barrier-card-footer-band strong {
-    color: #124a55;
-    font-size: 1.1em;
-}
-
-.barrier-card-footer-band strong span {
-    color: #08766c;
+    border-right: none;
 }
 
 .barrier-card-footer-band small {
-    color: #687c7e;
-    font-size: .9em;
+    display: block;
+    color: #496366;
+    font-size: 0.58rem;
+    line-height: 1.2;
 }
 
-.barrier-card-footer-band [dir="rtl"] {
-    font-family: Arial, Tahoma, sans-serif;
-    text-align: right;
+.barrier-card-footer-band small:first-child {
+    font-family: "Cairo", Arial, sans-serif;
 }
 
 /* WhatsApp Document Share Preview Card */
