@@ -548,20 +548,20 @@ function syncRecordToCard(record = getRecordFromForm()) {
 }
 
 function getBarrierCardLogoSrc() {
-    const choice = document.getElementById('card-logo-select')?.value || 'logo2';
+    const choice = document.getElementById('card-logo-select')?.value || 'logo1';
     if (typeof BARRIER_LOGOS !== 'undefined' && BARRIER_LOGOS && BARRIER_LOGOS[choice]) {
         return BARRIER_LOGOS[choice];
     }
-    if (choice === 'logo1') return 'assets/barrier-logo-1.png';
+    if (choice === 'logo2') return 'assets/barrier-logo-2.png';
     if (choice === 'logo3') return 'assets/barrier-logo-3.png';
-    return 'assets/barrier-logo-2.png';
+    return 'assets/barrier-logo-1.png';
 }
 
 function renderBarrierCard() {
     const table = document.getElementById('card-table');
     const qrTarget = document.getElementById('card-qr');
     if (!table || !qrTarget) return;
-    const value = (id, fallback = '') => document.getElementById(id)?.value.trim() || fallback;
+    const value = (id, fallback = '—') => document.getElementById(id)?.value.trim() || fallback;
 
     // Dynamic Barrier Card Logo
     const logoSrc = getBarrierCardLogoSrc();
@@ -571,98 +571,70 @@ function renderBarrierCard() {
     }
 
     // Dynamic Barrier Unique ID Number (رقم البطاقة المميز)
-    const uniqueId = value('card-unique-id', document.getElementById('rec-id')?.value.trim() || '3934058450');
+    const uniqueId = value('card-unique-id', document.getElementById('rec-id')?.value.trim() || '8801005508');
     const cardNumEn = document.getElementById('hdr-card-num-en');
     const cardNumAr = document.getElementById('hdr-card-num-ar');
     if (cardNumEn) cardNumEn.textContent = uniqueId;
     if (cardNumAr) cardNumAr.textContent = uniqueId;
 
-    const cardIssueDate = value('card-issue-date', document.getElementById('rec-card-issued')?.value.trim() || '20/10/2026');
+    const cardIssueDate = value('card-issue-date', document.getElementById('rec-card-issued')?.value.trim() || '14/10/2026');
     const hdrDateEn = document.getElementById('hdr-card-date-en');
     const hdrDateAr = document.getElementById('hdr-card-date-ar');
     if (hdrDateEn) hdrDateEn.textContent = cardIssueDate;
     if (hdrDateAr) hdrDateAr.textContent = cardIssueDate;
 
-    const maker = value('card-maker', 'مؤسسة زاين الماس للتجارة');
-    const makerCode = value('card-maker-code', '');
-    const country = value('card-country', 'المملكة العربية / Saudi Arabia');
-    const manufactureDate = value('card-manufacture-date', '20/10/2026');
-    const technical = value('card-technical', 'Technical Regulation for Front, Rear, and Side Barriers for Trucks and Trailers / اللائحة الفنية للحواجز الأمامية والخلفية والجانبية للشاحنات والمقطورات');
-    const model = value('card-model', 'حواجز / UPD for Truck Tractor');
-    const brand = value('card-brand', 'ISUZU / ISUZU');
-    const year = value('card-year', '1997');
-    const updType = value('card-upd-type', 'Front, Side, Rear Barrier');
-    const vin = value('card-vin', 'JAANPR58LV7100574');
-    const barrier = value('card-barrier', 'KSAES25/R/FSTA262103');
-
-    // VIN 17-cell character strip
+    const maker = value('card-maker');
+    const makerCode = value('card-maker-code');
+    const country = document.getElementById('card-country')?.value.trim() || 'Saudi Arabia';
+    const manufactureDate = value('card-manufacture-date');
+    const technical = value('card-technical');
+    const model = value('card-model');
+    const brand = value('card-brand');
+    const year = value('card-year');
+    const updType = value('card-upd-type');
+    const vin = value('card-vin');
+    const barrier = value('card-barrier');
     const vinGrid = document.getElementById('card-vin-grid');
     if (vinGrid) {
         vinGrid.innerHTML = '';
-        const vinClean = (vin || 'JAANPR58LV7100574').replace(/\s+/g, '').toUpperCase();
-        const characters = [...vinClean];
-        vinGrid.style.gridTemplateColumns = `repeat(${Math.max(characters.length, 17)}, minmax(0, 1fr))`;
+        const characters = [...vin.replace(/\s+/g, '')];
+        vinGrid.style.gridTemplateColumns = `repeat(${Math.max(characters.length, 1)}, minmax(0, 1fr))`;
         characters.forEach(character => {
             const cell = document.createElement('span');
             cell.textContent = character;
             vinGrid.appendChild(cell);
         });
     }
-
-    // 3 columns x 4 rows layout exactly matching official certificate
-    const cells = [
-        // Row 1
-        { english: "Manufacturer's Name", arabic: "اسم المصنع/الوكيل", value: maker },
-        { english: "Manufacturer Assigned Code", arabic: "رمز المصنع", value: makerCode },
-        { english: "Country of Origin", arabic: "بلد المنشأ", value: country },
-
-        // Row 2
-        { english: "Date of Manufacture", arabic: "تاريخ الصنع", value: manufactureDate },
-        { english: "Vehicle Model Name", arabic: "اسم طراز المركبة", value: model },
-        { english: "Vehicle Brand", arabic: "ماركة المركبة", value: brand },
-
-        // Row 3
-        { english: "Vehicle Model Year", arabic: "سنة موديل المركبة", value: year },
-        { english: "UPD Type (Front, Side, Rear)", arabic: "نوع الحاجز (أمامي، جانبي، خلفي)", value: updType },
-        { english: "Distinguished Under-Run Number", arabic: "الرقم المميز للحاجز", value: barrier },
-
-        // Row 4
-        { english: "Technical References", arabic: "المتطلبات الفنية", value: technical, isTechnical: true },
-        { empty: true },
-        { empty: true }
+    const rows = [
+        ['Manufacturer’s Name', 'اسم المصنع/الورشة', maker],
+        ['Manufacturer Assigned Code', 'رمز المنشأة', makerCode],
+        ['Country of Origin', 'بلد المنشأ', country],
+        ['Date of Manufacture', 'تاريخ الصنع', manufactureDate],
+        ['Vehicle Model Name', 'اسم طراز المركبة', model],
+        ['Vehicle Brand', 'ماركة المركبة', brand],
+        ['Vehicle Model Year', 'سنة موديل المركبة', year],
+        ['UPD Type (Front, Side, Rear)', 'نوع الحاجز (أمامي، جانبي، خلفي)', updType],
+        ['Sample Reference', 'مرجع تجريبي', barrier],
+        ['Technical References', 'المتطلبات الفنية', technical]
     ];
-
     table.innerHTML = '';
-    cells.forEach(cell => {
-        if (cell.empty) {
-            const emptyEl = document.createElement('div');
-            emptyEl.className = 'card-field card-field-empty';
-            table.appendChild(emptyEl);
-            return;
-        }
-
+    rows.forEach(row => {
         const item = document.createElement('div');
-        item.className = 'card-field' + (cell.isTechnical ? ' card-field-technical' : '');
-
+        item.className = 'card-field';
         const fieldValue = document.createElement('span');
         fieldValue.className = 'card-field-value';
-        fieldValue.textContent = cell.value || '';
-
+        fieldValue.textContent = row[2] || '—';
         const labels = document.createElement('div');
         labels.className = 'card-field-labels';
-
+        const english = document.createElement('span');
+        english.textContent = row[0];
         const arabic = document.createElement('bdi');
         arabic.dir = 'rtl';
-        arabic.textContent = cell.arabic;
-
-        const english = document.createElement('span');
-        english.textContent = cell.english;
-
-        labels.append(arabic, english);
+        arabic.textContent = row[1];
+        labels.append(english, arabic);
         item.append(fieldValue, labels);
         table.appendChild(item);
     });
-
     qrTarget.innerHTML = '';
     const mainQrCanvas = document.querySelector('#qr-canvas-container canvas');
     if (mainQrCanvas) {
@@ -769,11 +741,7 @@ async function buildBarrierCardPdfDoc() {
         throw new Error('PDF export library is not available.');
     }
     renderBarrierCard();
-    if (document.fonts) {
-        try {
-            await document.fonts.ready;
-        } catch (_) {}
-    }
+    if (document.fonts) await document.fonts.ready;
     const logo = card.querySelector('.card-intro-logo');
     const logoSrc = getBarrierCardLogoSrc();
     if (logo) {
@@ -783,48 +751,26 @@ async function buildBarrierCardPdfDoc() {
         }
     }
 
-    // High resolution (scale 2.8) on exact 794px x 1123px A4 base dimensions
-    // Produces 2223px x 3144px canvas -> 300 DPI razor-sharp print quality!
+    // Scale 2.2 produces high definition (1750x2475) while keeping file size ~137 kB
     const canvas = await html2canvas(card, {
         backgroundColor: '#ffffff',
-        scale: 2.8,
+        scale: 2.2,
         useCORS: true,
         allowTaint: true,
-        logging: false,
-        imageTimeout: 0,
-        windowWidth: 1200,
         onclone: (clonedDoc) => {
-            const clonedCard = clonedDoc.getElementById('barrier-card-document');
-            if (clonedCard) {
-                clonedCard.style.width = '794px';
-                clonedCard.style.minWidth = '794px';
-                clonedCard.style.maxWidth = '794px';
-                clonedCard.style.height = '1123px';
-                clonedCard.style.minHeight = '1123px';
-                clonedCard.style.maxHeight = '1123px';
-                clonedCard.style.aspectRatio = '210 / 297';
-                clonedCard.style.margin = '0';
-                clonedCard.style.boxShadow = 'none';
-                clonedCard.style.transform = 'none';
-            }
             const clonedLogo = clonedDoc.querySelector('.card-intro-logo');
             if (clonedLogo) clonedLogo.src = logoSrc;
         }
     });
 
     const { jsPDF } = window.jspdf;
-    // Standard A4 portrait (210 x 297 mm) with compression enabled
-    const pdf = new jsPDF({
-        orientation: 'portrait',
-        unit: 'mm',
-        format: 'a4',
-        compress: true
-    });
+    // Standard A4 portrait (210 x 297 mm)
+    const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
 
-    // JPEG DCTDecode at 0.89 compression: ultra crisp 300 DPI, file size ~400 kB - 600 kB!
-    // (This completely eliminates the 30MB+ uncompressed PNG bloat while drastically increasing sharpness)
-    const imgData = canvas.toDataURL('image/jpeg', 0.89);
-    pdf.addImage(imgData, 'JPEG', 0, 0, 210, 297, undefined, 'MEDIUM');
+    // JPEG DCTDecode at 0.90 compression creates the exact ~137 kB PDF
+    // which allows WhatsApp to render the first-page banner thumbnail preview!
+    const imgData = canvas.toDataURL('image/jpeg', 0.90);
+    pdf.addImage(imgData, 'JPEG', 0, 0, 210, 297, undefined, 'FAST');
 
     const filename = getBarrierCardFilename();
     pdf.setProperties({
@@ -852,7 +798,6 @@ async function buildBarrierCardPdfDoc() {
 
 async function downloadBarrierCardPdf() {
     try {
-        showToast('Generating high-definition PDF...');
         const { pdf, filename } = await buildBarrierCardPdfDoc();
         pdf.save(filename);
         showToast(`Downloaded: ${filename}`);
@@ -864,11 +809,11 @@ async function downloadBarrierCardPdf() {
 
 async function viewBarrierCardPdf() {
     try {
-        showToast('Preparing PDF preview...');
         const { pdf } = await buildBarrierCardPdfDoc();
         const blob = pdf.output('blob');
         const url = URL.createObjectURL(blob);
         window.open(url, '_blank');
+        showToast('Opening PDF preview...');
     } catch (error) {
         console.error('PDF view failed:', error);
         showToast('Could not view PDF.');
@@ -905,10 +850,43 @@ async function shareBarrierCardPdf() {
 }
 
 async function downloadMobileBarrierCardPdf() {
+    const card = document.getElementById('barrier-card-mobile-document');
+    if (!card || !window.html2canvas || !window.jspdf) {
+        showToast('PDF export library is not available. Please check your connection.');
+        return;
+    }
+    renderBarrierCard();
     try {
-        showToast('Generating high-definition PDF...');
-        const { pdf, filename } = await buildBarrierCardPdfDoc();
-        pdf.save(filename);
+        if (document.fonts) await document.fonts.ready;
+        const logo = card.querySelector('.card-intro-logo');
+        const logoSrc = getBarrierCardLogoSrc();
+        if (logo) {
+            logo.src = logoSrc;
+            if (!logo.complete) {
+                await new Promise(r => { logo.onload = logo.onerror = r; setTimeout(r, 600); });
+            }
+        }
+        const canvas = await html2canvas(card, {
+            backgroundColor: '#ffffff',
+            scale: 4,
+            useCORS: true,
+            allowTaint: true,
+            onclone: (clonedDoc) => {
+                const clonedLogo = clonedDoc.querySelector('.card-intro-logo');
+                if (clonedLogo) {
+                    clonedLogo.src = logoSrc;
+                }
+            }
+        });
+        const { jsPDF } = window.jspdf;
+        const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+        const maxWidth = 190;
+        const maxHeight = 277;
+        const scale = Math.min(maxWidth / canvas.width, maxHeight / canvas.height);
+        const width = canvas.width * scale;
+        const height = canvas.height * scale;
+        pdf.addImage(canvas.toDataURL('image/png'), 'PNG', (210 - width) / 2, (297 - height) / 2, width, height);
+        pdf.save('barrier-card-mobile.pdf');
         showToast('Mobile PDF downloaded.');
     } catch (error) {
         console.error('Mobile PDF export failed:', error);
